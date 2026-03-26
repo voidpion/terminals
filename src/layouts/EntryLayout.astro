@@ -83,7 +83,7 @@ const { data } = entry;
   <!-- Screenshot -->
   {data.screenshot && (
     <div class="mb-8 rounded-xl overflow-hidden border dark:border-terminal-border border-light-border">
-      <img src={data.screenshot} alt={`${data.title} 截图`}
+      <img src={url(data.screenshot)} alt={`${data.title} 截图`}
         class="w-full h-auto" loading="lazy" />
     </div>
   )}

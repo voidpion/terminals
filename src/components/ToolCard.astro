@@ -30,7 +30,7 @@ const tags = entry.data.tags.slice(0, 3);
   data-tags={entry.data.tags.join(',')}>
   {entry.data.screenshot && (
     <div class="aspect-video overflow-hidden bg-black/20">
-      <img src={entry.data.screenshot} alt={`${entry.data.title} 截图`}
+      <img src={url(entry.data.screenshot)} alt={`${entry.data.title} 截图`}
         class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" loading="lazy" />
     </div>
   )}
