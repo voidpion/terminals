@@ -3,6 +3,7 @@ import PageLayout from '../layouts/PageLayout.astro';
 import CardGrid from '../components/CardGrid.astro';
 import ToolCard from '../components/ToolCard.astro';
 import CategorySection from '../components/CategorySection.astro';
+import { url } from '../lib/utils';
 import { getCollection } from 'astro:content';
 
 const emulators = (await getCollection('emulators')).filter(e => e.data.featured).sort((a, b) => a.data.order - b.data.order).slice(0, 6);
@@ -50,7 +51,7 @@ const totalEntries = totalEmulators + totalShells + totalConfigs + totalThemes +
 
   <!-- Category Quick Links -->
   <section class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-16">
-    <a href="/emulators" class="group p-6 rounded-xl border transition-all no-underline
+    <a href={url('/emulators')} class="group p-6 rounded-xl border transition-all no-underline
       dark:bg-terminal-surface/50 dark:border-terminal-border dark:hover:border-terminal-green/50
       bg-light-surface border-light-border hover:border-terminal-green/50
       hover:shadow-lg hover:shadow-terminal-green/5">
@@ -61,7 +62,7 @@ const totalEntries = totalEmulators + totalShells + totalConfigs + totalThemes +
       <h3 class="font-semibold dark:text-terminal-heading text-light-heading text-base">终端模拟器</h3>
       <p class="text-sm dark:text-terminal-fg/60 text-light-fg/60 mt-1">iTerm2, Alacritty, Kitty...</p>
     </a>
-    <a href="/shells" class="group p-6 rounded-xl border transition-all no-underline
+    <a href={url('/shells')} class="group p-6 rounded-xl border transition-all no-underline
       dark:bg-terminal-surface/50 dark:border-terminal-border dark:hover:border-terminal-blue/50
       bg-light-surface border-light-border hover:border-terminal-blue/50
       hover:shadow-lg hover:shadow-terminal-blue/5">
@@ -72,7 +73,7 @@ const totalEntries = totalEmulators + totalShells + totalConfigs + totalThemes +
       <h3 class="font-semibold dark:text-terminal-heading text-light-heading text-base">Shell</h3>
       <p class="text-sm dark:text-terminal-fg/60 text-light-fg/60 mt-1">Zsh, Bash, Fish, Nushell...</p>
     </a>
-    <a href="/configs" class="group p-6 rounded-xl border transition-all no-underline
+    <a href={url('/configs')} class="group p-6 rounded-xl border transition-all no-underline
       dark:bg-terminal-surface/50 dark:border-terminal-border dark:hover:border-terminal-purple/50
       bg-light-surface border-light-border hover:border-terminal-purple/50
       hover:shadow-lg hover:shadow-terminal-purple/5">
@@ -83,7 +84,7 @@ const totalEntries = totalEmulators + totalShells + totalConfigs + totalThemes +
       <h3 class="font-semibold dark:text-terminal-heading text-light-heading text-base">经典配置</h3>
       <p class="text-sm dark:text-terminal-fg/60 text-light-fg/60 mt-1">.zshrc, tmux.conf, init.lua...</p>
     </a>
-    <a href="/themes" class="group p-6 rounded-xl border transition-all no-underline
+    <a href={url('/themes')} class="group p-6 rounded-xl border transition-all no-underline
       dark:bg-terminal-surface/50 dark:border-terminal-border dark:hover:border-terminal-cyan/50
       bg-light-surface border-light-border hover:border-terminal-cyan/50
       hover:shadow-lg hover:shadow-terminal-cyan/5">
@@ -94,7 +95,7 @@ const totalEntries = totalEmulators + totalShells + totalConfigs + totalThemes +
       <h3 class="font-semibold dark:text-terminal-heading text-light-heading text-base">主题美化</h3>
       <p class="text-sm dark:text-terminal-fg/60 text-light-fg/60 mt-1">Catppuccin, Dracula, Nord...</p>
     </a>
-    <a href="/tools" class="group p-6 rounded-xl border transition-all no-underline
+    <a href={url('/tools')} class="group p-6 rounded-xl border transition-all no-underline
       dark:bg-terminal-surface/50 dark:border-terminal-border dark:hover:border-terminal-yellow/50
       bg-light-surface border-light-border hover:border-terminal-yellow/50
       hover:shadow-lg hover:shadow-terminal-yellow/5">
@@ -105,7 +106,7 @@ const totalEntries = totalEmulators + totalShells + totalConfigs + totalThemes +
       <h3 class="font-semibold dark:text-terminal-heading text-light-heading text-base">CLI 工具</h3>
       <p class="text-sm dark:text-terminal-fg/60 text-light-fg/60 mt-1">fzf, ripgrep, bat, fd...</p>
     </a>
-    <a href="/fonts" class="group p-6 rounded-xl border transition-all no-underline
+    <a href={url('/fonts')} class="group p-6 rounded-xl border transition-all no-underline
       dark:bg-terminal-surface/50 dark:border-terminal-border dark:hover:border-terminal-orange/50
       bg-light-surface border-light-border hover:border-terminal-orange/50
       hover:shadow-lg hover:shadow-terminal-orange/5">
@@ -119,42 +120,42 @@ const totalEntries = totalEmulators + totalShells + totalConfigs + totalThemes +
   </section>
 
   <!-- Featured Emulators -->
-  <CategorySection title="精选终端模拟器" href="/emulators">
+  <CategorySection title="精选终端模拟器" href={url('/emulators')}>
     <CardGrid>
       {emulators.map(entry => <ToolCard entry={entry} collection="emulators" />)}
     </CardGrid>
   </CategorySection>
 
   <!-- Featured Shells -->
-  <CategorySection title="热门 Shell" href="/shells">
+  <CategorySection title="热门 Shell" href={url('/shells')}>
     <CardGrid>
       {shells.map(entry => <ToolCard entry={entry} collection="shells" />)}
     </CardGrid>
   </CategorySection>
 
   <!-- Featured Tools -->
-  <CategorySection title="必备 CLI 工具" href="/tools">
+  <CategorySection title="必备 CLI 工具" href={url('/tools')}>
     <CardGrid>
       {tools.map(entry => <ToolCard entry={entry} collection="tools" />)}
     </CardGrid>
   </CategorySection>
 
   <!-- Featured Themes -->
-  <CategorySection title="流行主题" href="/themes">
+  <CategorySection title="流行主题" href={url('/themes')}>
     <CardGrid>
       {themes.map(entry => <ToolCard entry={entry} collection="themes" />)}
     </CardGrid>
   </CategorySection>
 
   <!-- Featured Configs -->
-  <CategorySection title="经典配置" href="/configs">
+  <CategorySection title="经典配置" href={url('/configs')}>
     <CardGrid>
       {configs.map(entry => <ToolCard entry={entry} collection="configs" />)}
     </CardGrid>
   </CategorySection>
 
   <!-- Featured Fonts -->
-  <CategorySection title="推荐字体" href="/fonts">
+  <CategorySection title="推荐字体" href={url('/fonts')}>
     <CardGrid>
       {fonts.map(entry => <ToolCard entry={entry} collection="fonts" />)}
     </CardGrid>

@@ -1,5 +1,6 @@
 ---
 import { getTagColor } from '../lib/tag-colors';
+import { url } from '../lib/utils';
 
 interface Props {
   entry: {
@@ -18,7 +19,7 @@ interface Props {
 }
 
 const { entry, collection } = Astro.props;
-const href = `/${collection}/${entry.id}`;
+const href = url(`/${collection}/${entry.id}`);
 const tags = entry.data.tags.slice(0, 3);
 ---
 

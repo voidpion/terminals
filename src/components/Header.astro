@@ -1,13 +1,14 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import { url } from '../lib/utils';
 
 const navItems = [
-  { label: '终端', href: '/emulators' },
-  { label: 'Shell', href: '/shells' },
-  { label: '配置', href: '/configs' },
-  { label: '主题', href: '/themes' },
-  { label: '工具', href: '/tools' },
-  { label: '字体', href: '/fonts' },
+  { label: '终端', href: url('/emulators') },
+  { label: 'Shell', href: url('/shells') },
+  { label: '配置', href: url('/configs') },
+  { label: '主题', href: url('/themes') },
+  { label: '工具', href: url('/tools') },
+  { label: '字体', href: url('/fonts') },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -18,7 +19,7 @@ const currentPath = Astro.url.pathname;
   bg-light-bg/80 border-light-border">
   <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
     <!-- Logo -->
-    <a href="/" class="flex items-center gap-2 font-mono font-bold text-lg
+    <a href={url('/')} class="flex items-center gap-2 font-mono font-bold text-lg
       dark:text-terminal-green text-terminal-green no-underline hover:no-underline">
       <span class="dark:text-terminal-fg text-light-fg">$</span> terminals
       <span class="animate-pulse">_</span>

@@ -1,5 +1,6 @@
 ---
 import { getTagColor } from '../lib/tag-colors';
+import { url } from '../lib/utils';
 
 interface Props {
   tags: string[];
@@ -14,7 +15,7 @@ const { tags, linkable = true } = Astro.props;
     const color = getTagColor(tag);
     return linkable ? (
       <a
-        href={`/tags/${tag}`}
+        href={url(`/tags/${tag}`)}
         class="text-xs px-2.5 py-1 rounded-full font-mono transition-colors no-underline hover:opacity-80"
         style={`background:${color.bg};color:${color.text}`}
       >

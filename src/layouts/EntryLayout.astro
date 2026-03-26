@@ -3,6 +3,7 @@ import PageLayout from './PageLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import TagList from '../components/TagList.astro';
 import TableOfContents from '../components/TableOfContents.astro';
+import { url } from '../lib/utils';
 
 interface Props {
   entry: {
@@ -28,7 +29,7 @@ const { data } = entry;
 
 <PageLayout title={`${data.title} — Terminal 百科`} description={data.description}>
   <Breadcrumb items={[
-    { label: collectionLabel, href: `/${collection}` },
+    { label: collectionLabel, href: url(`/${collection}`) },
     { label: data.title },
   ]} />
 
