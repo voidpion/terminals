@@ -1,0 +1,235 @@
+---
+title: ".inputrc 配置指南"
+description: "一份全面的 Readline 配置方案，涵盖 Vi/Emacs 编辑模式、补全行为、按键绑定、历史搜索与终端行为定制"
+tags: ["Readline", "按键绑定", "Bash"]
+featured: false
+order: 16
+config_type: "other"
+target_tool: "Readline"
+filename: ".inputrc"
+---
+
+## 简介
+
+`.inputrc` 是 GNU Readline 库的配置文件，位于 `~/.inputrc`。Readline 为 Bash、Python REPL、GDB、PostgreSQL 命令行等众多程序提供行编辑功能。通过配置 `.inputrc`，你可以统一定制所有使用 Readline 的程序的输入行为——包括编辑模式、补全策略、按键绑定和历史搜索方式。
+
+这是一个容易被忽视但影响广泛的配置文件。一份好的 `.inputrc` 能让你在 Bash、Python 交互式解释器、数据库命令行等各种场景下都享受一致且高效的输入体验。
+
+## 完整配置
+
+```bash
+# ============================================================
+# ~/.inputrc — GNU Readline 配置文件
+# ============================================================
+
+# ---------- 1. 编辑模式 ----------
+# 设置编辑模式：vi 或 emacs（默认 emacs）
+# 如果你是 Vim 用户，取消下面一行的注释
+# set editing-mode vi
+
+# Emacs 模式下的默认快捷键已经很实用：
+# Ctrl+A: 行首  Ctrl+E: 行尾  Ctrl+W: 删除前一个单词
+# Ctrl+U: 删除到行首  Ctrl+K: 删除到行尾
+# Ctrl+R: 反向搜索历史  Ctrl+L: 清屏
+
+# ---------- 2. 补全设置 ----------
+# 单次 Tab 即显示所有匹配项（默认需要按两次）
+set show-all-if-ambiguous on
+
+# 单次 Tab 即显示未修改部分的匹配列表
+set show-all-if-unmodified on
+
+# 补全时忽略大小写
+set completion-ignore-case on
+
+# 将连字符 (-) 和下划线 (_) 视为等价字符
+set completion-map-case on
+
+# 补全文件时显示类型标记（目录加 /，可执行文件加 * 等）
+set visible-stats on
+
+# 补全列表按文件类型着色（使用 LS_COLORS）
+set colored-stats on
+
+# 补全时标记目录名后加斜杠
+set mark-directories on
+
+# 补全符号链接指向目录时也加斜杠
+set mark-symlinked-directories on
+
+# 补全列表中相同前缀用公共前缀颜色高亮
+set colored-completion-prefix on
+
+# 如果补全项超过此数量则先询问用户
+set completion-query-items 200
+
+# 分页显示补全列表时每页行数
+set page-completions on
+
+# 补全时不使用内部分页器（使用终端自身滚动）
+# set page-completions off
+
+# 仅显示匹配项中不同的部分（减少视觉噪音）
+set completion-display-width -1
+
+# 匹配隐藏文件（以点开头的文件）
+set match-hidden-files on
+
+# 补全后自动添加的分隔符（空格）
+set completion-prefix-display-length 4
+
+# ---------- 3. 历史记录 ----------
+# 增量搜索时跳过重复项
+set skip-completed-text on
+
+# 历史搜索（上/下箭头）只匹配已输入的前缀
+# 例如输入 "git" 后按上箭头，只在 git 开头的命令中搜索
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+
+# 支持 PageUp/PageDown 搜索历史（更大步幅浏览）
+"\e[5~": history-search-backward
+"\e[6~": history-search-forward
+
+# 在 Vi 模式下也启用前缀搜索
+set keymap vi-command
+"k": history-search-backward
+"j": history-search-forward
+set keymap emacs
+
+# ---------- 4. 响铃与提示 ----------
+# 关闭响铃（bell 声音/闪烁）
+# none: 完全静音  visible: 屏幕闪烁  audible: 声音提示
+set bell-style none
+
+# 显示模式指示器（仅 Vi 模式有效）
+# 在提示符前显示当前处于命令模式还是插入模式
+set show-mode-in-prompt on
+
+# Vi 命令模式光标指示符
+set vi-cmd-mode-string "\1\e[2 q\2(cmd) "
+
+# Vi 插入模式光标指示符
+set vi-ins-mode-string "\1\e[6 q\2(ins) "
+
+# ---------- 5. 通用行为 ----------
+# 将粘贴的多行文本视为单行（避免意外执行）
+set enable-bracketed-paste on
+
+# 单词边界字符（Ctrl+W 删除单词时使用的分隔符）
+# 默认值是 " \t\n\"\\><=;|&{("，添加 / 使路径编辑更方便
+set word-delimiters " \t\n\"\\><=;|&{(/:"
+
+# 关闭行数限制的第八位输入
+set input-meta on
+set output-meta on
+
+# 允许 UTF-8 输入（对中文输入很重要）
+set convert-meta off
+
+# 光标在右边界时是否换行（而非等到下一个字符）
+set horizontal-scroll-mode off
+
+# 启用宏（按键绑定到字符串）
+set enable-keypad on
+
+# ---------- 6. 自定义按键绑定 ----------
+# Ctrl+L：清屏并重绘当前行
+"\C-l": clear-screen
+
+# Alt+L：将光标后的单词转为小写
+"\el": downcase-word
+
+# Alt+U：将光标后的单词转为大写
+"\eu": upcase-word
+
+# Alt+C：将光标处单词首字母大写
+"\ec": capitalize-word
+
+# Ctrl+X Ctrl+E：用 $EDITOR 编辑当前命令行
+"\C-x\C-e": edit-and-execute-command
+
+# Alt+.（点号）：插入上一条命令的最后一个参数
+"\e.": yank-last-arg
+
+# Alt+数字 + Alt+.：插入上一条命令的第 N 个参数
+# 例如 Alt+1 Alt+. 插入上一条命令的第一个参数
+
+# Ctrl+X Ctrl+V：显示 Readline 版本
+"\C-x\C-v": display-shell-version
+
+# ---------- 7. 常用宏（按键映射到字符串） ----------
+# Ctrl+X Ctrl+L：将当前行内容转为管道到 less
+"\C-x\C-l": " | less\n"
+
+# Ctrl+X Ctrl+G：将当前行内容转为管道到 grep
+"\C-x\C-g": " | grep "
+
+# Ctrl+X Ctrl+W：将当前行内容转为管道到 wc -l
+"\C-x\C-w": " | wc -l\n"
+
+# Alt+S：在行首插入 sudo
+"\es": "\C-asudo \C-e"
+
+# Alt+H：显示当前命令的帮助（--help）
+"\eh": "\C-e --help\n"
+
+# ---------- 8. 条件配置（按程序区分） ----------
+# 仅对 Bash 生效的配置
+$if Bash
+    # Bash 特有：Tab 补全时展开环境变量
+    # 比如 $HO<Tab> 展开为 $HOME 的值
+    "\C-x$": shell-expand-line
+
+    # 快速跳转：Ctrl+X Ctrl+D 列出目录
+    "\C-x\C-d": "\C-a ls -la \C-e\n"
+$endif
+
+# 仅对 Python 生效的配置
+$if Python
+    # Python REPL 中 Tab 补全
+    TAB: complete
+$endif
+
+# 仅对 GDB 生效的配置
+$if Gdb
+    # GDB 中直接按回车重复上一条命令
+    set editing-mode emacs
+$endif
+
+# ---------- 9. 终端类型条件配置 ----------
+$if term=xterm-256color
+    # 256 色终端下的特殊配置
+    set colored-stats on
+    set colored-completion-prefix on
+$endif
+
+$if term=linux
+    # Linux 控制台（TTY）下的简化配置
+    set colored-stats off
+    set bell-style visible
+$endif
+```
+
+## 配置说明
+
+### 编辑模式
+Readline 支持 Emacs 和 Vi 两种编辑模式。Emacs 模式（默认）更适合快速编辑短命令，常用 `Ctrl` 组合键；Vi 模式提供完整的模态编辑体验，适合 Vim 用户。通过 `set editing-mode vi` 切换，启用后会在提示符前显示当前模式。
+
+### 补全行为
+`show-all-if-ambiguous` 和 `completion-ignore-case` 两个选项对日常使用影响最大。前者省去多按一次 Tab 的麻烦，后者在处理文件名和命令时更加宽容。`colored-stats` 和 `colored-completion-prefix` 利用颜色区分文件类型和公共前缀，显著提升补全列表的可读性。
+
+### 历史搜索
+将上下箭头绑定到 `history-search-backward/forward`（而非默认的 `previous-history/next-history`）是最值得做的优化。输入前几个字符后按上箭头，只在匹配的历史命令中导航，比 `Ctrl+R` 更直观快速。
+
+### 条件配置
+`.inputrc` 支持 `$if program`、`$if mode`、`$if term` 等条件语句，可为不同程序和终端定制不同行为。例如在 Python REPL 中启用 Tab 补全，在 Linux TTY 下关闭颜色输出。
+
+## 常用技巧
+
+- **即时生效**：修改 `.inputrc` 后，在 Bash 中按 `Ctrl+X Ctrl+R` 重新读取配置，无需重启终端。
+- **调试绑定**：执行 `bind -P` 查看所有当前生效的按键绑定，`bind -l` 列出所有可用的 Readline 函数。
+- **覆盖全局配置**：系统级 Readline 配置在 `/etc/inputrc`，用户的 `~/.inputrc` 会覆盖其中的设置。
+- **INPUTRC 环境变量**：设置 `export INPUTRC=~/path/to/my-inputrc` 可指定自定义路径。
+- **Vi 模式增强**：在 Vi 模式下，`v` 键可打开 `$EDITOR` 编辑当前命令行，适合编写复杂的多行命令。
+- **Escape 序列查看**：不确定某个按键的 Escape 序列？在终端中按 `Ctrl+V` 然后按目标键，会显示其原始序列（如 `^[[A` 代表上箭头）。

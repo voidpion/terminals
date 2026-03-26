@@ -1,0 +1,91 @@
+---
+title: "Iosevka"
+description: "高度可定制的窄等宽编程字体，极适合分屏和小字号场景"
+github: "https://github.com/be5invis/Iosevka"
+tags: ["编程字体", "窄字体", "可定制", "开源"]
+featured: false
+order: 5
+ligatures: true
+nerd_font_variant: true
+styles: ["Regular", "Bold", "Italic", "Bold Italic", "Thin", "Light", "Medium", "SemiBold", "Heavy"]
+preview_text: "Terminal > ls -la ~/.config"
+---
+
+## 简介
+
+Iosevka 是由 Belleve Invis（be5invis）开发的一款开源等宽编程字体，最大的特点是其极窄的字符宽度。相比常见的编程字体，Iosevka 的字符宽度约窄 20%，这意味着在相同屏幕空间中可以显示更多的代码列数，特别适合多窗口分屏工作、小尺寸屏幕或偏好小字号的开发者。
+
+Iosevka 另一个显著优势是其极高的可定制性。通过项目提供的构建系统，用户可以自定义字形风格、连字集合、字符变体等参数，生成专属的字体文件。项目预置了多种风格方案，包括默认的 Iosevka（等宽 + 连字）、Iosevka Slab（衬线风格）、Iosevka Aile（非等宽 UI 字体）等。它拥有 9 种字重和完善的斜体支持，灵活度在编程字体中首屈一指。
+
+## 安装
+
+```bash
+# macOS — Homebrew
+brew install --cask font-iosevka
+brew install --cask font-iosevka-nerd-font  # Nerd Font 变体
+
+# Ubuntu/Debian — 手动安装
+mkdir -p ~/.local/share/fonts && cd ~/.local/share/fonts
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Iosevka.zip
+unzip Iosevka.zip -d Iosevka && fc-cache -fv
+
+# Windows — Scoop
+scoop bucket add nerd-fonts
+scoop install nerd-fonts/Iosevka-NF
+
+# 从源码自定义构建
+git clone https://github.com/be5invis/Iosevka.git
+cd Iosevka && npm install
+npm run build -- contents::Iosevka
+```
+
+## 特性亮点
+
+- **极窄字宽**: 字符宽度约为常规编程字体的 80%，同等屏幕空间可显示更多代码列
+- **高度可定制**: 通过构建参数可自定义字形风格、连字集合、字符变体，打造专属字体
+- **丰富变体**: 预置 Iosevka、Iosevka Slab、Iosevka Curly、Iosevka SS 系列等多种风格
+- **9 种字重**: 从 Thin 到 Heavy 覆盖全面，适配各种显示场景
+- **完整连字支持**: 内置编程连字，可通过构建配置开关和自定义连字集
+- **开源免费**: SIL OFL 许可证，可自由使用、修改和分发
+
+## 推荐配置
+
+### 终端模拟器
+
+```toml
+# Alacritty — ~/.config/alacritty/alacritty.toml
+[font]
+size = 14.0
+[font.normal]
+family = "Iosevka Nerd Font"
+style = "Regular"
+[font.bold]
+family = "Iosevka Nerd Font"
+style = "Bold"
+```
+
+```conf
+# Kitty — ~/.config/kitty/kitty.conf
+font_family      Iosevka Nerd Font
+bold_font        auto
+italic_font      auto
+font_size        14.0
+```
+
+```lua
+-- WezTerm — ~/.wezterm.lua
+config.font = wezterm.font('Iosevka Nerd Font')
+config.font_size = 14.0
+config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
+```
+
+### VS Code
+
+```json
+{
+  "editor.fontFamily": "'Iosevka', 'Iosevka Nerd Font', monospace",
+  "editor.fontSize": 14,
+  "editor.fontLigatures": true,
+  "terminal.integrated.fontFamily": "'Iosevka Nerd Font'"
+}
+```

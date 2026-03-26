@@ -1,0 +1,140 @@
+---
+title: "Murex"
+description: "面向 DevOps 的智能 Shell，内置类型系统和多格式数据处理能力，让管道更安全"
+website: "https://murex.rocks/"
+github: "https://github.com/lmorg/murex"
+tags: ["DevOps", "类型安全", "数据格式", "智能补全"]
+featured: false
+order: 8
+language: "Go"
+posix_compatible: false
+default_on: []
+config_file: ".murex_profile"
+---
+
+## 简介
+
+Murex 是一款用 Go 编写的面向 DevOps 工程师的智能 Shell。它在保留类 Bash 交互体验的同时，引入了类型感知管道（typed pipeline）、内置多格式数据处理、以及智能的上下文感知补全系统。Murex 的管道不仅传递数据，还携带数据类型信息（如 JSON、CSV、YAML 等），下游命令可以据此自动选择最合适的处理方式。这种设计让数据在管道中流动时不再丢失结构信息。
+
+Murex 特别关注安全性和可靠性。它内置了类似 `set -e` 的错误处理机制，但比 Bash 的实现更加细粒度和可控。管道中的每个命令的退出状态都会被追踪，支持 `try`/`catch` 风格的错误处理。此外，Murex 还提供了事件驱动的编程模型，可以在文件变化、定时器触发、或信号接收时自动执行代码，非常适合 DevOps 自动化场景。
+
+## 安装
+
+```bash
+# macOS
+brew install murex
+
+# 使用安装脚本
+curl -sL https://murex.rocks/install.sh | sh
+
+# 从源码编译（需要 Go 1.20+）
+go install github.com/lmorg/murex@latest
+
+# Arch Linux (AUR)
+yay -S murex
+
+# Docker（试用）
+docker run -it lmorg/murex
+
+# 设为默认 Shell
+echo $(which murex) | sudo tee -a /etc/shells
+chsh -s $(which murex)
+```
+
+## 核心特性
+
+- **类型感知管道**: 管道中的数据携带 MIME 类型信息，例如 JSON 数据通过管道传递时，下游命令知道它是 JSON 并可以直接按结构操作
+- **内置多格式支持**: 原生解析和生成 JSON、YAML、TOML、CSV、S-表达式等格式，无需外部工具如 `jq`
+- **智能上下文补全**: 补全系统不仅基于命令名，还会分析管道上下文、数据类型和命令文档来提供精确补全
+- **安全的错误处理**: 内置 `try`/`catch`/`finally` 语法，每个管道组件的错误都会被捕获，避免静默失败
+- **事件驱动编程**: 支持 `onFileSystemChange`、`onInterval`、`onSignalReceived` 等事件监听器，适合自动化任务
+- **内置测试框架**: 提供 `test` 和 `!test` 关键字，可以在脚本中嵌入单元测试
+- **Man 页面解析**: 自动解析系统 man 页面为命令生成补全规则，无需手动配置
+- **可选类型注解**: 函数参数支持类型注解，提前捕获类型错误
+
+## 配置推荐
+
+```murex
+# ~/.murex_profile
+
+# ---------- 环境变量 ----------
+export EDITOR=nvim
+export PATH=$PATH:$HOME/.local/bin:$HOME/go/bin
+
+# ---------- 实用别名 ----------
+alias ll=ls -lah
+alias gs=git status
+alias gp=git pull --rebase
+alias dc=docker compose
+
+# ---------- Shell 行为配置 ----------
+config set shell prompt {
+    out "{BLUE}${pwd}{RESET} {GREEN}>{RESET} "
+}
+config set shell hint-text-enabled true       # 启用命令提示
+config set shell max-suggestions 15           # 补全建议数量
+config set shell spellcheck-enabled true      # 启用拼写检查
+
+# ---------- 类型感知管道示例 ----------
+# 处理 JSON 数据，管道自动识别格式
+function api-get {
+    params: [url: str]
+    curl -s $url -> cast json
+}
+
+# 用 JSON 管道查询 API 并格式化输出
+function pods {
+    kubectl get pods -o json -> [ Items ] -> foreach pod {
+        out "$pod[metadata][name]: $pod[status][phase]"
+    }
+}
+
+# ---------- 错误处理 ----------
+function safe-deploy {
+    params: [env: str]
+    try {
+        out "Deploying to $env..."
+        docker compose -f docker-compose.$env.yml up -d
+        out "Deploy successful!"
+    }
+    catch {
+        err "Deploy failed!"
+        exit 1
+    }
+}
+
+# ---------- 事件驱动 ----------
+# 当配置文件变化时自动重新加载
+event onFileSystemChange config-reload=~/.murex_profile {
+    source ~/.murex_profile
+    out "Configuration reloaded"
+}
+
+# ---------- 自定义函数 ----------
+function mkcd {
+    params: [dir: str]
+    mkdir -p $dir
+    cd $dir
+}
+
+# 快速查看各种格式的数据文件
+function peek {
+    params: [file: str]
+    open $file -> head 20
+}
+```
+
+## 与其他 Shell 的对比
+
+| 特性 | Murex | Bash | Fish | Nushell |
+|------|-------|------|------|---------|
+| POSIX 兼容 | 否 | 是 | 否 | 否 |
+| 类型化管道 | MIME 类型 | 无 | 无 | 结构化类型 |
+| 内置数据格式 | JSON/YAML/CSV/TOML | 无 | 无 | JSON/YAML/CSV |
+| 错误处理 | try/catch | set -e | 无 | try/catch |
+| 事件系统 | 内置 | 无 | 无 | 无 |
+| 内置测试 | 有 | 无 | 无 | 无 |
+| 智能补全 | 上下文感知 | 基础 | 丰富 | 内置 |
+| 实现语言 | Go | C | C | Rust |
+
+Murex 面向的核心用户群是 DevOps 工程师和系统管理员。如果你日常工作涉及大量 JSON/YAML 配置文件处理、Kubernetes 管理、CI/CD 管道调试等场景，Murex 的类型感知管道和内置数据格式支持会让你事半功倍。它在安全性和自动化方面的设计也让它特别适合生产环境中的运维脚本编写。

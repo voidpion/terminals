@@ -1,0 +1,32 @@
+---
+import { getTagColor } from '../lib/tag-colors';
+
+interface Props {
+  tags: string[];
+  linkable?: boolean;
+}
+
+const { tags, linkable = true } = Astro.props;
+---
+
+<div class="flex flex-wrap gap-2">
+  {tags.map((tag) => {
+    const color = getTagColor(tag);
+    return linkable ? (
+      <a
+        href={`/tags/${tag}`}
+        class="text-xs px-2.5 py-1 rounded-full font-mono transition-colors no-underline hover:opacity-80"
+        style={`background:${color.bg};color:${color.text}`}
+      >
+        {tag}
+      </a>
+    ) : (
+      <span
+        class="text-xs px-2.5 py-1 rounded-full font-mono"
+        style={`background:${color.bg};color:${color.text}`}
+      >
+        {tag}
+      </span>
+    );
+  })}
+</div>

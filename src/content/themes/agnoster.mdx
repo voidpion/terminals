@@ -1,0 +1,65 @@
+---
+title: "Agnoster"
+description: "经典 Powerline 风格 Zsh 主题，开创了现代终端提示符的视觉设计先河"
+github: "https://github.com/agnoster/agnoster-zsh-theme"
+tags: ["Powerline", "提示符", "经典", "Zsh"]
+featured: false
+order: 29
+theme_type: "prompt"
+compatible_with: ["Zsh"]
+---
+
+## 简介
+
+Agnoster 是最具影响力的 Zsh 提示符主题之一，开创了终端中 Powerline 风格箭头分隔符的视觉设计潮流。它使用彩色背景块和三角形箭头将提示符分割成多个视觉段落，让目录路径、Git 分支、用户身份等信息一目了然。如今许多流行提示符的设计语言都可以追溯到 Agnoster 的影响。
+
+Agnoster 遵循"上下文感知"的设计原则——在默认用户本地登录时只显示最必要的信息，而在 SSH 远程连接、root 权限操作或 Git 仓库中时会自动展示额外的上下文信息。这种简洁而不失信息量的设计，让它成为 Oh My Zsh 中最受欢迎的内置主题之一。
+
+## 安装
+
+```bash
+# 方式一：通过 Oh My Zsh（已内置）
+# 在 ~/.zshrc 中设置
+ZSH_THEME="agnoster"
+
+# 方式二：独立安装
+curl -fsSL https://raw.githubusercontent.com/agnoster/agnoster-zsh-theme/main/agnoster.zsh-theme \
+  -o ~/.oh-my-zsh/themes/agnoster.zsh-theme
+
+# 重要：需要安装 Powerline 兼容字体
+# 推荐安装 Nerd Font（如 MesloLGS NF）
+brew install --cask font-meslo-lg-nerd-font
+```
+
+## 核心特性
+
+- **Powerline 视觉风格**: 彩色背景块搭配箭头分隔符，辨识度极高
+- **上下文感知**: 默认隐藏用户名，SSH 或 root 时自动显示
+- **Git 集成**: 显示分支名称和工作区状态（干净/脏）
+- **虚拟环境**: 自动显示 Python virtualenv 名称
+- **错误指示**: 上一条命令失败时提示符颜色变化
+- **简洁高效**: 代码量精简，加载速度快
+
+## 配置推荐
+
+```bash
+# 在 ~/.zshrc 中配置（Oh My Zsh 环境下）
+ZSH_THEME="agnoster"
+
+# 隐藏默认用户名（设为你的用户名）
+DEFAULT_USER="$(whoami)"
+
+# 自定义提示符段落（需编辑主题文件或创建覆盖）
+# 可在 ~/.zshrc 中覆盖 build_prompt 函数
+prompt_context() {
+  # 仅在 SSH 或非默认用户时显示
+  if [[ "$SSH_CONNECTION" != '' ]] || [[ "$USER" != "$DEFAULT_USER" ]]; then
+    prompt_segment black default "%(!.%{%F{yellow}%}.)%n@%m"
+  fi
+}
+
+# 搭配推荐终端配色
+# - Solarized Dark（Agnoster 的经典搭配）
+# - Dracula
+# - One Dark
+```

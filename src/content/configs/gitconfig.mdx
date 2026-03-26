@@ -1,0 +1,360 @@
+---
+title: ".gitconfig 配置指南"
+description: "一份全面的 .gitconfig 配置方案，包含用户信息、常用别名、差异对比、合并策略与凭证管理"
+tags: ["Git", "版本控制", "终端"]
+featured: false
+order: 7
+config_type: "other"
+target_tool: "Git"
+filename: ".gitconfig"
+---
+
+## 简介
+
+`.gitconfig` 是 Git 的全局用户配置文件，位于 `~/.gitconfig`。通过合理配置，可以大幅简化日常 Git 操作：用简短的别名替代冗长的命令、优化差异对比和合并体验、设置合理的默认行为。本文提供一份覆盖全面的配置方案，涵盖用户信息、核心设置、别名系统、颜色输出、差异对比、合并策略、推送/拉取行为、凭证管理等方面。
+
+## 完整配置
+
+```ini
+# ============================================================
+# ~/.gitconfig — Git 全局用户配置
+# ============================================================
+
+# ---------- 用户信息 ----------
+# 每次提交都会记录以下信息，请务必修改为自己的真实信息
+[user]
+    name = Your Name
+    email = your.email@example.com
+    # 如果使用 GPG 签名提交，取消以下注释
+    # signingkey = YOUR_GPG_KEY_ID
+
+# ---------- 核心设置 ----------
+[core]
+    # 默认编辑器（用于编写提交信息、交互式 rebase 等）
+    editor = vim
+    # 分页器设置：less 支持颜色、短内容不分页、不清屏
+    pager = less -FRX
+    # 处理跨平台换行符：输入时转换为 LF，检出时不转换
+    autocrlf = input
+    # 防止中文文件名被转义显示为八进制
+    quotepath = false
+    # 全局 .gitignore 文件路径
+    excludesfile = ~/.gitignore_global
+    # 启用文件系统缓存（Windows 上提升性能）
+    fscache = true
+    # 启用预加载索引以加速 status 操作
+    preloadindex = true
+    # 处理长路径（Windows 常见问题）
+    longpaths = true
+    # 信任文件权限更改
+    filemode = false
+
+# ---------- 别名系统 ----------
+# 用简短命令替代常用的冗长操作
+[alias]
+    # --- 基础操作 ---
+    s = status --short --branch
+    st = status
+    a = add
+    aa = add --all
+    ap = add --patch
+    ci = commit
+    cm = commit -m
+    ca = commit --amend
+    can = commit --amend --no-edit
+
+    # --- 分支操作 ---
+    br = branch
+    bra = branch -a
+    brd = branch -d
+    brD = branch -D
+    co = checkout
+    cb = checkout -b
+    sw = switch
+    sc = switch -c
+    main = checkout main
+    master = checkout master
+    dev = checkout develop
+
+    # --- 差异查看 ---
+    d = diff
+    ds = diff --staged
+    dc = diff --cached
+    dw = diff --word-diff
+    dt = difftool
+
+    # --- 日志查看 ---
+    lg = log --oneline --graph --decorate --all -20
+    ll = log --oneline --graph --decorate -15
+    la = log --oneline --graph --decorate --all
+    lp = log --patch -5
+    ls = log --stat -10
+    last = log -1 HEAD --stat
+    today = log --since='00:00:00' --oneline --no-merges
+    week = log --since='1 week ago' --oneline --no-merges
+    who = shortlog -sne --no-merges
+    timeline = log --all --graph --pretty=format:'%C(yellow)%h%C(reset) %C(cyan)%ad%C(reset) %C(green)%an%C(reset) %s%C(red)%d%C(reset)' --date=short
+
+    # --- 暂存操作 ---
+    ss = stash save
+    sl = stash list
+    sp = stash pop
+    sa = stash apply
+    sd = stash drop
+    sshow = stash show -p
+
+    # --- 远程操作 ---
+    f = fetch --all --prune
+    pl = pull
+    plr = pull --rebase
+    ps = push
+    psu = push -u origin HEAD
+    psf = push --force-with-lease
+    rv = remote -v
+
+    # --- 合并与变基 ---
+    m = merge
+    mn = merge --no-ff
+    rb = rebase
+    rbi = rebase -i
+    rbc = rebase --continue
+    rba = rebase --abort
+
+    # --- 重置操作 ---
+    unstage = reset HEAD --
+    undo = reset --soft HEAD~1
+    wipe = reset --hard HEAD
+    clean-all = clean -fd
+
+    # --- 标签操作 ---
+    t = tag
+    tl = tag -l --sort=-v:refname
+    td = tag -d
+
+    # --- 查找与调试 ---
+    find = log --all --full-history --
+    search = grep -n --heading --break
+    blame-line = blame -L
+    whoami = !echo "$(git config user.name) <$(git config user.email)>"
+    root = rev-parse --show-toplevel
+
+    # --- 实用组合命令 ---
+    # 快速提交所有变更
+    ac = !git add --all && git commit -m
+    # 拉取后自动变基
+    sync = !git fetch --all --prune && git rebase origin/$(git symbolic-ref --short HEAD)
+    # 查看当前分支与 main 的差异文件列表
+    changed = diff --name-only main...HEAD
+    # 统计代码修改量
+    stat = diff --stat main...HEAD
+    # 删除已合并到 main 的本地分支
+    cleanup = !git branch --merged main | grep -v 'main\\|master\\|develop' | xargs -r git branch -d
+    # 显示所有被忽略的文件
+    ignored = !git ls-files -v | grep '^[[:lower:]]'
+    # 显示最近操作过的分支
+    recent = branch --sort=-committerdate --format='%(committerdate:relative)\t%(refname:short)' -n 10
+    # 交互式选择未暂存的文件进行 add
+    ai = add -i
+    # 创建并推送新标签
+    release = !sh -c 'git tag -a $1 -m \"Release $1\" && git push origin $1' -
+    # 导出某个提交的修改为 patch
+    patch = format-patch -1
+    # 查看文件的完整修改历史
+    file-history = log --follow -p --
+    # 快速 fixup 提交
+    fixup = commit --fixup
+    # 统计每位贡献者的代码行数
+    contributions = shortlog -sn --all --no-merges
+
+# ---------- 颜色配置 ----------
+[color]
+    # 自动检测终端是否支持颜色
+    ui = auto
+
+[color "branch"]
+    current = yellow bold
+    local = green
+    remote = cyan
+
+[color "diff"]
+    meta = yellow
+    frag = magenta bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
+
+[color "status"]
+    added = green bold
+    changed = yellow bold
+    untracked = cyan
+
+[color "decorate"]
+    branch = green bold
+    remoteBranch = cyan bold
+    tag = yellow bold
+
+# ---------- 差异对比 ----------
+[diff]
+    # 使用更智能的差异算法（检测代码移动和重命名）
+    algorithm = histogram
+    # 检测文件重命名
+    renames = copies
+    # 使用更有意义的差异前缀（c/ 表示更改, w/ 表示工作区）
+    mnemonicPrefix = true
+    # 将移动的代码块标记为不同颜色
+    colorMoved = default
+    # 子模块差异显示日志摘要
+    submodule = log
+
+[difftool]
+    # 不弹出确认提示
+    prompt = false
+
+# ---------- 合并策略 ----------
+[merge]
+    # 使用三方合并并显示共同祖先的内容
+    conflictstyle = diff3
+    # 默认合并工具
+    tool = vimdiff
+    # 合并日志中包含分支提交摘要
+    log = true
+
+[mergetool]
+    # 合并后自动删除 .orig 备份文件
+    keepBackup = false
+    # 不弹出确认提示
+    prompt = false
+
+# ---------- 拉取设置 ----------
+[pull]
+    # 拉取时默认使用变基而非合并（保持线性历史）
+    rebase = true
+
+# ---------- 推送设置 ----------
+[push]
+    # 推送时默认推送当前分支到同名远程分支
+    default = current
+    # 推送时同时推送相关标签
+    followTags = true
+    # 自动设置上游追踪分支
+    autoSetupRemote = true
+
+# ---------- 拉取请求 & Fetch ----------
+[fetch]
+    # 拉取时自动清理已删除的远程分支
+    prune = true
+    # 同时清理已删除的远程标签
+    prunetags = true
+
+# ---------- 初始化设置 ----------
+[init]
+    # 新仓库的默认分支名
+    defaultBranch = main
+
+# ---------- 变基设置 ----------
+[rebase]
+    # 变基时自动处理 fixup 提交
+    autosquash = true
+    # 变基时自动暂存未提交的变更
+    autostash = true
+
+# ---------- 凭证管理 ----------
+[credential]
+    # macOS 使用钥匙串存储凭证
+    # helper = osxkeychain
+    #
+    # Linux 使用内存缓存（超时时间 3600 秒 = 1 小时）
+    # helper = cache --timeout=3600
+    #
+    # 跨平台方案：使用 Git Credential Manager
+    # helper = manager
+
+# ---------- 提交签名（可选） ----------
+# 如果需要 GPG 签名提交，取消以下注释
+# [commit]
+#     gpgsign = true
+# [tag]
+#     gpgsign = true
+
+# ---------- HTTP/网络设置 ----------
+[http]
+    # 提交大文件时增大缓冲区（512MB）
+    postBuffer = 536870912
+    # SSL 验证（生产环境务必保持为 true）
+    sslVerify = true
+
+# ---------- 日志格式 ----------
+[format]
+    # 默认的 log 美化格式
+    pretty = format:%C(yellow)%h%C(reset) %C(green)%ad%C(reset) | %s%C(red)%d%C(reset) %C(blue)[%an]%C(reset)
+
+[log]
+    # 日志中使用相对日期格式
+    date = relative
+    # 默认显示重命名信息
+    follow = true
+
+# ---------- 其他设置 ----------
+[help]
+    # 自动纠正拼写错误的命令（延迟 1.5 秒后自动执行）
+    autocorrect = 15
+
+[rerere]
+    # 记录并自动重用已解决的冲突方案
+    enabled = true
+
+[status]
+    # 显示子模块的变更摘要
+    submoduleSummary = true
+    # 简短格式显示未追踪文件的目录
+    showUntrackedFiles = all
+
+[transfer]
+    # 传输时检查对象完整性
+    fsckobjects = true
+```
+
+## 配置说明
+
+### 用户信息
+
+`[user]` 部分是唯一需要手动修改的必填项。每次 `git commit` 都会在提交对象中记录这里的 `name` 和 `email`。如果你在不同项目中使用不同身份（如公司和个人），可以在项目目录下创建局部 `.gitconfig` 并通过 `[includeIf]` 条件引入。
+
+### 别名系统
+
+别名是本配置的核心部分。设计原则：单字母用于最高频操作（`s`=status, `a`=add, `d`=diff），两字母用于常用变体（`ds`=diff --staged, `cb`=checkout -b），完整单词用于不常用但有用的功能（`cleanup`, `timeline`）。以 `!` 开头的别名会在 Shell 中执行，可以组合多个命令。
+
+### 差异与合并
+
+`histogram` 算法比默认的 `myers` 算法在处理大范围代码移动时产生更可读的 diff。`conflictstyle = diff3` 在冲突标记中额外显示共同祖先的内容，帮助理解冲突双方的修改意图。`colorMoved` 会将移动（而非修改）的代码块标记为不同颜色。
+
+### 拉取策略
+
+`pull.rebase = true` 让 `git pull` 默认执行变基而非合并，从而保持提交历史的线性结构。配合 `rebase.autostash = true`，即使工作区有未提交的修改也能安全执行 pull。
+
+### 凭证管理
+
+配置文件中列出了三种常见的凭证存储方案：macOS 钥匙串、Linux 内存缓存和跨平台的 Git Credential Manager。根据你的操作系统取消对应行的注释即可。
+
+### 自动纠错
+
+`help.autocorrect = 15` 表示当输入错误的 Git 命令时（如 `git stauts`），Git 会提示最接近的正确命令并在 1.5 秒后自动执行。设为 0 则只提示不自动执行。
+
+### Rerere
+
+`rerere.enabled = true` 启用 "REuse REcorded REsolution" 功能。Git 会记住你解决过的合并冲突模式，下次遇到相同冲突时自动应用之前的解决方案，在频繁变基的工作流中尤为有用。
+
+## 常用技巧
+
+- 使用 `git config --list --show-origin` 查看所有配置项的来源文件，排查冲突
+- 项目级配置优先于全局配置，在项目根目录的 `.git/config` 中设置项目特有的选项
+- 使用 `[includeIf "gitdir:~/work/"]` 按目录自动切换工作/个人身份配置
+- `git lg` 可以快速浏览带分支图的提交历史，比默认的 `git log` 直观得多
+- `git sync` 一键拉取并变基当前分支，保持与远程同步
+- `git cleanup` 自动删除已合并到 main 的本地分支，保持分支列表整洁
+- `git recent` 按最近提交时间排序分支，快速找到最近工作过的分支
+- `git undo` 撤销最近一次提交（保留修改在暂存区），比 `reset --hard` 更安全
+- `git psf`（`push --force-with-lease`）是比 `push --force` 更安全的强制推送方式
+- `git ap`（`add --patch`）交互式暂存，可以只提交文件的部分修改
+- 使用 `~/.gitignore_global` 统一忽略 `.DS_Store`、`.idea/`、`*.swp` 等个人环境文件
+- 定期运行 `git gc` 清理和压缩仓库，或依赖 Git 的自动 gc 机制

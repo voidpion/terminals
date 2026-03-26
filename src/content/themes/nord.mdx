@@ -1,0 +1,72 @@
+---
+title: "Nord"
+description: "以北极冰雪为灵感的冷色配色方案，由四组精心设计的调色板组成"
+website: "https://www.nordtheme.com/"
+github: "https://github.com/nordtheme/nord"
+tags: ["配色", "暗色", "冷色调", "北极"]
+featured: true
+order: 6
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal", "Hyper"]
+---
+
+## 简介
+
+Nord 是由设计师 Sven Greb 创建的配色方案，灵感来源于北极地区的冰雪、极光和冬季自然景观。它以冷峻而克制的蓝灰色为基调，营造出一种宁静、专注的视觉氛围。与许多追求色彩丰富度的配色方案不同，Nord 坚持"少即是多"的设计哲学，使用有限但经过精心调配的色彩来传达信息层次，让开发者能够将注意力集中在代码本身而非界面装饰上。
+
+Nord 的调色板由四组共 16 种颜色组成，每组都有明确的设计用途：**Polar Night**（极夜，四种深色用于背景和界面元素）、**Snow Storm**（暴风雪，三种亮色用于文本和高亮）、**Frost**（霜冻，四种蓝色系用于核心语法元素）和 **Aurora**（极光，五种彩色用于辅助语法高亮）。这种结构化的调色板设计使 Nord 在不同应用间移植时能保持高度一致的视觉体验，也让主题开发者能够更准确地理解每种颜色的语义用途。
+
+## 配色预览
+
+| 角色 | 颜色名 | 色值 | 所属调色板 |
+|------|--------|------|-----------|
+| 背景 | nord0 | `#2e3440` | Polar Night |
+| 深色高亮 | nord1 | `#3b4252` | Polar Night |
+| 浅色高亮 | nord2 | `#434c5e` | Polar Night |
+| 注释色 | nord3 | `#4c566a` | Polar Night |
+| 前景 | nord4 | `#d8dee9` | Snow Storm |
+| 亮前景 | nord5 | `#e5e9f0` | Snow Storm |
+| 最亮前景 | nord6 | `#eceff4` | Snow Storm |
+| 冻蓝 | nord7 | `#8fbcbb` | Frost |
+| 冰蓝 | nord8 | `#88c0d0` | Frost |
+| 冷蓝 | nord9 | `#81a1c1` | Frost |
+| 深蓝 | nord10 | `#5e81ac` | Frost |
+| 红色 | nord11 | `#bf616a` | Aurora |
+| 橙色 | nord12 | `#d08770` | Aurora |
+| 黄色 | nord13 | `#ebcb8b` | Aurora |
+| 绿色 | nord14 | `#a3be8c` | Aurora |
+| 紫色 | nord15 | `#b48ead` | Aurora |
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+git clone https://github.com/nordtheme/iterm2.git ~/nord-iterm2
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+# 选择 ~/nord-iterm2/src/xml/Nord.itermcolors
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/nord.toml"]
+```
+
+### Kitty
+
+```bash
+kitty +kitten themes Nord
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'Nord (Gogh)'
+```
+
+## 适用场景
+
+Nord 配色方案特别适合追求极简、克制视觉风格的开发者。其低饱和度、低对比度的设计使其成为长时间编码会话的理想选择，尤其是在夜间或暗光环境中工作时，Nord 的冷色调不会对眼睛造成过度刺激。对于注重美学统一性的用户，Nord 的结构化调色板和广泛的生态移植能够确保从终端到编辑器、从浏览器到笔记应用的一致视觉体验。不过需要注意的是，Nord 的低对比度可能在强光环境或投影演示时不够清晰，这种情况下建议切换到对比度更高的方案。

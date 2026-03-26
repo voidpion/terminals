@@ -1,0 +1,58 @@
+---
+title: "eza"
+description: "现代化的 ls 替代品，支持颜色、图标、Git 状态和树形视图"
+github: "https://github.com/eza-community/eza"
+tags: ["文件管理", "ls替代", "Rust"]
+featured: true
+order: 4
+category: "file_manager"
+replaces: "ls"
+install_cmd: "brew install eza"
+written_in: "Rust"
+---
+
+## 简介
+
+eza 是 `ls` 命令的现代替代品（exa 的社区维护分支），支持颜色高亮、文件图标、Git 状态显示和树形视图。它让文件列表的查看变得更加直观和美观。
+
+## 安装
+
+```bash
+# macOS
+brew install eza
+
+# Ubuntu/Debian (需要先添加 GPG key)
+sudo apt install eza
+
+# Cargo
+cargo install eza
+```
+
+## 常用命令
+
+```bash
+# 带图标和颜色的列表
+eza --icons
+
+# 长格式 + Git 状态
+eza -l --git --icons
+
+# 树形视图
+eza --tree --level=2 --icons
+
+# 按修改时间排序
+eza -l --sort=modified --reverse
+
+# 仅显示目录
+eza -D --icons
+```
+
+## 配置推荐
+
+```bash
+# 在 .zshrc 中设置别名
+alias ls="eza --icons"
+alias ll="eza -l --git --icons --time-style=relative"
+alias la="eza -la --git --icons"
+alias lt="eza --tree --level=2 --icons"
+```

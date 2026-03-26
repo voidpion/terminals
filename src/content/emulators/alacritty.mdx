@@ -1,0 +1,172 @@
+---
+title: "Alacritty"
+description: "基于 Rust 开发的跨平台 GPU 加速终端模拟器，追求极致的性能与简洁"
+website: "https://alacritty.org"
+github: "https://github.com/alacritty/alacritty"
+tags: ["跨平台", "免费", "GPU加速", "Rust"]
+featured: true
+order: 2
+platforms: ["macOS", "Linux", "Windows"]
+license: "Apache-2.0"
+gpu_accelerated: true
+multiplexer_builtin: false
+pricing: "free"
+screenshot: "/screenshots/alacritty.png"
+---
+
+## 简介
+
+Alacritty 是一款使用 Rust 语言编写的跨平台终端模拟器，以"最快的终端模拟器"为目标进行设计和优化。它利用 OpenGL 进行 GPU 加速渲染，在处理大量文本输出时表现尤为出色，是追求极致性能的开发者的理想选择。
+
+Alacritty 的设计哲学是"做好一件事"——它专注于终端模拟的核心功能，不内置标签页、分屏等窗口管理功能，而是鼓励用户搭配 tmux、Zellij 等外部工具来实现这些需求。这种 Unix 哲学的设计使得 Alacritty 的代码库精简高效，启动速度极快。
+
+Alacritty 使用 TOML 格式的配置文件（早期版本使用 YAML），所有配置通过文本文件完成，不提供 GUI 设置界面。配置文件修改后会自动热加载，无需重启终端。
+
+## 安装
+
+### macOS
+
+```bash
+# 通过 Homebrew 安装
+brew install --cask alacritty
+
+# 或通过 Cargo 从源码编译
+cargo install alacritty
+```
+
+### Linux
+
+```bash
+# Ubuntu / Debian
+sudo add-apt-repository ppa:aslatter/ppa -y
+sudo apt update
+sudo apt install alacritty
+
+# Arch Linux
+sudo pacman -S alacritty
+
+# Fedora
+sudo dnf install alacritty
+
+# 通过 Cargo 编译（通用方法）
+sudo apt install cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3
+cargo install alacritty
+```
+
+### Windows
+
+```powershell
+# 通过 Scoop 安装
+scoop install alacritty
+
+# 通过 Winget 安装
+winget install Alacritty.Alacritty
+
+# 通过 Cargo 编译
+cargo install alacritty
+```
+
+## 核心特性
+
+- **GPU 加速渲染** - 基于 OpenGL 的渲染管线，文本输出速度远超传统终端模拟器
+- **跨平台支持** - 原生支持 macOS、Linux、Windows 和 BSD，表现一致
+- **Rust 编写** - 内存安全，无垃圾回收开销，崩溃率极低
+- **Vi 模式** - 内置 Vi 风格的终端内容浏览模式，可用键盘选择和复制文本
+- **搜索功能** - 支持正则表达式搜索终端输出内容
+- **配置热加载** - 修改配置文件后自动生效，无需重启
+- **提示功能（Hints）** - 可识别终端中的 URL、文件路径等内容，通过键盘快速操作
+- **真彩色支持** - 完整的 24-bit 真彩色支持
+- **极简设计** - 不内置标签页和分屏，保持核心功能的精简与高效
+- **启动速度快** - 几乎瞬间启动，无任何可感知的延迟
+- **自定义键绑定** - 灵活的按键映射配置，支持复杂的修饰键组合
+- **IPC 控制** - 通过 `alacritty msg` 命令在运行时动态修改配置
+
+## 配置推荐
+
+Alacritty 的配置文件位于以下路径：
+
+- macOS: `~/.config/alacritty/alacritty.toml`
+- Linux: `~/.config/alacritty/alacritty.toml`
+- Windows: `%APPDATA%\alacritty\alacritty.toml`
+
+以下是一份实用的基础配置：
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+
+# 实时加载配置
+live_config_reload = true
+
+[env]
+TERM = "xterm-256color"
+
+[window]
+# 窗口内边距
+padding = { x = 8, y = 8 }
+# 窗口装饰（macOS 可设为 "Buttonless" 获得更简洁的外观）
+decorations = "Buttonless"
+# 启动模式：Windowed, Maximized, Fullscreen
+startup_mode = "Windowed"
+# 窗口透明度（1.0 为完全不透明）
+opacity = 0.95
+# macOS 特有：使用系统原生标签页
+option_as_alt = "Both"
+
+[font]
+size = 14.0
+
+[font.normal]
+family = "JetBrains Mono"
+style = "Regular"
+
+[font.bold]
+family = "JetBrains Mono"
+style = "Bold"
+
+[font.italic]
+family = "JetBrains Mono"
+style = "Italic"
+
+[scrolling]
+# 回滚缓冲区行数
+history = 10000
+# 每次滚动行数
+multiplier = 3
+
+[selection]
+# 选中内容自动复制到剪贴板
+save_to_clipboard = true
+
+# 搜索模式的按键绑定
+[hints]
+alphabet = "jfkdls;ahgurieowpq"
+
+[[hints.enabled]]
+command = "open"
+hyperlinks = true
+post_processing = true
+persist = false
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+
+[hints.enabled.binding]
+key = "U"
+mods = "Control|Shift"
+
+# 自定义按键绑定
+[[keyboard.bindings]]
+action = "ToggleViMode"
+key = "Space"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "ClearHistory"
+key = "K"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "ResetFontSize"
+key = "Key0"
+mods = "Command"
+```
+
+> **提示**：Alacritty 不内置分屏和标签页功能，强烈建议搭配 tmux 或 Zellij 使用。推荐组合：Alacritty + Zellij + Starship，可获得高性能、美观且功能完整的终端体验。配合 `alacritty msg config` 命令可在运行时动态切换主题，非常适合写脚本实现日夜主题自动切换。

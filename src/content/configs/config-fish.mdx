@@ -1,0 +1,241 @@
+---
+title: "config.fish 配置指南"
+description: "Fish Shell 完整配置方案，涵盖环境变量、缩写、自定义函数与插件管理"
+tags: ["Fish", "Shell配置", "交互式"]
+featured: false
+order: 4
+config_type: "shell"
+target_tool: "Fish"
+filename: "config.fish"
+---
+
+## 简介
+
+`config.fish` 是 Fish Shell 的用户配置文件，位于 `~/.config/fish/config.fish`。Fish 以"开箱即用"著称——语法高亮、自动建议、Tab 补全无需任何配置即可使用。但一份精心定制的 `config.fish` 能进一步释放 Fish 的潜力，从环境变量管理、缩写定义到自定义函数，让你的终端工作流更加流畅。
+
+与 Bash/Zsh 不同，Fish 使用自己的语法（不兼容 POSIX），变量设置用 `set` 而非 `export`，条件判断用 `if ... end` 而非 `if ... fi`。本配置充分利用 Fish 的原生特性，避免移植 Bash 习惯带来的不自然感。
+
+## 完整配置
+
+```fish
+# ============================================================
+# ~/.config/fish/config.fish — Fish Shell 用户配置
+# ============================================================
+
+# ---------- 1. 环境变量 ----------
+# Fish 使用 set -gx 设置全局导出变量（等价于 Bash 的 export）
+set -gx EDITOR nvim
+set -gx VISUAL nvim
+set -gx LANG zh_CN.UTF-8
+set -gx LC_ALL zh_CN.UTF-8
+
+# LESS 配置：支持颜色、短内容不分页
+set -gx LESS "-R -F -X"
+set -gx BAT_THEME TwoDark
+set -gx FZF_DEFAULT_OPTS "--height 40% --layout=reverse --border"
+
+# ---------- 2. PATH 管理 ----------
+# fish_add_path 会自动去重，且仅添加存在的目录
+fish_add_path $HOME/.local/bin
+fish_add_path $HOME/.cargo/bin
+fish_add_path /usr/local/go/bin
+fish_add_path /opt/homebrew/bin
+
+# ---------- 3. 欢迎语 ----------
+# 设为空字符串关闭默认的欢迎信息
+set -g fish_greeting ""
+
+# 如果想要自定义欢迎语，可以取消注释以下内容
+# function fish_greeting
+#     echo (set_color cyan)"欢迎回来，"(whoami)"！"(set_color normal)
+#     echo (set_color yellow)(date '+%Y-%m-%d %H:%M:%S')(set_color normal)
+# end
+
+# ---------- 4. 缩写 (Abbreviation) ----------
+# 缩写会在按下空格或回车时自动展开为完整命令
+# 相比别名，缩写让你能在执行前看到并编辑展开后的命令
+
+# 文件与目录
+abbr -a ll 'eza -lah --icons --git'
+abbr -a la 'eza -a --icons'
+abbr -a lt 'eza --tree --level=3 --icons'
+abbr -a cat 'bat --paging=never'
+
+# 安全操作
+abbr -a rm 'rm -i'
+abbr -a mv 'mv -i'
+abbr -a cp 'cp -i'
+
+# 导航快捷
+abbr -a .. 'cd ..'
+abbr -a ... 'cd ../..'
+abbr -a .... 'cd ../../..'
+
+# Git 快捷操作
+abbr -a gs 'git status'
+abbr -a ga 'git add'
+abbr -a gc 'git commit'
+abbr -a gp 'git push'
+abbr -a gl 'git log --oneline --graph --decorate -20'
+abbr -a gd 'git diff'
+abbr -a gco 'git checkout'
+abbr -a gb 'git branch'
+abbr -a gpl 'git pull --rebase'
+
+# Docker 快捷操作
+abbr -a dc 'docker compose'
+abbr -a dps 'docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}"'
+
+# 系统工具
+abbr -a myip 'curl -s ifconfig.me'
+abbr -a ports 'ss -tlnp'
+
+# ---------- 5. 自定义函数 ----------
+# Fish 的函数可以直接写在 config.fish 中
+# 也可以放在 ~/.config/fish/functions/ 目录下（自动延迟加载）
+
+# mkcd — 创建目录并进入
+function mkcd --description "创建目录并进入"
+    mkdir -p $argv[1]; and cd $argv[1]
+end
+
+# extract — 万能解压
+function extract --description "自动识别格式并解压文件"
+    if test ! -f $argv[1]
+        echo "错误: '$argv[1]' 不是有效文件" >&2
+        return 1
+    end
+    switch $argv[1]
+        case '*.tar.bz2'
+            tar xjf $argv[1]
+        case '*.tar.gz' '*.tgz'
+            tar xzf $argv[1]
+        case '*.tar.xz'
+            tar xJf $argv[1]
+        case '*.zip'
+            unzip $argv[1]
+        case '*.gz'
+            gunzip $argv[1]
+        case '*.bz2'
+            bunzip2 $argv[1]
+        case '*.rar'
+            unrar x $argv[1]
+        case '*.7z'
+            7z x $argv[1]
+        case '*.xz'
+            xz -d $argv[1]
+        case '*.zst'
+            zstd -d $argv[1]
+        case '*'
+            echo "无法识别的压缩格式: '$argv[1]'" >&2
+            return 1
+    end
+end
+
+# backup — 快速备份文件
+function backup --description "创建文件的时间戳备份"
+    cp $argv[1] "$argv[1].bak."(date +%Y%m%d_%H%M%S)
+end
+
+# fcd — 使用 fzf 模糊搜索目录并 cd
+function fcd --description "fzf 模糊跳转目录"
+    set -l dir (find . -type d 2>/dev/null | fzf --preview 'ls -la {}')
+    if test -n "$dir"
+        cd $dir
+    end
+end
+
+# serve — 快速启动 HTTP 文件服务器
+function serve --description "启动 Python HTTP 服务器"
+    set -l port (test -n "$argv[1]"; and echo $argv[1]; or echo 8000)
+    echo "在 http://localhost:$port 启动文件服务器..."
+    python3 -m http.server $port
+end
+
+# ---------- 6. 按键绑定 ----------
+# Fish 使用 bind 命令设置快捷键
+function fish_user_key_bindings
+    # fzf 快捷键集成
+    if type -q fzf_key_bindings
+        fzf_key_bindings
+    end
+
+    # Ctrl+Z 切换前后台（将挂起的任务恢复）
+    bind \cz 'fg 2>/dev/null; commandline -f repaint'
+
+    # Alt+C 复制当前命令行到剪贴板（macOS）
+    bind \ec 'commandline | pbcopy; commandline -f repaint'
+end
+
+# ---------- 7. Fisher 插件管理 ----------
+# Fisher 是 Fish 的轻量级插件管理器
+# 安装: curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
+#
+# 推荐插件（使用 fisher install 安装）：
+# fisher install jorgebucaran/fisher          # 插件管理器自身
+# fisher install PatrickF1/fzf.fish           # fzf 深度集成
+# fisher install jethrokuan/z                 # 智能目录跳转（类似 zoxide）
+# fisher install jorgebucaran/autopair.fish   # 自动补全括号和引号
+# fisher install meaningful-ooo/sponge        # 自动从历史中清除失败命令
+# fisher install gazorby/fifc                 # fzf 驱动的补全界面
+
+# ---------- 8. 主题与颜色 ----------
+# Fish 内置主题系统，使用 fish_config 命令在浏览器中配置
+# 或手动设置颜色变量
+set -g fish_color_command green              # 有效命令显示绿色
+set -g fish_color_error red                  # 无效命令显示红色
+set -g fish_color_param normal               # 参数使用默认颜色
+set -g fish_color_quote yellow               # 引号内字符串黄色
+set -g fish_color_autosuggestion 555         # 自动建议灰色
+set -g fish_color_comment brblack            # 注释暗灰色
+set -g fish_color_selection --background=333 # 选中背景色
+
+# ---------- 9. 外部工具集成 ----------
+# Starship 提示符
+if type -q starship
+    starship init fish | source
+end
+
+# zoxide 智能目录跳转
+if type -q zoxide
+    zoxide init fish | source
+end
+
+# fnm — Node.js 版本管理
+if type -q fnm
+    fnm env --use-on-cd --shell fish | source
+end
+
+# direnv — 目录级环境变量
+if type -q direnv
+    direnv hook fish | source
+end
+```
+
+## 配置说明
+
+### 缩写 vs 别名
+
+Fish 同时支持 `abbr`（缩写）和 `alias`（别名），但推荐优先使用缩写。缩写在按空格或回车时展开为完整命令，你可以在执行前看到并修改它。别名则完全隐藏原始命令，在调试和分享命令时容易造成困惑。
+
+### PATH 管理
+
+`fish_add_path` 是 Fish 3.2+ 引入的便捷函数，它自动处理去重且只在路径存在时添加。相比手动操作 `$PATH` 变量，它更安全也更简洁。
+
+### 函数自动加载
+
+Fish 支持将函数放在 `~/.config/fish/functions/` 目录下，每个函数一个文件（文件名与函数名一致），Fish 会在首次调用时自动加载。这种机制既加快了启动速度，又便于管理。对于复杂函数建议使用此方式，简单函数可以留在 `config.fish` 中。
+
+### 插件管理
+
+Fisher 是目前最活跃的 Fish 插件管理器，安装和更新都只需一条命令。`fzf.fish` 插件提供了比原生更强大的 fzf 集成，包括文件搜索（`Ctrl+Alt+F`）、历史搜索（`Ctrl+R`）和进程搜索（`Ctrl+Alt+P`）。
+
+## 常用技巧
+
+- 输入命令后按右箭头接受自动建议，按 `Alt+Right` 逐词接受
+- 使用 `funced 函数名` 可以在交互式编辑器中修改函数，`funcsave 函数名` 保存到文件
+- `fish_config` 命令会打开一个 Web 界面，让你可视化配置颜色、提示符和函数
+- Fish 不支持 `!!` 和 `$?` 等 Bash 语法，但可以用 `$status` 获取上一条命令的退出码
+- 使用 `string` 内置命令处理字符串操作，比调用 `sed`/`awk` 更高效
+- `prevd` 和 `nextd` 可以在目录历史中前后跳转，类似浏览器的前进/后退
+- 将 `~/.config/fish/` 整个目录纳入 dotfiles 版本管理

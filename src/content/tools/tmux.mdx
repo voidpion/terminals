@@ -1,0 +1,66 @@
+---
+title: "tmux"
+description: "终端多路复用器，支持会话管理、窗口分割和后台保持"
+website: "https://github.com/tmux/tmux"
+github: "https://github.com/tmux/tmux"
+tags: ["多路复用", "会话管理", "效率工具"]
+featured: true
+order: 7
+category: "multiplexer"
+install_cmd: "brew install tmux"
+written_in: "C"
+---
+
+## 简介
+
+tmux 是一个终端多路复用器，允许你在一个终端窗口中创建多个会话、窗口和窗格。即使断开连接，tmux 中的程序也会继续运行，非常适合远程服务器管理。
+
+## 安装
+
+```bash
+# macOS
+brew install tmux
+
+# Ubuntu/Debian
+sudo apt install tmux
+```
+
+## 核心概念
+
+- **会话 (Session)**: 最顶层的容器，可以包含多个窗口
+- **窗口 (Window)**: 类似于浏览器标签页
+- **窗格 (Pane)**: 窗口内的分割区域
+
+## 常用命令
+
+```bash
+# 新建会话
+tmux new -s myproject
+
+# 列出会话
+tmux ls
+
+# 附加到会话
+tmux attach -t myproject
+
+# 断开会话（不关闭）
+# 在 tmux 中按 Ctrl+b d
+```
+
+## 快捷键（默认前缀 Ctrl+b）
+
+| 按键 | 功能 |
+|------|------|
+| `%` | 垂直分割窗格 |
+| `"` | 水平分割窗格 |
+| `c` | 新建窗口 |
+| `n/p` | 下/上一个窗口 |
+| `方向键` | 切换窗格 |
+| `d` | 断开会话 |
+| `z` | 全屏/还原窗格 |
+
+## 推荐插件
+
+- **TPM** — tmux 插件管理器
+- **tmux-resurrect** — 会话持久化，重启后恢复
+- **tmux-continuum** — 自动保存/恢复会话

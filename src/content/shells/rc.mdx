@@ -1,0 +1,170 @@
+---
+title: "Rc"
+description: "Plan 9 Shell，语法极简纯净，以最少的规则实现最大的表达力"
+website: "https://9fans.github.io/plan9port/"
+github: "https://github.com/rakitzis/rc"
+tags: ["极简", "Plan9", "经典", "研究型"]
+featured: false
+order: 17
+language: "C"
+posix_compatible: false
+default_on: ["Plan 9"]
+config_file: ".rcrc"
+---
+
+## 简介
+
+Rc 是由 Tom Duff 为 Bell Labs 的 Plan 9 操作系统设计的命令行 Shell。它的设计目标是修正 Bourne Shell 中的语法缺陷和不一致之处，用更少、更清晰的规则来实现同等甚至更强的表达能力。Rc 的语法极度精简——没有 `$()` 与反引号的混乱、没有 `[[ ]]` 与 `[ ]` 的双重标准、没有花括号展开的隐式魔法，一切都通过少数几条正交的规则组合而成。
+
+Rc 最初运行在 Plan 9 from Bell Labs 上，是该系统的默认 Shell。后来 Byron Rakitzis 将其移植到 Unix 系统，使其可以在 Linux、macOS 和各种 BSD 上运行。Plan 9 from User Space（plan9port）项目也包含了 rc 的实现。虽然 Rc 在桌面用户中并不流行，但它在编程语言和系统设计研究社区中享有很高的声誉，被视为"Shell 语言可以做到多简洁"的典范。
+
+Rc 的影响深远：它直接启发了 Es shell（一个基于 Rc 的函数式 Shell），其设计哲学也影响了后来许多试图简化 Shell 语法的项目。如果你对编程语言设计感兴趣，或者厌倦了 POSIX Shell 中累积了数十年的语法包袱，Rc 值得深入了解。
+
+## 安装
+
+```bash
+# macOS（通过 plan9port）
+brew install plan9port
+# rc 位于 $(brew --prefix)/opt/plan9port/bin/9 rc
+# 或直接运行：
+9 rc
+
+# macOS / Linux（编译 Rakitzis 版本）
+git clone https://github.com/rakitzis/rc.git
+cd rc
+./configure
+make
+sudo make install
+
+# Ubuntu/Debian（Rakitzis 版本）
+sudo apt-get install rc
+
+# FreeBSD
+sudo pkg install rc
+
+# Plan 9（已内置，无需安装）
+# rc 是 Plan 9 的默认 Shell
+
+# 启动 rc
+rc
+```
+
+## 核心特性
+
+- **极简语法**: 整个语法可以用不到一页的 BNF 文法描述，学习曲线极短，却足以表达复杂的控制流
+- **一致的变量处理**: 变量是字符串列表（list），`$var` 展开为列表元素，没有"引号分词"陷阱；空列表与空字符串有明确区分
+- **简洁的引用规则**: 只有一种引用方式——单引号 `'...'`，其中用 `''` 表示字面单引号，没有双引号的变量展开与转义混乱
+- **干净的重定向语法**: 用 `>[2]` 替代 Bourne Shell 的 `2>`，用 `>[2=1]` 替代 `2>&1`，更加直观和一致
+- **Here 文档简化**: 使用 `<<EOF` 的同时保持语法干净，不存在 `<<-` 等变体的混淆
+- **函数即命令**: 函数定义简洁——`fn name { body }`，函数与外部命令在使用方式上完全一致
+- **信号处理**: 通过 `fn sigint { }` 等以信号名命名的函数优雅地处理信号，比 `trap` 更直观
+- **管道与重定向的正交组合**: 管道和重定向可以自由组合，没有 POSIX Shell 中的各种边界情况
+- **轻量高效**: 极小的代码量（仅数千行 C 代码），启动速度极快，资源占用极低
+
+## 配置推荐
+
+```rc
+# ~/.rcrc（Rc 启动配置文件）
+
+# ---------- 环境变量 ----------
+EDITOR=nvim
+path=($home/.local/bin $home/bin /usr/local/bin /usr/bin /bin)
+prompt=('rc% ' '   ')    # 主提示符和续行提示符
+
+# ---------- 常用别名（通过函数实现）----------
+fn ll { ls -lah $* }
+fn la { ls -la $* }
+fn gs { git status $* }
+fn gp { git pull --rebase $* }
+fn gco { git checkout $* }
+fn .. { cd .. }
+fn ... { cd ../.. }
+
+# ---------- 实用函数 ----------
+# 创建目录并进入
+fn mkcd {
+    mkdir -p $1 && cd $1
+}
+
+# 显示 PATH 中的目录（每行一个）
+fn showpath {
+    for (d in $path)
+        echo $d
+}
+
+# 简易计算器
+fn calc {
+    echo $* | bc -l
+}
+
+# 查找文件
+fn ff {
+    find . -name '*'^$1^'*' -print
+}
+
+# 查看进程
+fn psg {
+    ps aux | grep $1 | grep -v grep
+}
+
+# ---------- 交互式设置 ----------
+# 历史记录（plan9port 版本支持）
+if (test -x /usr/local/bin/rlwrap)
+    fn rc { rlwrap /usr/bin/rc $* }
+
+# ---------- 条件加载 ----------
+if (test -f $home/.rcrc.local)
+    . $home/.rcrc.local
+```
+
+## 与其他 Shell 的对比
+
+| 特性 | Rc | Bash | Zsh | Fish |
+|------|------|------|-----|------|
+| POSIX 兼容 | 否 | 是 | 是 | 否 |
+| 语法复杂度 | 极低 | 高 | 高 | 中等 |
+| 引用规则 | 仅单引号 | 单/双/反引号 | 单/双/反引号 | 单/双引号 |
+| 变量模型 | 字符串列表 | 字符串 | 字符串/数组 | 列表 |
+| 代码规模 | ~5000 行 | ~100000 行 | ~130000 行 | ~80000 行 |
+| 交互功能 | 基础 | 基础 | 丰富 | 丰富 |
+| 脚本可靠性 | 高（规则少） | 中（陷阱多） | 中 | 高 |
+| 起源 | Plan 9 (1990) | Unix (1989) | Unix (1990) | 独立 (2005) |
+
+## Rc 语法速览
+
+```rc
+# 变量赋值（注意：等号两侧不能有空格）
+name=world
+echo $name
+
+# 列表变量
+colors=(red green blue)
+echo $colors(2)          # 输出 green（索引从 1 开始）
+
+# 条件判断
+if (test -f config.txt)
+    echo 'found config'
+if not
+    echo 'no config'
+
+# 循环
+for (f in *.txt)
+    echo 'processing:' $f
+
+# 重定向
+echo error message >[2] /dev/null    # stderr 重定向
+cmd >[2=1]                           # stderr 合并到 stdout
+cmd1 |[2] cmd2                       # 仅管道 stderr
+
+# 函数定义
+fn greet {
+    echo 'Hello,' $1
+}
+greet 'Plan 9'
+
+# 命令替换
+files=`{ls *.c}
+n=`{wc -l < main.c}
+```
+
+Rc 的价值不在于日常交互的便捷性（它没有语法高亮、自动补全等现代功能），而在于它作为一种语言的纯粹和优雅。它证明了一个 Shell 不需要数十年的语法堆砌就能具备强大的表达力。对于想要理解 Shell 语言本质、或者在嵌入式/极简环境中需要可靠脚本工具的用户，Rc 是一个极具启发性的选择。

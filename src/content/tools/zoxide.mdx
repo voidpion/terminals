@@ -1,0 +1,59 @@
+---
+title: "zoxide"
+description: "更智能的 cd 命令，通过学习你的使用习惯来快速跳转目录"
+github: "https://github.com/ajeetdsouza/zoxide"
+tags: ["目录跳转", "效率工具", "Rust"]
+featured: true
+order: 5
+category: "productivity"
+replaces: "cd"
+install_cmd: "brew install zoxide"
+written_in: "Rust"
+---
+
+## 简介
+
+zoxide 是一个更智能的 `cd` 命令替代品。它会记住你最常访问的目录，让你只需要输入路径的一部分就能快速跳转。灵感来自 z 和 autojump，但用 Rust 重写，速度更快。
+
+## 安装
+
+```bash
+# macOS
+brew install zoxide
+
+# Ubuntu/Debian
+sudo apt install zoxide
+
+# Cargo
+cargo install zoxide --locked
+```
+
+## 配置
+
+```bash
+# 在 .zshrc 中添加初始化
+eval "$(zoxide init zsh)"
+
+# 如果想用 cd 替代 z
+eval "$(zoxide init zsh --cmd cd)"
+```
+
+## 常用命令
+
+```bash
+# 跳转到匹配 "proj" 的最高频目录
+z proj
+
+# 交互式选择（需要 fzf）
+zi proj
+
+# 添加目录到数据库
+zoxide add /path/to/dir
+
+# 查看排名
+zoxide query -ls
+```
+
+## 推荐搭配
+
+- **fzf** — `zi` 命令使用 fzf 进行交互式选择

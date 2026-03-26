@@ -1,0 +1,165 @@
+---
+title: "Windows Terminal"
+description: "微软官方推出的现代化终端应用，支持多标签页、GPU 加速和丰富的自定义选项"
+screenshot: "/screenshots/windows-terminal.png"
+website: "https://aka.ms/terminal"
+github: "https://github.com/microsoft/terminal"
+tags: ["Windows", "免费", "GPU加速", "微软"]
+featured: true
+order: 6
+platforms: ["Windows"]
+license: "MIT"
+gpu_accelerated: true
+multiplexer_builtin: false
+pricing: "free"
+---
+
+## 简介
+
+Windows Terminal 是微软于 2019 年推出的现代化终端应用，作为 Windows 平台上传统 CMD 和 PowerShell 控制台的替代品。它支持多标签页、GPU 加速渲染、Unicode/UTF-8 字符、丰富的文本渲染和高度可定制的外观，彻底改变了 Windows 上的命令行体验。
+
+Windows Terminal 可以同时承载多种 Shell 环境，包括 PowerShell、CMD、WSL（Windows Subsystem for Linux）、Azure Cloud Shell 等，并在统一的界面中通过标签页进行管理。这意味着开发者可以在同一个窗口中同时使用 PowerShell 管理 Windows 系统、使用 WSL 中的 Bash 进行 Linux 开发，以及连接 Azure 云端资源。
+
+从 Windows 11 开始，Windows Terminal 已成为系统默认的终端应用。对于 Windows 10 用户，可以从 Microsoft Store 免费下载安装。它使用 DirectX/DirectWrite 进行 GPU 加速文本渲染，确保高 DPI 显示器上的清晰显示和流畅滚动。
+
+## 安装
+
+### 通过 Microsoft Store 安装（推荐）
+
+在 Microsoft Store 中搜索 "Windows Terminal" 并安装，这是最简单的方式，可自动获取更新。
+
+### 通过 Winget 安装
+
+```powershell
+winget install Microsoft.WindowsTerminal
+
+# 安装预览版
+winget install Microsoft.WindowsTerminal.Preview
+```
+
+### 通过 Scoop 安装
+
+```powershell
+scoop install windows-terminal
+```
+
+### 通过 Chocolatey 安装
+
+```powershell
+choco install microsoft-windows-terminal
+```
+
+### 验证安装
+
+```powershell
+# 检查版本
+wt --version
+
+# 以新标签页打开 PowerShell
+wt -p "PowerShell"
+
+# 打开特定的 WSL 发行版
+wt -p "Ubuntu"
+```
+
+## 核心特性
+
+- **多标签页** - 在同一窗口中管理多个终端会话，支持拖拽排列标签页
+- **GPU 加速渲染** - 基于 DirectX 的文本渲染引擎，高 DPI 显示清晰流畅
+- **多 Shell 支持** - 同时支持 PowerShell、CMD、WSL、Azure Cloud Shell 等多种 Shell
+- **分屏窗格** - 支持水平和垂直分屏，可在同一标签页中同时查看多个终端
+- **丰富的文本渲染** - 完整的 Unicode、UTF-8 和 Emoji 支持，连字渲染
+- **可自定义外观** - 支持亚克力/云母透明效果、自定义背景图片、配色方案
+- **JSON 配置** - 通过 JSON 文件进行完整的配置管理，支持配色、快捷键等
+- **命令行启动参数** - 丰富的 `wt` 命令行参数，可脚本化启动多窗格布局
+- **Quake 模式** - 类似 Quake 风格的下拉终端，通过快捷键快速呼出
+- **颜色主题** - 内置多款配色方案，同时支持自定义主题和第三方主题
+- **搜索功能** - 内置终端内容搜索，支持正则表达式匹配
+- **像素着色器** - 支持自定义 HLSL 像素着色器实现特殊视觉效果
+
+## 配置推荐
+
+Windows Terminal 的配置文件位于：
+`%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json`
+
+也可以通过 `Ctrl+Shift+,` 快捷键直接打开配置文件。以下是一份推荐的基础配置：
+
+```json
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+    "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+    "copyOnSelect": true,
+    "copyFormatting": "none",
+    "profiles": {
+        "defaults": {
+            "font": {
+                "face": "JetBrains Mono",
+                "size": 13,
+                "weight": "normal"
+            },
+            "opacity": 95,
+            "useAcrylic": false,
+            "padding": "10",
+            "antialiasingMode": "grayscale",
+            "cursorShape": "bar",
+            "colorScheme": "Catppuccin Mocha",
+            "scrollbarState": "hidden",
+            "altGrAliasing": true
+        },
+        "list": [
+            {
+                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+                "name": "PowerShell",
+                "source": "Windows.Terminal.PowershellCore",
+                "startingDirectory": "~"
+            },
+            {
+                "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+                "name": "Ubuntu",
+                "source": "Windows.Terminal.Wsl",
+                "startingDirectory": "~"
+            }
+        ]
+    },
+    "schemes": [
+        {
+            "name": "Catppuccin Mocha",
+            "foreground": "#CDD6F4",
+            "background": "#1E1E2E",
+            "cursorColor": "#F5E0DC",
+            "selectionBackground": "#585B70",
+            "black": "#45475A",
+            "red": "#F38BA8",
+            "green": "#A6E3A1",
+            "yellow": "#F9E2AF",
+            "blue": "#89B4FA",
+            "purple": "#F5C2E7",
+            "cyan": "#94E2D5",
+            "white": "#BAC2DE",
+            "brightBlack": "#585B70",
+            "brightRed": "#F38BA8",
+            "brightGreen": "#A6E3A1",
+            "brightYellow": "#F9E2AF",
+            "brightBlue": "#89B4FA",
+            "brightPurple": "#F5C2E7",
+            "brightCyan": "#94E2D5",
+            "brightWhite": "#A6ADC8"
+        }
+    ],
+    "actions": [
+        { "command": "paste", "keys": "ctrl+v" },
+        { "command": "find", "keys": "ctrl+shift+f" },
+        { "command": { "action": "splitPane", "split": "horizontal" }, "keys": "alt+shift+-" },
+        { "command": { "action": "splitPane", "split": "vertical" }, "keys": "alt+shift+plus" },
+        { "command": { "action": "moveFocus", "direction": "left" }, "keys": "alt+h" },
+        { "command": { "action": "moveFocus", "direction": "right" }, "keys": "alt+l" },
+        { "command": { "action": "moveFocus", "direction": "up" }, "keys": "alt+k" },
+        { "command": { "action": "moveFocus", "direction": "down" }, "keys": "alt+j" },
+        { "command": "togglePaneZoom", "keys": "alt+shift+z" },
+        { "command": "quakeMode", "keys": "win+`" }
+    ]
+}
+```
+
+> **提示**：Windows Terminal 搭配 PowerShell 7 和 Oh My Posh 提示符主题引擎可获得媲美 macOS/Linux 的终端体验。对于 WSL 用户，建议将 WSL 发行版的起始目录设为 Linux 家目录 `~` 而非 Windows 挂载路径，以获得更好的文件系统性能。使用 `wt` 命令行工具可以编写脚本自动启动预设的多窗格工作布局，非常适合每日固定的开发环境配置。

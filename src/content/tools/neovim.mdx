@@ -1,0 +1,96 @@
+---
+title: "neovim"
+description: "Vim 的现代化重构版"
+website: "https://neovim.io/"
+github: "https://github.com/neovim/neovim"
+tags: ["编辑器", "Vim", "Lua"]
+featured: false
+order: 15
+category: "productivity"
+replaces: "vim"
+install_cmd: "brew install neovim"
+written_in: "C"
+---
+
+## 简介
+
+Neovim 是 Vim 的一个雄心勃勃的重构版本，旨在积极重构 Vim 代码库以实现更好的可维护性、可扩展性和现代化特性。它完全兼容 Vim 的编辑模型和大部分配置，同时引入了内置 LSP 客户端、Lua 脚本引擎、异步任务处理等现代功能。
+
+Neovim 最大的改进之一是原生支持 Lua 作为配置和插件语言，相比 VimScript 具有更好的性能和更清晰的语法。内置的 LSP（语言服务器协议）客户端让 Neovim 可以获得与 VS Code 同级的代码补全、诊断和重构能力。活跃的社区生态催生了 lazy.nvim、telescope、treesitter 等优秀插件，使 Neovim 成为一个功能完整的现代 IDE。
+
+## 安装
+
+```bash
+# macOS
+brew install neovim
+
+# Ubuntu/Debian (最新版)
+sudo add-apt-repository ppa:neovim-ppa/unstable
+sudo apt update && sudo apt install neovim
+
+# pip
+pip install neovim
+
+# 从源码编译
+git clone https://github.com/neovim/neovim.git
+cd neovim && make CMAKE_BUILD_TYPE=Release && sudo make install
+```
+
+## 核心特性
+
+- **内置 LSP**: 原生语言服务器协议支持，提供补全和诊断
+- **Lua 引擎**: 使用 Lua 编写配置和插件，性能优异
+- **Tree-sitter**: 基于语法树的高亮和代码分析
+- **异步任务**: 原生支持异步 I/O 和任务处理
+- **终端模拟器**: 内置终端，无需离开编辑器
+- **远程插件**: 支持任意语言编写的远程插件架构
+
+## 使用示例
+
+```bash
+# 启动 Neovim
+nvim
+
+# 打开文件
+nvim file.py
+
+# 以只读模式打开
+nvim -R file.conf
+
+# 在指定行打开文件
+nvim +42 file.py
+
+# 打开多个文件（标签页）
+nvim -p file1.py file2.py
+
+# 对比两个文件
+nvim -d file1.txt file2.txt
+
+# 从 stdin 读取
+cat log.txt | nvim -
+
+# 执行命令后退出
+nvim -c ":%s/foo/bar/g" -c ":wq" file.txt
+
+# 检查健康状态
+nvim +checkhealth
+```
+
+### 配置入门
+
+```lua
+-- ~/.config/nvim/init.lua 基础配置示例
+vim.opt.number = true         -- 显示行号
+vim.opt.relativenumber = true -- 相对行号
+vim.opt.tabstop = 4           -- Tab 宽度
+vim.opt.shiftwidth = 4        -- 缩进宽度
+vim.opt.expandtab = true      -- 用空格代替 Tab
+vim.opt.clipboard = "unnamedplus" -- 系统剪贴板
+```
+
+## 推荐搭配
+
+- **tmux / zellij** — 终端复用器中运行 Neovim
+- **ripgrep** — 作为 Neovim 模糊搜索的后端
+- **lazygit** — 在 Neovim 中集成 Git 操作
+- **fd** — 作为 telescope 等插件的文件查找后端

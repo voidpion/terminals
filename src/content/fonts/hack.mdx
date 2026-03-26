@@ -1,0 +1,92 @@
+---
+title: "Hack"
+description: "为源码设计的开源等宽字体，字符清晰辨识度高，阅读体验流畅自然"
+website: "https://sourcefoundry.org/hack/"
+github: "https://github.com/source-foundry/Hack"
+tags: ["编程字体", "清晰", "开源"]
+featured: false
+order: 7
+ligatures: false
+nerd_font_variant: true
+styles: ["Regular", "Bold", "Italic", "Bold Italic"]
+preview_text: "Terminal > ls -la ~/.config"
+---
+
+## 简介
+
+Hack 是由 Source Foundry 维护的一款开源等宽编程字体，其设计理念是"专为源代码而生"。Hack 基于经典的 DejaVu Sans Mono 和 Bitstream Vera Sans Mono 字体演化而来，在继承前辈优秀可读性的基础上，对数百个字形进行了重新设计和优化，使其更加适合现代编程场景中的代码阅读需求。
+
+Hack 的字形风格简洁有力，笔画粗细适中，在中小字号下依然保持出色的清晰度。它特别注重易混淆字符的区分：`0`（零）采用斜杠标记，`l`（小写 L）带底部弯钩，`1`（一）有明显衬线，这些设计让开发者在快速扫描代码时不会误读。Hack 虽然不支持连字，但对于偏好"所见即所得"、不喜欢符号合并渲染的开发者来说，这恰恰是一个优点。
+
+## 安装
+
+```bash
+# macOS — Homebrew
+brew install --cask font-hack
+brew install --cask font-hack-nerd-font  # Nerd Font 变体
+
+# Ubuntu/Debian
+sudo apt install fonts-hack-ttf
+
+# Arch Linux
+sudo pacman -S ttf-hack
+
+# 手动安装 Nerd Font 变体
+mkdir -p ~/.local/share/fonts && cd ~/.local/share/fonts
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip
+unzip Hack.zip -d Hack && fc-cache -fv
+
+# Windows — Scoop
+scoop bucket add nerd-fonts
+scoop install nerd-fonts/Hack-NF
+```
+
+## 特性亮点
+
+- **源码优先设计**: 字形专为代码阅读优化，笔画清晰、结构分明
+- **优秀的字符辨识度**: `0`/`O`、`1`/`l`/`I` 等易混淆字符有清晰的区分设计
+- **经典传承**: 基于 DejaVu Sans Mono 和 Bitstream Vera 演化，继承了久经考验的可读性基因
+- **适中的字符宽度**: 不像 Iosevka 那样极窄，也不像某些字体那样过宽，视觉平衡感好
+- **Powerline 兼容**: Nerd Font 变体完整支持 Powerline 符号和各类图标
+- **开源免费**: MIT 许可证，使用和分发无任何限制
+
+## 推荐配置
+
+### 终端模拟器
+
+```toml
+# Alacritty — ~/.config/alacritty/alacritty.toml
+[font]
+size = 14.0
+[font.normal]
+family = "Hack Nerd Font"
+style = "Regular"
+[font.bold]
+family = "Hack Nerd Font"
+style = "Bold"
+```
+
+```conf
+# Kitty — ~/.config/kitty/kitty.conf
+font_family      Hack Nerd Font
+bold_font        auto
+italic_font      auto
+font_size        14.0
+```
+
+```lua
+-- WezTerm — ~/.wezterm.lua
+config.font = wezterm.font('Hack Nerd Font')
+config.font_size = 14.0
+```
+
+### VS Code
+
+```json
+{
+  "editor.fontFamily": "'Hack', 'Hack Nerd Font', monospace",
+  "editor.fontSize": 14,
+  "editor.fontLigatures": false,
+  "terminal.integrated.fontFamily": "'Hack Nerd Font'"
+}
+```

@@ -1,0 +1,51 @@
+---
+title: "Snazzy"
+description: "高饱和度的彩虹暗色配色方案，视觉冲击力强，终端界的霓虹灯"
+github: "https://github.com/sindresorhus/hyper-snazzy"
+tags: ["配色", "高饱和", "彩虹", "鲜艳", "暗色"]
+featured: false
+order: 21
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Hyper", "Windows Terminal"]
+---
+
+## 简介
+
+Snazzy 是由知名开源开发者 Sindre Sorhus 创建的一款高饱和度暗色配色方案，最初作为 Hyper 终端的主题发布。它的设计风格大胆而鲜明——在深色背景上使用一组饱和度极高的彩虹色彩，包括明亮的青色、鲜艳的粉红色、活力四射的绿色和耀眼的黄色。这种配色让终端窗口看起来就像是夜晚的霓虹灯街道，充满了活力和视觉张力。
+
+尽管高饱和度配色在色彩理论上可能不够"温和"，但 Snazzy 在实际使用中的可读性出人意料地好。这得益于它精心选择的背景色——一种带有微妙蓝色调的深灰色，与明亮的前景色形成了清晰但不刺眼的对比。Snazzy 的色彩搭配使得不同类型的终端输出（命令、路径、错误、注释等）在视觉上有非常明显的区分度，这在快速浏览大量终端输出时是一个实实在在的效率优势。
+
+## 安装与使用
+
+### Hyper
+
+```bash
+# Snazzy 的原生平台
+hyper install hyper-snazzy
+```
+
+### iTerm2
+
+```bash
+# 使用 iterm2-snazzy 社区移植
+# 下载 Snazzy.itermcolors 文件
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/snazzy.toml"]
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'Snazzy (base16)'
+```
+
+## 适用场景
+
+Snazzy 非常适合喜欢鲜艳色彩和视觉个性的开发者。如果你觉得大多数暗色主题看起来都差不多、沉闷而无趣，Snazzy 的霓虹风格一定会让你眼前一亮。它特别适合短时间高强度的终端操作——鲜明的色彩区分能帮助你在密集的输出中快速定位关键信息。Snazzy 也是编程直播和录屏时的热门选择，因为高饱和度的配色在视频中的表现力远好于柔和主题。如果你是一个追求个性化工作环境的年轻开发者，Snazzy 值得尝试。

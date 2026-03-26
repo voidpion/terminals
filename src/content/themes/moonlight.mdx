@@ -1,0 +1,50 @@
+---
+title: "Moonlight"
+description: "以月光为灵感的深蓝紫配色方案，氛围优雅宁静，适合夜间编码"
+github: "https://github.com/atomiks/moonlight-vscode-theme"
+tags: ["配色", "月光", "深蓝紫", "暗色", "优雅"]
+featured: false
+order: 22
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal"]
+---
+
+## 简介
+
+Moonlight 是一款以月光为灵感的深蓝紫配色方案，最初由 atomiks 为 VS Code 创建。它的设计灵感来源于月夜的宁静氛围——背景采用深邃的靛蓝色，语法高亮则使用了一组经过精心调配的蓝色、紫色、青色和柔和的暖色点缀。整体视觉效果如同在月光下编码，既有足够的对比度保证可读性，又不失浪漫优雅的氛围感。
+
+Moonlight 的色彩搭配从 Palenight 和 Shades of Purple 等主题中汲取了灵感，但走出了自己独特的路线。它的背景色比大多数蓝色系主题略深一些，带有更浓的紫色调，这让代码区域有一种更加沉浸的感觉。前景色的选择同样讲究——主文本使用柔和的浅灰蓝色，关键字和字符串分别使用不同色相的蓝紫色调，而数值和特殊标记则用暖色（如琥珀色和珊瑚色）来形成视觉焦点。这种冷暖结合的方式让配色既统一又不单调。
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+# 从社区移植项目获取 Moonlight 的 .itermcolors 文件
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/moonlight.toml"]
+```
+
+### Kitty
+
+```conf
+# 将 Moonlight 配色添加到 kitty.conf
+include themes/moonlight.conf
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'Moonlight II (Gogh)'
+```
+
+## 适用场景
+
+Moonlight 是夜间编码爱好者的理想配色选择。它的深蓝紫基调比纯黑色背景更有温度，比浅色主题对眼睛的刺激更小，特别适合在夜深人静时沉浸式编码。如果你是全栈开发者，希望终端配色与 VS Code 中的 Moonlight 主题保持一致，那么使用终端版本能带来无缝的视觉体验。Moonlight 也很适合搭配蓝光过滤功能一起使用，因为其本身偏蓝紫的色调在蓝光过滤后依然能保持良好的色彩层次和可读性。

@@ -1,0 +1,71 @@
+---
+title: "Typewritten"
+description: "打字机灵感极简 Zsh 提示符，追求纯粹文字之美的优雅设计"
+website: "https://typewritten.dev/"
+github: "https://github.com/reobin/typewritten"
+tags: ["极简", "提示符", "Zsh", "打字机"]
+featured: false
+order: 30
+theme_type: "prompt"
+compatible_with: ["Zsh"]
+---
+
+## 简介
+
+Typewritten 是一款以打字机为灵感的极简 Zsh 提示符。它的设计哲学是回归文字本身的纯粹之美——没有 Powerline 箭头、没有花哨的图标符号、不需要任何特殊字体。提示符仅由简洁的文字和符号组成，营造出一种安静专注的编码氛围。
+
+尽管外观极简，Typewritten 的功能并不简陋。它支持多种布局模式（单行、双行、半双行），能显示 Git 分支和状态信息，还可以在右侧提示符中展示当前目录。所有配置都通过环境变量完成，简单直接。对于追求极简审美、希望终端界面干净整洁的开发者来说，Typewritten 是理想的选择。
+
+## 安装
+
+```bash
+# 通过 npm 安装
+npm install -g typewritten
+
+# 通过 Oh My Zsh
+git clone https://github.com/reobin/typewritten.git \
+  $ZSH_CUSTOM/themes/typewritten
+ln -s "$ZSH_CUSTOM/themes/typewritten/typewritten.zsh-theme" \
+  "$ZSH_CUSTOM/themes/typewritten.zsh-theme"
+# 设置 ZSH_THEME="typewritten"
+
+# 通过 Antibody
+antibody bundle reobin/typewritten
+
+# 手动安装
+git clone https://github.com/reobin/typewritten.git ~/typewritten
+# 在 ~/.zshrc 中: source ~/typewritten/typewritten.zsh
+```
+
+## 核心特性
+
+- **无需特殊字体**: 使用纯 ASCII 字符，任何终端环境均可完美显示
+- **多种布局**: 支持 singleline、multiline、pure 等多种布局模式
+- **Git 集成**: 显示当前分支、工作区变更和暂存状态
+- **目录信息**: 可在左侧或右侧显示当前完整路径或缩写路径
+- **高度可定制**: 通过环境变量自定义颜色、符号和显示选项
+- **轻量快速**: 代码精简，对 Shell 启动时间几乎零影响
+
+## 配置推荐
+
+```bash
+# 在 ~/.zshrc 中配置
+# 选择布局模式
+TYPEWRITTEN_PROMPT_LAYOUT="multiline"  # singleline, multiline, half_pure, pure
+
+# 自定义提示符号
+TYPEWRITTEN_SYMBOL=">"
+TYPEWRITTEN_GIT_RELATIVE_PATH=true
+
+# 自定义颜色
+TYPEWRITTEN_COLOR_MAPPINGS="primary:cyan;accent:blue;info_negative:red"
+
+# 光标样式
+TYPEWRITTEN_CURSOR="beam"  # block, beam, underscore
+
+# 右侧提示符内容
+TYPEWRITTEN_RIGHT_PROMPT_PREFIX=""
+
+# 目录显示
+TYPEWRITTEN_RELATIVE_PATH="adaptive"
+```

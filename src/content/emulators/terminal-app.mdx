@@ -1,0 +1,86 @@
+---
+title: "Terminal.app"
+description: "macOS 系统内置终端，无需安装即可使用，提供基础的命令行操作环境"
+screenshot: "/screenshots/terminal-app.png"
+tags: ["macOS", "内置", "免费"]
+featured: false
+order: 13
+platforms: ["macOS"]
+license: "Proprietary"
+gpu_accelerated: false
+multiplexer_builtin: false
+pricing: "free"
+---
+
+## 简介
+
+Terminal.app 是 macOS 系统自带的终端模拟器，自 Mac OS X 初代版本起便作为系统核心组件随操作系统一同安装。它位于"应用程序/实用工具"文件夹中，无需任何额外安装即可使用，是每一台 Mac 电脑开箱即有的命令行工具。
+
+作为 Apple 官方维护的终端应用，Terminal.app 与 macOS 系统深度集成。它完整支持 macOS 的辅助功能（Accessibility）框架、系统通知、Spotlight 搜索，以及与 Finder 的交互。对于轻度命令行用户或刚接触终端的初学者来说，Terminal.app 提供了一个简洁、稳定且无需配置的起点。
+
+Terminal.app 支持标签页、多窗口、自定义描述文件（Profile）以及基本的键盘快捷键。它默认使用 zsh 作为 Shell（macOS Catalina 起），并支持 256 色显示。然而，与 iTerm2 等第三方终端相比，Terminal.app 在功能丰富度上有明显差距——它不支持分屏、没有 GPU 加速渲染、缺少热键窗口、不支持图像显示协议，自定义能力也相对有限。
+
+对于专业开发者而言，Terminal.app 通常被视为一个临时工具或备用方案，大多数人会在安装 Mac 后很快切换到功能更强大的第三方终端模拟器。但如果你的需求仅限于偶尔执行一些基本命令，Terminal.app 完全可以胜任。
+
+## 安装
+
+Terminal.app 随 macOS 系统预装，无需任何安装步骤。
+
+### 启动方式
+
+```bash
+# 通过 Spotlight 搜索打开（推荐）
+# 按下 Cmd + Space，输入 "Terminal"，回车即可
+
+# 通过 Finder 打开
+# 前往：应用程序 -> 实用工具 -> 终端.app
+
+# 通过 Launchpad 打开
+# 打开 Launchpad -> 搜索 "Terminal" 或在"其他"文件夹中找到
+```
+
+### 设置默认 Shell
+
+```bash
+# 查看当前使用的 Shell
+echo $SHELL
+
+# 查看系统可用的 Shell
+cat /etc/shells
+
+# 更改默认 Shell 为 zsh（macOS 默认）
+chsh -s /bin/zsh
+
+# 更改默认 Shell 为 bash
+chsh -s /bin/bash
+```
+
+## 核心特性
+
+- **系统预装** - 随 macOS 自动安装，开箱即用，零配置成本
+- **描述文件系统** - 支持创建多个描述文件（Profile），每个可独立设置字体、颜色、窗口大小、背景等
+- **标签页管理** - 支持多标签页（`Cmd+T` 新建），可通过 `Cmd+数字键` 快速切换
+- **多窗口支持** - 支持同时打开多个独立终端窗口（`Cmd+N`）
+- **系统集成** - 与 macOS 辅助功能、通知中心、Spotlight 深度集成
+- **256 色支持** - 支持 256 色显示，满足大部分命令行工具的颜色需求
+- **Unicode 支持** - 支持 Unicode 字符显示，包括基本的 Emoji 渲染
+- **快捷键操作** - 常用快捷键：`Cmd+K`（清屏）、`Cmd+加号/减号`（缩放字体）、`Cmd+W`（关闭标签）
+- **安全粘贴** - 粘贴多行命令时会弹出提示，防止意外执行危险命令
+- **编码支持** - 支持多种文本编码格式切换，包括 UTF-8、GBK 等
+- **窗口组** - 支持保存和恢复窗口组，可在下次启动时自动恢复之前的工作状态
+- **Touch Bar 支持** - 在配备 Touch Bar 的 MacBook 上提供快捷操作按钮
+
+### 与 iTerm2 的主要差异
+
+| 功能 | Terminal.app | iTerm2 |
+|------|-------------|--------|
+| 分屏 | 不支持 | 支持水平/垂直分屏 |
+| GPU 渲染 | 不支持 | Metal GPU 加速 |
+| 热键窗口 | 不支持 | 全局快捷键呼出 |
+| 图像显示 | 不支持 | imgcat 协议 |
+| 即时回放 | 不支持 | 终端内容回放 |
+| 自动补全 | 不支持 | 基于历史的补全 |
+| 触发器 | 不支持 | 基于输出的自动操作 |
+| Shell 集成 | 基础 | 深度集成 |
+| 脚本扩展 | AppleScript | Python API |
+| 搜索 | 基础文本搜索 | 正则表达式搜索 |

@@ -1,0 +1,73 @@
+---
+title: "Oh My Zsh"
+description: "最流行的 Zsh 框架，拥有 300+ 插件和 150+ 主题的庞大生态系统"
+website: "https://ohmyz.sh/"
+github: "https://github.com/ohmyzsh/ohmyzsh"
+tags: ["框架", "Zsh", "插件", "生态"]
+featured: true
+order: 32
+theme_type: "framework"
+compatible_with: ["Zsh"]
+---
+
+## 简介
+
+Oh My Zsh 是 Zsh 生态中最流行、最知名的框架，拥有超过 17 万 GitHub Stars 和数百万用户。它提供了一个开箱即用的 Zsh 配置框架，内置超过 300 个插件和 150 个主题，覆盖了 Git、Docker、Node.js、Python、AWS 等几乎所有主流开发工具的快捷操作和自动补全。
+
+Oh My Zsh 的最大优势在于其庞大的社区生态和极低的上手门槛。一条安装命令就能获得丰富的 Git 别名、智能的 Tab 补全、语法高亮和自动建议等功能。对于刚接触 Zsh 的用户来说，Oh My Zsh 是最友好的入门方式；对于资深用户来说，它丰富的插件库和活跃的社区也是巨大的资源宝库。
+
+## 安装
+
+```bash
+# 通过 curl 安装
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# 通过 wget 安装
+sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+
+# 手动安装
+git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
+cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+```
+
+## 核心特性
+
+- **300+ 内置插件**: Git、Docker、kubectl、npm、pip 等主流工具全覆盖
+- **150+ 内置主题**: 从 Agnoster 到 Robbyrussell，风格多样
+- **自动更新**: 定期提示并自动拉取最新版本
+- **Git 快捷别名**: ga、gc、gp 等数十个 Git 操作缩写
+- **智能补全**: 增强的 Tab 补全，支持命令参数和文件路径
+- **插件管理**: 在 ~/.zshrc 中简单声明即可启用/禁用插件
+- **自定义目录**: `$ZSH_CUSTOM` 目录支持用户自定义扩展
+
+## 使用方式
+
+```bash
+# 在 ~/.zshrc 中配置主题
+ZSH_THEME="robbyrussell"    # 默认主题
+# ZSH_THEME="agnoster"      # Powerline 风格
+# ZSH_THEME="random"        # 每次随机
+
+# 启用插件（在 ~/.zshrc 中设置）
+plugins=(
+  git
+  docker
+  kubectl
+  node
+  npm
+  python
+  pip
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  z
+  extract
+  sudo
+)
+
+# 安装自定义插件
+git clone https://github.com/zsh-users/zsh-autosuggestions \
+  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+# 更新 Oh My Zsh
+omz update
+```

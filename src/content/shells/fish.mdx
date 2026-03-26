@@ -1,0 +1,99 @@
+---
+title: "Fish"
+description: "开箱即用的现代化交互式 Shell，零配置即可享受语法高亮和智能补全"
+website: "https://fishshell.com/"
+github: "https://github.com/fish-shell/fish-shell"
+tags: ["交互式", "用户友好", "现代化", "语法高亮"]
+featured: true
+order: 2
+language: "C"
+posix_compatible: false
+default_on: []
+config_file: "config.fish"
+---
+
+## 简介
+
+Fish（Friendly Interactive Shell）是一款专注于用户体验的现代化 Shell。与 Bash 和 Zsh 不同，Fish 不追求 POSIX 兼容性，而是从零开始设计了更直观、更一致的语法体系。它最大的亮点是无需任何配置即可提供语法高亮、智能自动建议和丰富的 Tab 补全。对于不想花时间折腾 Shell 配置但又想要优秀交互体验的用户来说，Fish 是理想之选。
+
+## 安装
+
+```bash
+# macOS
+brew install fish
+
+# Ubuntu/Debian（通过 PPA 获取最新版）
+sudo apt-add-repository ppa:fish-shell/release-3
+sudo apt update
+sudo apt install fish
+
+# Fedora
+sudo dnf install fish
+
+# Arch Linux
+sudo pacman -S fish
+
+# 设为默认 Shell
+echo $(which fish) | sudo tee -a /etc/shells
+chsh -s $(which fish)
+```
+
+## 核心特性
+
+- **开箱即用的语法高亮**: 命令存在则绿色显示，不存在则红色，路径有效则加下划线，无需安装任何插件
+- **智能自动建议**: 根据命令历史和补全规则，在光标后以灰色文字实时显示建议，按右方向键接受
+- **强大的 Tab 补全**: 内置对数千个命令的补全支持，包括命令描述、选项说明，且可通过解析 man 手册自动生成补全规则
+- **基于 Web 的配置界面**: 运行 `fish_config` 即可在浏览器中配置颜色主题、提示符和功能
+- **简洁一致的语法**: 没有 `$?`、`$()`、`[[ ]]` 等晦涩语法，用 `if`/`end`、`for`/`end` 等清晰的块结构替代
+- **通用变量**: 变量可跨会话持久化，无需手动写入配置文件
+- **私密模式**: `fish --private` 启动不记录历史的会话
+
+## 配置推荐
+
+```fish
+# ~/.config/fish/config.fish
+
+# ---------- 环境变量 ----------
+set -gx EDITOR nvim
+set -gx PATH $HOME/.local/bin $HOME/go/bin $PATH
+
+# ---------- 实用别名（Fish 用 abbr 替代传统 alias）----------
+# abbr 会在按下回车时展开为完整命令，便于学习和审查
+abbr -a ll 'ls -lah'
+abbr -a gs 'git status'
+abbr -a gp 'git pull --rebase'
+abbr -a gco 'git checkout'
+abbr -a dc 'docker compose'
+
+# ---------- 交互式配置 ----------
+set -g fish_greeting ""                      # 关闭启动问候语
+set -g fish_history_max 50000                # 历史记录上限
+
+# ---------- 使用 Fisher 管理插件 ----------
+# 安装 Fisher: curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
+# fisher install PatrickF1/fzf.fish          # fzf 集成
+# fisher install jethrokuan/z               # 智能目录跳转
+# fisher install jorgebucaran/autopair.fish  # 括号自动配对
+
+# ---------- 自定义函数（Fish 推荐用函数替代复杂别名）----------
+function mkcd -d "创建目录并进入"
+    mkdir -p $argv[1] && cd $argv[1]
+end
+
+function fish_title
+    echo (basename (pwd)) — $argv
+end
+```
+
+## 与其他 Shell 的对比
+
+| 特性 | Fish | Bash | Zsh | Nushell |
+|------|------|------|-----|---------|
+| POSIX 兼容 | 否 | 是 | 是 | 否 |
+| 零配置体验 | 优秀 | 基础 | 基础 | 优秀 |
+| 语法高亮 | 内置 | 需插件 | 需插件 | 内置 |
+| 自动建议 | 内置 | 需插件 | 需插件 | 部分内置 |
+| 脚本通用性 | 低 | 最高 | 高 | 低 |
+| 语法风格 | 独立直观 | POSIX 传统 | POSIX 增强 | 结构化数据 |
+
+Fish 的核心理念是"默认就应该好用"。它牺牲了 POSIX 兼容性，换来了显著更好的开箱即用体验。如果你的主要需求是日常交互使用而非编写可移植脚本，Fish 是一个非常省心的选择。

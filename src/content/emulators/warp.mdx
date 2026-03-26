@@ -1,0 +1,132 @@
+---
+title: "Warp"
+description: "基于 Rust 开发的 AI 驱动现代终端，重新定义命令行交互体验"
+website: "https://www.warp.dev/"
+tags: ["AI", "现代化", "GPU加速", "Rust"]
+featured: true
+order: 5
+platforms: ["macOS", "Linux"]
+license: "Proprietary"
+gpu_accelerated: true
+multiplexer_builtin: false
+pricing: "freemium"
+screenshot: "/screenshots/warp.png"
+---
+
+## 简介
+
+Warp 是一款使用 Rust 语言开发的现代化终端模拟器，通过 Metal（macOS）和 Vulkan（Linux）实现 GPU 加速渲染。它的核心理念是将终端从一个纯文本交互界面升级为一个类似 IDE 的智能化工作环境，集成了 AI 助手、智能补全、命令块（Blocks）等创新功能。
+
+Warp 最显著的创新是将终端输出按命令分组为"Block"。每个命令及其输出被视为一个独立的块，用户可以方便地选择、复制、搜索特定命令的输出，甚至将其保存为书签或分享给团队成员。这种交互模式让终端操作更加结构化和直观。
+
+Warp 内置了基于大语言模型的 AI 助手（Warp AI），用户可以直接在终端中用自然语言描述需求，AI 会生成对应的命令并解释其作用。对于不熟悉某些命令的开发者来说，这是一个非常实用的功能。Warp 采用 Freemium 商业模式，基础功能免费使用，高级团队功能需要订阅。
+
+## 安装
+
+### macOS
+
+```bash
+# 通过 Homebrew 安装（推荐）
+brew install --cask warp
+
+# 或从官网下载
+# 访问 https://www.warp.dev/ 下载 .dmg 安装包
+```
+
+### Linux
+
+```bash
+# Ubuntu / Debian（通过官方 APT 仓库）
+sudo apt-get install wget gpg
+wget -qO- https://releases.warp.dev/linux/keys/warp.asc | gpg --dearmor > warpdotdev.gpg
+sudo install -D -o root -g root -m 644 warpdotdev.gpg /etc/apt/keyrings/warpdotdev.gpg
+sudo sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/warpdotdev.gpg] https://releases.warp.dev/linux/deb stable main" > /etc/apt/sources.list.d/warpdotdev.list'
+sudo apt update
+sudo apt install warp-terminal
+
+# Fedora / RHEL
+sudo rpm --import https://releases.warp.dev/linux/keys/warp.asc
+sudo sh -c 'echo -e "[warpdotdev]\nname=warpdotdev\nbaseurl=https://releases.warp.dev/linux/rpm/stable\nenabled=1\ngpgcheck=1\ngpgkey=https://releases.warp.dev/linux/keys/warp.asc" > /etc/yum.repos.d/warpdotdev.repo'
+sudo dnf install warp-terminal
+
+# Arch Linux（通过 AUR）
+yay -S warp-terminal
+```
+
+## 核心特性
+
+- **AI 命令助手** - 内置 AI 助手，支持用自然语言生成命令、解释命令、调试错误
+- **命令块（Blocks）** - 每条命令的输入和输出被组织为独立的块，便于浏览、选择和分享
+- **现代编辑器体验** - 命令输入区支持多光标编辑、语法高亮和自动补全，类似代码编辑器
+- **智能补全** - 基于上下文的命令补全，支持子命令、参数和文件路径的智能提示
+- **Warp Drive** - 团队共享功能，可保存和分享常用命令、工作流和代码片段
+- **主题与定制** - 支持自定义主题、字体和配色，提供丰富的内置主题库
+- **GPU 加速渲染** - 基于 Metal/Vulkan 的高性能渲染引擎，滚动和输出极为流畅
+- **工作流（Workflows）** - 可将复杂的多步骤命令封装为可参数化的工作流模板
+- **命令历史搜索** - 增强版的历史命令搜索，支持模糊匹配和按时间筛选
+- **Notebook 模式** - 可将终端会话导出为类似 Jupyter Notebook 的格式
+- **快捷键自定义** - 提供 GUI 快捷键编辑器，无需手动编辑配置文件
+- **团队协作** - 支持共享终端会话和命令片段（团队版功能）
+
+## 配置推荐
+
+Warp 的配置主要通过 GUI 设置界面完成，同时也支持 YAML 格式的配置文件。配置文件位于 `~/.warp/` 目录。
+
+主题文件存放于 `~/.warp/themes/` 目录，可自定义 YAML 格式的主题文件：
+
+```yaml
+# ~/.warp/themes/custom-theme.yaml
+accent: '#cba6f7'
+background: '#1e1e2e'
+foreground: '#cdd6f4'
+details: darker
+terminal_colors:
+  normal:
+    black: '#45475a'
+    red: '#f38ba8'
+    green: '#a6e3a1'
+    yellow: '#f9e2af'
+    blue: '#89b4fa'
+    magenta: '#f5c2e7'
+    cyan: '#94e2d5'
+    white: '#bac2de'
+  bright:
+    black: '#585b70'
+    red: '#f38ba8'
+    green: '#a6e3a1'
+    yellow: '#f9e2af'
+    blue: '#89b4fa'
+    magenta: '#f5c2e7'
+    cyan: '#94e2d5'
+    white: '#a6adc8'
+```
+
+常用设置（通过 Settings 面板调整）：
+
+```text
+Appearance > Theme: 选择或导入自定义主题
+Appearance > Font: 推荐 JetBrains Mono 或 Fira Code
+Appearance > Font Size: 14
+Appearance > Opacity: 95%
+
+Features > AI: 启用 Warp AI 助手
+Features > Completions: 启用智能补全
+Features > Block: 启用命令块模式
+
+Keys: 可自定义各项快捷键
+```
+
+快捷键速查表：
+
+```text
+Ctrl+`          - 打开/关闭 AI 助手面板
+Ctrl+R          - 搜索命令历史
+Ctrl+Shift+R    - 搜索 Workflows
+Cmd+D / Ctrl+D  - 垂直分屏
+Cmd+Shift+D     - 水平分屏
+Cmd+P           - 打开命令面板
+Cmd+L           - 清除当前 Block
+Cmd+Shift+C     - 复制当前 Block 的输出
+```
+
+> **提示**：Warp 需要注册账户才能使用（支持 GitHub 登录），这是一些用户的顾虑所在。但其 AI 助手功能确实可以显著提升命令行使用效率，特别适合刚接触命令行的开发者或需要频繁使用不熟悉工具的场景。Warp AI 在生成复杂的 `awk`、`sed`、`find` 等命令方面表现出色。免费版对个人用户已经足够，团队协作功能需要 Pro 订阅。

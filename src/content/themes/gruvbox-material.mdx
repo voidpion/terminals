@@ -1,0 +1,50 @@
+---
+title: "Gruvbox Material"
+description: "Gruvbox 的柔和变体，通过降低色彩饱和度实现更舒适护眼的编码体验"
+github: "https://github.com/sainnhe/gruvbox-material"
+tags: ["配色", "Gruvbox", "护眼", "柔和", "复古"]
+featured: false
+order: 20
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal"]
+---
+
+## 简介
+
+Gruvbox Material 是经典 Gruvbox 配色方案的柔和改良版本，同样由开发者 sainnhe 创建。原版 Gruvbox 以其独特的复古暖色调而广受欢迎，但部分用户反馈其某些颜色饱和度过高，长时间使用容易引发视觉疲劳。Gruvbox Material 正是为解决这一问题而生——它保留了 Gruvbox 标志性的复古暖色基调和设计美学，同时将所有亮色的饱和度系统性地降低，使色彩过渡更加自然柔和。
+
+Gruvbox Material 提供三种对比度模式——**hard**、**medium** 和 **soft**，分别对应不同深浅的背景色。同时也支持亮色（light）和暗色（dark）两种基础风格。这种灵活的组合方式让用户可以根据环境光线和个人偏好精确调整视觉体验。项目同样对 Tree-sitter 和 LSP 提供了深度支持，并在仓库中附带了到各主流终端的配色导出文件。与原版 Gruvbox 相比，Gruvbox Material 更加适合作为全天候使用的日常配色。
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+# 从 gruvbox-material 仓库的 extras 目录获取配色文件
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/gruvbox-material-dark-medium.toml"]
+```
+
+### Kitty
+
+```conf
+# 从仓库 extras 目录获取 kitty 配色文件
+include themes/gruvbox-material.conf
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'Gruvbox Material (Gogh)'
+```
+
+## 适用场景
+
+Gruvbox Material 是 Gruvbox 爱好者的最佳升级选择。如果你喜欢原版 Gruvbox 的复古暖色美学但觉得某些颜色过于刺眼，Gruvbox Material 的柔和处理会让你满意。它特别适合需要全天候使用同一配色的开发者——medium 对比度模式在大多数光照条件下都表现良好。对于眼部容易疲劳的用户，soft 模式的低对比度背景能提供额外的舒适感。系统运维人员和后端开发者在长时间查看日志和终端输出时，会尤其受益于这款配色的护眼特性。

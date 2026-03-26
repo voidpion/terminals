@@ -1,0 +1,95 @@
+---
+title: "Zsh"
+description: "功能强大的 POSIX 兼容 Shell，拥有丰富的插件生态和高度可定制性"
+website: "https://www.zsh.org/"
+github: "https://github.com/zsh-users/zsh"
+tags: ["交互式", "脚本", "POSIX", "插件生态"]
+featured: true
+order: 1
+language: "C"
+posix_compatible: true
+default_on: ["macOS"]
+config_file: ".zshrc"
+---
+
+## 简介
+
+Zsh（Z Shell）是一款功能极其丰富的 POSIX 兼容 Shell，自 2019 年 macOS Catalina 起成为 macOS 的默认 Shell。它在 Bash 的基础上进行了大量改进，提供了更强大的自动补全、主题系统、拼写纠正和插件框架。得益于 Oh My Zsh 等框架的流行，Zsh 已成为开发者中使用最广泛的交互式 Shell 之一。
+
+## 安装
+
+```bash
+# macOS（已预装，可通过 Homebrew 更新到最新版）
+brew install zsh
+
+# Ubuntu/Debian
+sudo apt install zsh
+
+# Fedora
+sudo dnf install zsh
+
+# Arch Linux
+sudo pacman -S zsh
+
+# 设为默认 Shell
+chsh -s $(which zsh)
+```
+
+## 核心特性
+
+- **强大的自动补全**: 支持命令参数、文件路径、Git 分支等上下文感知的 Tab 补全，补全结果可用方向键导航选择
+- **丰富的插件生态**: 通过 Oh My Zsh、Antigen、zinit 等框架管理数百个插件，轻松扩展功能
+- **主题与提示符**: 内置及社区提供大量主题，支持 Powerlevel10k 等高度可定制的提示符方案
+- **通配符扩展**: 支持递归通配（`**/*.ts`）、限定符（按文件类型、大小、时间筛选）等高级 Glob 语法
+- **拼写纠正**: 输入命令或路径时自动提供拼写纠正建议
+- **共享历史**: 多个终端会话可实时共享命令历史记录
+- **目录栈**: 内置 `pushd`/`popd` 增强，`cd -` 可快速回退到之前的目录
+
+## 配置推荐
+
+```bash
+# ~/.zshrc
+
+# ---------- 插件管理（以 zinit 为例）----------
+source "${HOME}/.local/share/zinit/zinit.git/zinit.zsh"
+
+# 语法高亮与自动建议
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-completions
+
+# ---------- 历史记录配置 ----------
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+setopt SHARE_HISTORY          # 多会话共享历史
+setopt HIST_IGNORE_ALL_DUPS   # 去除重复历史
+setopt HIST_REDUCE_BLANKS     # 移除多余空格
+
+# ---------- 补全系统 ----------
+autoload -Uz compinit && compinit
+zstyle ':completion:*' menu select                    # 方向键导航补全菜单
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'  # 大小写不敏感补全
+
+# ---------- 常用选项 ----------
+setopt AUTO_CD                # 输入目录名直接跳转
+setopt CORRECT                # 拼写纠正
+setopt INTERACTIVE_COMMENTS   # 交互模式下允许注释
+
+# ---------- 实用别名 ----------
+alias ll="ls -lah --color=auto"
+alias gs="git status"
+alias gp="git pull --rebase"
+```
+
+## 与其他 Shell 的对比
+
+| 特性 | Zsh | Bash | Fish | Nushell |
+|------|-----|------|------|---------|
+| POSIX 兼容 | 是 | 是 | 否 | 否 |
+| 开箱即用体验 | 中等 | 基础 | 优秀 | 优秀 |
+| 插件生态 | 非常丰富 | 一般 | 丰富 | 成长中 |
+| 脚本兼容性 | 广泛 | 最广泛 | 有限 | 独立语法 |
+| 学习曲线 | 低（Bash 用户） | 低 | 低 | 中等 |
+
+Zsh 最大的优势在于兼顾了 POSIX 兼容性与现代化体验——既能运行绝大多数 Bash 脚本，又提供了远超 Bash 的交互功能和定制能力。

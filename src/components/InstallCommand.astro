@@ -1,0 +1,70 @@
+---
+interface Props {
+  commands: { label: string; cmd: string }[];
+}
+
+const { commands } = Astro.props;
+const id = `install-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<div class="rounded-lg overflow-hidden border dark:border-terminal-border border-light-border my-4" data-install-id={id}>
+  <!-- Tabs -->
+  <div class="flex border-b dark:border-terminal-border border-light-border dark:bg-terminal-surface/50 bg-light-border/30">
+    {commands.map((cmd, i) => (
+      <button
+        class:list={[
+          'install-tab px-4 py-2 text-xs font-mono cursor-pointer transition-colors',
+          i === 0
+            ? 'dark:bg-terminal-bg dark:text-terminal-green bg-light-bg text-terminal-green border-b-2 border-terminal-green'
+            : 'dark:text-terminal-fg/60 text-light-fg/60 hover:dark:text-terminal-fg hover:text-light-fg',
+        ]}
+        data-index={i}
+      >
+        {cmd.label}
+      </button>
+    ))}
+  </div>
+  <!-- Commands -->
+  {commands.map((cmd, i) => (
+    <div
+      class:list={['install-panel relative', i !== 0 && 'hidden']}
+      data-index={i}
+    >
+      <pre class="!m-0 !rounded-none"><code class="!text-sm">{cmd.cmd}</code></pre>
+      <button
+        class="copy-btn absolute top-2 right-2 p-1.5 rounded dark:bg-terminal-border/50 bg-light-border/50 dark:text-terminal-fg/60 text-light-fg/60 hover:dark:text-terminal-green hover:text-terminal-green cursor-pointer text-xs"
+        data-cmd={cmd.cmd}
+      >
+        复制
+      </button>
+    </div>
+  ))}
+</div>
+
+<script is:inline>
+  document.querySelectorAll('[data-install-id]').forEach((container) => {
+    const tabs = container.querySelectorAll('.install-tab');
+    const panels = container.querySelectorAll('.install-panel');
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const idx = tab.dataset.index;
+        tabs.forEach((t) => {
+          t.classList.remove('dark:bg-terminal-bg', 'dark:text-terminal-green', 'bg-light-bg', 'text-terminal-green', 'border-b-2', 'border-terminal-green');
+          t.classList.add('dark:text-terminal-fg/60', 'text-light-fg/60');
+        });
+        tab.classList.add('dark:bg-terminal-bg', 'dark:text-terminal-green', 'bg-light-bg', 'text-terminal-green', 'border-b-2', 'border-terminal-green');
+        tab.classList.remove('dark:text-terminal-fg/60', 'text-light-fg/60');
+        panels.forEach((p) => p.classList.toggle('hidden', p.dataset.index !== idx));
+      });
+    });
+
+    container.querySelectorAll('.copy-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        navigator.clipboard.writeText(btn.dataset.cmd);
+        btn.textContent = '已复制';
+        setTimeout(() => (btn.textContent = '复制'), 1500);
+      });
+    });
+  });
+</script>

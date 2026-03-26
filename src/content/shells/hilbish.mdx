@@ -1,0 +1,154 @@
+---
+title: "Hilbish"
+description: "Lua 脚本驱动的可扩展 Shell，用 Lua 的简洁优雅重新定义 Shell 配置与扩展"
+website: "https://rosettea.github.io/Hilbish/"
+github: "https://github.com/Rosettea/Hilbish"
+tags: ["Lua", "可扩展", "现代化", "可编程"]
+featured: false
+order: 9
+language: "Go"
+posix_compatible: false
+default_on: []
+config_file: ".hilbishrc.lua"
+---
+
+## 简介
+
+Hilbish 是一款用 Go 编写、以 Lua 作为配置和扩展语言的现代交互式 Shell。它的核心设计理念是将 Shell 的几乎所有行为都暴露为 Lua API，让用户可以用 Lua 这门简洁而强大的脚本语言来自定义 Shell 的方方面面——从提示符、补全、快捷键，到命令执行钩子和自定义内置命令。选择 Lua 作为脚本语言而非发明新语法，意味着用户可以利用整个 Lua 生态系统的库和工具。
+
+Hilbish 将自身定位为"可编程的 Shell 框架"。它提供了交互式 Shell 的基础设施（命令执行、任务管理、历史记录），同时把上层逻辑的控制权交给用户。你可以用 Lua 编写命令补全逻辑、定义新的提示符主题、创建交互式菜单、甚至构建完整的 TUI 应用。对于喜欢深度定制自己工具的用户来说，Hilbish 提供了前所未有的灵活性。Hilbish 内嵌的是 Go 实现的 Lua 5.4 解释器，无需单独安装 Lua 运行时。
+
+## 安装
+
+```bash
+# macOS
+brew install hilbish
+
+# Arch Linux (AUR)
+yay -S hilbish
+
+# Nix
+nix-env -i hilbish
+
+# 从源码编译（需要 Go 1.21+）
+git clone https://github.com/Rosettea/Hilbish.git
+cd Hilbish
+go build
+sudo install -m 755 hilbish /usr/local/bin/
+
+# 设为默认 Shell
+echo $(which hilbish) | sudo tee -a /etc/shells
+chsh -s $(which hilbish)
+```
+
+## 核心特性
+
+- **Lua 驱动的配置**: 使用完整的 Lua 5.4 语法进行配置，支持变量、函数、模块、面向对象等所有 Lua 特性
+- **丰富的内置 API**: 提供 `hilbish.prompt`、`hilbish.alias`、`hilbish.complete`、`hilbish.timer` 等大量 Lua API 用于控制 Shell 行为
+- **命令钩子系统**: 可以在命令执行前后注册 Lua 回调函数，用于日志记录、命令修改、通知等场景
+- **自定义补全**: 用 Lua 为任意命令编写补全函数，完全控制补全的来源和展示方式
+- **任务管理**: 内置后台任务管理，提供 Lua API 创建、查询和控制后台进程
+- **语法高亮**: 内置交互式语法高亮，命令和参数以不同颜色显示
+- **历史管理**: 提供 `hilbish.history` API，支持搜索、过滤和操作命令历史
+- **内嵌 Lua 运行时**: 使用 Go 实现的 Lua 解释器，无需系统中安装 Lua，开箱即用
+
+## 配置推荐
+
+```lua
+-- ~/.hilbishrc.lua
+
+-- ---------- 环境变量 ----------
+hilbish.appendPath '~/.local/bin'
+hilbish.appendPath '~/go/bin'
+os.setenv('EDITOR', 'nvim')
+
+-- ---------- 提示符配置 ----------
+-- 使用 Lua 的灵活性构建动态提示符
+hilbish.prompt(function()
+    local cwd = hilbish.cwd()
+    local home = os.getenv('HOME')
+    -- 将 home 目录替换为 ~
+    if cwd:sub(1, #home) == home then
+        cwd = '~' .. cwd:sub(#home + 1)
+    end
+
+    local branch = ''
+    local ok, result = pcall(function()
+        return hilbish.run('git branch --show-current 2>/dev/null', false)
+    end)
+    if ok and result then
+        branch = ' \x1b[33m(' .. result:gsub('%s+$', '') .. ')\x1b[0m'
+    end
+
+    return string.format('\x1b[34m%s\x1b[0m%s \x1b[32m>\x1b[0m ', cwd, branch)
+end)
+
+-- ---------- 实用别名 ----------
+hilbish.alias('ll', 'ls -lah')
+hilbish.alias('gs', 'git status')
+hilbish.alias('gp', 'git pull --rebase')
+hilbish.alias('gco', 'git checkout')
+hilbish.alias('dc', 'docker compose')
+
+-- ---------- 自定义补全 ----------
+-- 为 git 子命令添加补全
+hilbish.complete('command.git', function(query, ctx, fields)
+    local subcmds = {
+        'add', 'branch', 'checkout', 'clone', 'commit',
+        'diff', 'fetch', 'init', 'log', 'merge',
+        'pull', 'push', 'rebase', 'reset', 'stash',
+        'status', 'switch', 'tag'
+    }
+    local completions = {}
+    for _, cmd in ipairs(subcmds) do
+        if cmd:sub(1, #query) == query then
+            table.insert(completions, cmd)
+        end
+    end
+    return { completions }, { prefix = query }
+end)
+
+-- ---------- 命令钩子 ----------
+-- 记录命令执行时间
+local cmdStart = 0
+hilbish.hooks.add('command.preexec', function(cmd)
+    cmdStart = os.clock()
+end)
+
+hilbish.hooks.add('command.exit', function(code, cmd)
+    local elapsed = os.clock() - cmdStart
+    if elapsed > 2.0 then
+        print(string.format('\x1b[33m[命令执行用时: %.2f 秒]\x1b[0m', elapsed))
+    end
+end)
+
+-- ---------- 自定义函数 ----------
+-- 创建目录并进入
+hilbish.runner.lua('function mkcd(dir) hilbish.run("mkdir -p " .. dir) hilbish.run("cd " .. dir) end')
+
+-- ---------- 定时器 ----------
+-- 每小时提醒休息（可选）
+-- hilbish.timer(3600000, function()
+--     print('\x1b[33m[提醒] 该休息一下了！\x1b[0m')
+-- end)
+
+-- ---------- 加载插件 ----------
+-- Hilbish 插件是普通的 Lua 模块
+-- 将插件放在 ~/.config/hilbish/plugins/ 目录下
+-- dofile(hilbish.userDir.config .. '/hilbish/plugins/my-plugin.lua')
+```
+
+## 与其他 Shell 的对比
+
+| 特性 | Hilbish | Fish | Zsh | Elvish |
+|------|---------|------|-----|--------|
+| POSIX 兼容 | 否 | 否 | 是 | 否 |
+| 配置语言 | Lua | Fish 语法 | Zsh 语法 | Elvish 语法 |
+| 可编程性 | 极高（完整 Lua） | 中等 | 中等 | 高 |
+| 命令钩子 | 内置 | 有限 | 有限 | 有限 |
+| 语法高亮 | 内置 | 内置 | 需插件 | 内置 |
+| 生态系统 | 新生 | 成熟 | 非常成熟 | 中等 |
+| 实现语言 | Go | C | C | Go |
+| 学习曲线 | Lua 基础即可 | 低 | 中等 | 中等 |
+
+Hilbish 的核心吸引力在于用一门已有的、广受好评的编程语言（Lua）来替代自创的 Shell 配置语法。如果你熟悉 Lua 或者喜欢 Neovim 的 Lua 配置方式，Hilbish 会让你感到非常亲切。它特别适合那些追求深度可定制性、喜欢将 Shell 打造为个人化工具的高级用户。项目仍在活跃开发中，功能在不断完善。

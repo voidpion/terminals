@@ -1,0 +1,75 @@
+---
+title: "Prezto"
+description: "高性能 Zsh 配置框架，以速度和优雅著称的 Oh My Zsh 替代方案"
+github: "https://github.com/sorin-ionescu/prezto"
+tags: ["框架", "Zsh", "高性能"]
+featured: false
+order: 33
+theme_type: "framework"
+compatible_with: ["Zsh"]
+---
+
+## 简介
+
+Prezto 是一个高性能的 Zsh 配置框架，由 Sorin Ionescu 创建。它的定位是 Oh My Zsh 的轻量级替代方案——提供类似的功能集，但通过更精简的代码和更优化的加载策略实现显著更快的 Shell 启动速度。对于那些觉得 Oh My Zsh 太重但又不想从零配置 Zsh 的用户来说，Prezto 是理想的中间选择。
+
+Prezto 采用模块化架构，将功能组织为独立的 Module。每个 Module 都经过精心优化，只做一件事并做好它。框架内置了语法高亮、自动补全建议、Git 信息、目录导航等核心模块，以及多款精美的提示符主题。Prezto 的配置文件使用 Zsh 原生语法，风格统一且文档完善。
+
+## 安装
+
+```bash
+# 克隆仓库到 ~/.zprezto
+git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
+
+# 创建配置文件符号链接
+setopt EXTENDED_GLOB
+for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
+  ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
+done
+
+# 设置 Zsh 为默认 Shell
+chsh -s /bin/zsh
+```
+
+## 核心特性
+
+- **快速启动**: 优化的加载策略，Shell 启动时间显著优于 Oh My Zsh
+- **模块化设计**: 每个功能独立封装为 Module，按需加载
+- **语法高亮**: 内置语法高亮模块，无需额外安装插件
+- **自动补全建议**: 基于历史记录的智能补全建议
+- **Git 模块**: 提供丰富的 Git 信息和快捷别名
+- **多款主题**: 内置 Sorin、Paradox、Steeef 等精美提示符主题
+- **完善文档**: 每个模块都有清晰的文档说明
+
+## 使用方式
+
+```bash
+# 编辑 ~/.zpreztorc 配置文件
+# 启用模块（顺序很重要）
+zstyle ':prezto:load' pmodule \
+  'environment' \
+  'terminal' \
+  'editor' \
+  'history' \
+  'directory' \
+  'spectrum' \
+  'utility' \
+  'completion' \
+  'syntax-highlighting' \
+  'autosuggestions' \
+  'prompt' \
+  'git'
+
+# 设置提示符主题
+zstyle ':prezto:module:prompt' theme 'sorin'
+
+# 设置语法高亮样式
+zstyle ':prezto:module:syntax-highlighting' highlighters \
+  'main' 'brackets' 'pattern' 'line' 'cursor'
+
+# 设置编辑器模式
+zstyle ':prezto:module:editor' key-bindings 'emacs'
+
+# Git 模块配置
+zstyle ':prezto:module:git:alias' skip 'no'
+```

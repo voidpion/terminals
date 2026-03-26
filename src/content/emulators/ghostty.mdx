@@ -1,0 +1,185 @@
+---
+title: "Ghostty"
+description: "基于 Zig 语言开发的高性能终端模拟器，追求原生 UI 体验和极致速度"
+website: "https://ghostty.org/"
+github: "https://github.com/ghostty-org/ghostty"
+tags: ["免费", "GPU加速", "Zig", "原生UI"]
+featured: true
+order: 8
+platforms: ["macOS", "Linux"]
+license: "MIT"
+gpu_accelerated: true
+multiplexer_builtin: false
+pricing: "free"
+screenshot: "/screenshots/ghostty.jpg"
+---
+
+## 简介
+
+Ghostty 是由 Mitchell Hashimoto（HashiCorp 联合创始人）开发的终端模拟器，使用 Zig 语言编写，于 2024 年底正式开源。Ghostty 的设计目标是打造一款"快到不需要妥协功能"的终端模拟器，在追求极致性能的同时提供丰富的原生平台功能。
+
+Ghostty 与其他现代终端模拟器的最大不同在于它坚持使用原生 UI 框架。在 macOS 上使用 AppKit/SwiftUI，在 Linux 上使用 GTK4，而非自绘整个窗口。这意味着 Ghostty 的窗口管理、菜单、对话框等界面元素与操作系统完全一致，用户无需适应不同于系统风格的界面元素，拖拽、窗口管理等操作也完全符合系统行为。
+
+Ghostty 使用自研的终端渲染引擎，基于自定义的字体光栅化器和 GPU 加速的文本渲染管线（macOS 上使用 Metal，Linux 上使用 OpenGL）。在基准测试中，Ghostty 的 I/O 吞吐量和延迟表现均处于顶级水平，在某些场景下甚至超越了 Alacritty。
+
+## 安装
+
+### macOS
+
+```bash
+# 通过 Homebrew 安装（推荐）
+brew install --cask ghostty
+
+# 或从官网下载
+# 访问 https://ghostty.org/ 下载 .dmg 安装包
+```
+
+### Linux
+
+```bash
+# Ubuntu / Debian（需要 24.04+）
+# 暂无官方 APT 仓库，需从源码编译或使用第三方包
+# 参见官方文档获取最新安装方式
+
+# Arch Linux
+sudo pacman -S ghostty
+
+# Fedora（通过 COPR）
+sudo dnf copr enable pgdev/ghostty
+sudo dnf install ghostty
+
+# NixOS / Nix
+nix-env -iA nixpkgs.ghostty
+
+# 从源码编译（需要 Zig 0.13+）
+git clone https://github.com/ghostty-org/ghostty.git
+cd ghostty
+zig build -Doptimize=ReleaseFast
+```
+
+### 验证安装
+
+```bash
+# 检查版本
+ghostty --version
+
+# 查看当前配置
+ghostty +show-config
+
+# 列出所有可用配置项
+ghostty +list-keybinds
+```
+
+## 核心特性
+
+- **原生 UI 框架** - macOS 使用 AppKit/SwiftUI，Linux 使用 GTK4，完美融入操作系统
+- **极致性能** - 自研渲染引擎和字体光栅化器，I/O 吞吐量和输入延迟均为顶级水平
+- **GPU 加速渲染** - 基于 Metal（macOS）/ OpenGL（Linux）的高性能文本渲染管线
+- **Zig 语言编写** - 利用 Zig 的编译时优化和内存安全特性，兼顾性能与可靠性
+- **零配置可用** - 开箱即用的合理默认值，无需任何配置即可获得优秀的使用体验
+- **原生标签页和分屏** - 使用系统原生的标签页和分屏实现，操作行为与系统一致
+- **自定义着色器** - 支持自定义 GLSL 片段着色器，可实现 CRT 效果等视觉特效
+- **快速终端（Quick Terminal）** - 类似 Quake 模式的全局快捷键快速呼出终端
+- **连字支持** - 完整的 OpenType 连字渲染支持
+- **图像协议** - 支持 Kitty 图像协议，可在终端中显示图片
+- **配置热加载** - 修改配置文件后即时生效，无需重启终端
+- **低输入延迟** - 经过专门优化的输入处理管线，按键响应极为迅速
+
+## 配置推荐
+
+Ghostty 的配置文件位于 `~/.config/ghostty/config`，使用简洁的 `key = value` 格式，不需要引号包裹字符串值。
+
+```ini
+# ~/.config/ghostty/config
+
+# ========== 字体设置 ==========
+font-family = JetBrains Mono
+font-size = 14
+font-thicken = true
+
+# 调整单元格尺寸以获得更好的行距
+adjust-cell-height = 2
+
+# ========== 外观设置 ==========
+# 主题（内置多款主题可选）
+theme = catppuccin-mocha
+
+# 窗口透明度（需要合成器支持）
+background-opacity = 0.95
+
+# macOS 窗口样式
+macos-titlebar-style = tabs
+
+# 窗口内边距
+window-padding-x = 10
+window-padding-y = 10
+
+# 光标样式
+cursor-style = bar
+cursor-style-blink = true
+
+# 窗口尺寸
+window-width = 120
+window-height = 35
+
+# ========== 行为设置 ==========
+# 确认退出行为
+confirm-close-surface = false
+
+# 剪贴板设置
+copy-on-select = clipboard
+clipboard-paste-protection = false
+
+# 滚动缓冲区行数
+scrollback-limit = 10000
+
+# macOS 下 Option 键作为 Alt
+macos-option-as-alt = true
+
+# Shell 集成（自动注入）
+shell-integration = detect
+
+# ========== 快捷键设置 ==========
+# 分屏操作
+keybind = cmd+d=new_split:right
+keybind = cmd+shift+d=new_split:down
+
+# 窗格导航
+keybind = cmd+alt+left=goto_split:left
+keybind = cmd+alt+right=goto_split:right
+keybind = cmd+alt+up=goto_split:top
+keybind = cmd+alt+down=goto_split:bottom
+
+# 调整窗格大小
+keybind = cmd+ctrl+left=resize_split:left,20
+keybind = cmd+ctrl+right=resize_split:right,20
+keybind = cmd+ctrl+up=resize_split:up,20
+keybind = cmd+ctrl+down=resize_split:down,20
+
+# 最大化窗格
+keybind = cmd+shift+enter=toggle_split_zoom
+
+# 快速终端
+keybind = global:cmd+grave_accent=toggle_quick_terminal
+
+# 重新加载配置
+keybind = cmd+shift+comma=reload_config
+```
+
+查看和调试配置：
+
+```bash
+# 显示当前生效的完整配置
+ghostty +show-config
+
+# 显示默认配置（可用作参考模板）
+ghostty +show-config --default --docs
+
+# 列出所有可用主题
+ghostty +list-themes
+
+# 列出当前的快捷键绑定
+ghostty +list-keybinds
+```
+
+> **提示**：Ghostty 的"零配置"理念意味着它的默认配置已经非常优秀，对大多数用户来说开箱即用就是最佳状态。与 Alacritty 类似，Ghostty 不内置多路复用功能（标签页和分屏除外），复杂的会话管理建议搭配 tmux 或 Zellij。Ghostty 的原生 UI 策略使其在 macOS 上的体验特别出色，窗口管理和系统集成比自绘 UI 的终端模拟器更加自然。使用 `ghostty +show-config --default --docs` 可以查看所有可用配置项及其说明，是学习配置的最佳起点。

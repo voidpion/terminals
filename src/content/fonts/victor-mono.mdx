@@ -1,0 +1,92 @@
+---
+title: "Victor Mono"
+description: "以独特手写风格斜体闻名的编程字体，辨识度极高，连字优雅"
+website: "https://rubjo.github.io/victor-mono/"
+github: "https://github.com/rubjo/victor-mono"
+tags: ["编程字体", "手写斜体", "连字", "开源"]
+featured: false
+order: 9
+ligatures: true
+nerd_font_variant: true
+styles: ["Regular", "Bold", "Italic", "Bold Italic", "Thin", "Light", "Medium", "SemiBold", "ExtraLight"]
+preview_text: "Terminal > ls -la ~/.config"
+---
+
+## 简介
+
+Victor Mono 是由挪威开发者 Rune Bjornerås（rubjo）设计的一款开源等宽编程字体，其最鲜明的特色是独一无二的手写风格斜体。与大多数编程字体仅将正体字形简单倾斜不同，Victor Mono 的斜体采用了完全重新设计的草书笔画，使得代码中的注释、关键字、字符串等语法元素在启用语义斜体时拥有极高的视觉辨识度，仿佛手写在代码行间。
+
+Victor Mono 的正体同样设计精良，采用纤细而清晰的笔画风格，在小字号下表现优秀。它内置了编程连字支持，提供从 Thin 到 SemiBold 共 7 种字重，每种字重都配有对应的手写斜体。字体整体给人一种优雅、轻盈的视觉感受，特别适合追求独特代码审美的开发者。
+
+## 安装
+
+```bash
+# macOS — Homebrew
+brew install --cask font-victor-mono
+brew install --cask font-victor-mono-nerd-font  # Nerd Font 变体
+
+# Linux — 手动安装
+mkdir -p ~/.local/share/fonts && cd ~/.local/share/fonts
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/VictorMono.zip
+unzip VictorMono.zip -d VictorMono && fc-cache -fv
+
+# npm 安装
+npm install -g victormono
+
+# Windows — Scoop
+scoop bucket add nerd-fonts
+scoop install nerd-fonts/VictorMono-NF
+```
+
+## 特性亮点
+
+- **手写斜体**: 斜体采用完全重新设计的草书笔画，在代码中极具辨识度和美感
+- **纤细清晰**: 正体笔画纤细精致，小字号下依然清晰可读
+- **编程连字**: 内置 `=>` `!==` `>=` 等常见编程连字，与手写斜体风格协调统一
+- **7 种字重**: 从 Thin 到 SemiBold 覆盖，每种字重均配有手写斜体
+- **语义高亮最佳拍档**: 搭配编辑器的语义高亮功能，注释和关键字以手写斜体呈现效果惊艳
+- **Nerd Font 变体**: 社区提供 Victor Mono Nerd Font，支持完整的图标字形集
+- **开源免费**: MIT 许可证，可自由使用和修改
+
+## 推荐配置
+
+### 终端模拟器
+
+```toml
+# Alacritty — ~/.config/alacritty/alacritty.toml
+[font]
+size = 14.0
+[font.normal]
+family = "VictorMono Nerd Font"
+style = "Regular"
+[font.bold]
+family = "VictorMono Nerd Font"
+style = "Bold"
+```
+
+```conf
+# Kitty — ~/.config/kitty/kitty.conf
+font_family      VictorMono Nerd Font
+bold_font        auto
+italic_font      auto
+font_size        14.0
+```
+
+```lua
+-- WezTerm — ~/.wezterm.lua
+config.font = wezterm.font('VictorMono Nerd Font')
+config.font_size = 14.0
+config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
+```
+
+### VS Code
+
+```json
+{
+  "editor.fontFamily": "'Victor Mono', 'VictorMono Nerd Font', monospace",
+  "editor.fontSize": 14,
+  "editor.fontLigatures": true,
+  "terminal.integrated.fontFamily": "'VictorMono Nerd Font'"
+}
+```
+

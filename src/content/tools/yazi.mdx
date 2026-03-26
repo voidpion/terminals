@@ -1,0 +1,80 @@
+---
+title: "yazi"
+description: "极速终端文件管理器，支持图片预览"
+github: "https://github.com/sxyazi/yazi"
+tags: ["文件管理", "Rust", "图片预览", "异步"]
+featured: true
+order: 26
+category: "file_manager"
+install_cmd: "brew install yazi"
+written_in: "Rust"
+---
+
+## 简介
+
+yazi（中文"鸭子"的拼音）是一款使用 Rust 编写的极速终端文件管理器。它基于异步 I/O 架构设计，能够在浏览大量文件时保持流畅的交互体验。yazi 最引人注目的特性是支持终端内图片预览，包括 PNG、JPG、GIF 动图甚至 PDF 文件的预览。
+
+yazi 提供了 Vim 风格的键位操作、强大的插件系统和丰富的内置功能。它支持批量重命名、文件搜索、归档管理、目录跳转等高级功能，并且可以通过 Lua 脚本进行深度定制。对于追求效率的终端用户，yazi 是 ranger 和 lf 的优秀替代方案。
+
+## 安装
+
+```bash
+# macOS
+brew install yazi
+
+# Arch Linux
+sudo pacman -S yazi
+
+# Cargo
+cargo install --locked yazi-fm yazi-cli
+```
+
+建议同时安装以下依赖以获得最佳预览体验：
+
+```bash
+# 文件预览相关依赖
+brew install ffmpeg poppler fd ripgrep fzf zoxide jq
+```
+
+## 核心特性
+
+- **极速异步**: 基于 Tokio 异步运行时，文件加载和预览完全非阻塞
+- **图片预览**: 支持在终端中直接预览图片、视频缩略图和 PDF
+- **Vim 键位**: 使用 h/j/k/l 导航，操作高效自然
+- **插件系统**: 通过 Lua 脚本扩展功能，社区插件丰富
+- **批量操作**: 支持批量选择、重命名、复制、移动和删除
+- **集成搜索**: 内置 fd 和 ripgrep 集成，快速搜索文件和内容
+
+## 使用示例
+
+```bash
+# 启动 yazi
+yazi
+
+# 在指定目录启动
+yazi ~/projects
+
+# 退出时切换到最后浏览的目录（需要 Shell 包装函数）
+function y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
+}
+```
+
+常用快捷键：
+
+```text
+h/l          - 返回上级/进入目录
+j/k          - 上下移动光标
+Space        - 选择/取消选择文件
+Enter        - 打开文件
+y/p/d        - 复制/粘贴/删除
+r            - 重命名
+/            - 搜索文件
+z            - 使用 zoxide 跳转
+q            - 退出
+```

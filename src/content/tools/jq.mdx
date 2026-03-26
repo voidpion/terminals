@@ -1,0 +1,81 @@
+---
+title: "jq"
+description: "命令行 JSON 处理器"
+website: "https://jqlang.github.io/jq/"
+github: "https://github.com/jqlang/jq"
+tags: ["JSON", "数据处理", "过滤器"]
+featured: true
+order: 12
+category: "viewer"
+install_cmd: "brew install jq"
+written_in: "C"
+---
+
+## 简介
+
+jq 是一个轻量级且功能强大的命令行 JSON 处理器，类似于用于 JSON 数据的 `sed`、`awk` 和 `grep`。它能够对 JSON 数据进行切片、过滤、映射和转换，语法简洁而表达力强。无论是简单的字段提取还是复杂的数据重组，jq 都能从容应对。
+
+作为命令行环境中处理 JSON 数据的事实标准工具，jq 在 API 调试、日志分析、配置文件处理等场景中被广泛使用。它完全用 C 语言编写，无运行时依赖，处理速度极快。jq 的过滤器语法虽然初学时稍有门槛，但一旦掌握，就能大幅提升处理结构化数据的效率。
+
+## 安装
+
+```bash
+# macOS
+brew install jq
+
+# Ubuntu/Debian
+sudo apt install jq
+
+# 从源码编译
+git clone https://github.com/jqlang/jq.git
+cd jq && autoreconf -i && ./configure && make
+```
+
+## 核心特性
+
+- **强大的过滤器**: 提供丰富的内置函数和操作符
+- **管道语法**: 支持过滤器之间的管道组合，灵活处理数据
+- **格式化输出**: 自动美化打印 JSON，带语法着色
+- **数据转换**: 支持 JSON 到 CSV、TSV 等格式的转换
+- **条件过滤**: 支持 `select`、`if-then-else` 等条件表达式
+- **零依赖**: 纯 C 实现，单一二进制文件，开箱即用
+
+## 使用示例
+
+```bash
+# 美化打印 JSON
+echo '{"name":"fd","lang":"rust"}' | jq '.'
+
+# 提取单个字段
+curl -s https://api.github.com/repos/jqlang/jq | jq '.stargazers_count'
+
+# 提取嵌套字段
+jq '.data.user.name' response.json
+
+# 遍历数组并提取字段
+jq '.items[] | .name' data.json
+
+# 条件过滤
+jq '.[] | select(.age > 18)' users.json
+
+# 构造新的 JSON 对象
+jq '{name: .user.login, stars: .stargazers_count}' repo.json
+
+# 数组长度和统计
+jq '.items | length' data.json
+
+# 将 JSON 数组转为 TSV
+jq -r '.[] | [.name, .age] | @tsv' users.json
+
+# 合并多个 JSON 文件
+jq -s '.[0] * .[1]' base.json override.json
+
+# 原地编辑（配合 sponge）
+jq '.version = "2.0"' package.json | sponge package.json
+```
+
+## 推荐搭配
+
+- **curl** — 获取 API 响应后用 jq 解析
+- **fzf** — 交互式浏览和筛选 JSON 数据
+- **bat** — 用 `bat -l json` 高亮查看 JSON 文件

@@ -1,0 +1,79 @@
+---
+title: "delta"
+description: "Git diff 的语法高亮美化工具"
+github: "https://github.com/dandavison/delta"
+tags: ["Git", "diff", "语法高亮", "Rust"]
+featured: false
+order: 10
+category: "git"
+install_cmd: "brew install git-delta"
+written_in: "Rust"
+---
+
+## 简介
+
+delta 是一个用 Rust 编写的语法高亮分页器，专为 `git diff`、`git log`、`git show` 和 `grep` 等工具的输出设计。它提供了精美的语法高亮、行号显示、并排对比等功能，让代码差异审查变得清晰直观。
+
+与传统的 diff 输出不同，delta 能够识别代码语言并进行语法着色，支持单词级别的差异高亮，还能在行内精确标记出修改的部分。它可以无缝替换 Git 默认的分页器，无需改变任何工作习惯，只需在 `.gitconfig` 中简单配置即可。
+
+## 安装
+
+```bash
+# macOS
+brew install git-delta
+
+# Ubuntu/Debian
+sudo apt install git-delta
+
+# Cargo
+cargo install git-delta
+```
+
+## 核心特性
+
+- **语法高亮**: 基于 bat 的语法高亮引擎，支持 200+ 种语言
+- **行内差异**: 在变更行中精确高亮修改的单词或字符
+- **并排对比**: 支持 side-by-side 并排差异视图
+- **行号显示**: 同时显示旧文件和新文件的行号
+- **主题支持**: 丰富的内置主题，也支持自定义主题
+- **Git 无缝集成**: 配置后自动接管所有 Git diff 输出
+
+## 使用示例
+
+```bash
+# 在 ~/.gitconfig 中配置 delta 为默认分页器
+# [core]
+#     pager = delta
+# [interactive]
+#     diffFilter = delta --color-only
+# [delta]
+#     navigate = true
+#     side-by-side = true
+
+# 直接使用 delta 查看 diff
+diff -u old.py new.py | delta
+
+# 启用并排对比模式
+git diff | delta --side-by-side
+
+# 使用指定主题
+git diff | delta --syntax-theme="Dracula"
+
+# 显示行号
+git diff | delta --line-numbers
+
+# 查看 git log 中的差异
+git log -p | delta
+
+# 查看暂存区的差异
+git diff --staged | delta
+
+# 列出所有可用主题
+delta --list-syntax-themes
+```
+
+## 推荐搭配
+
+- **lazygit** — 在 lazygit 中使用 delta 美化 diff 输出
+- **bat** — 共享语法高亮引擎，主题风格统一
+- **ripgrep** — delta 也支持美化 grep 输出

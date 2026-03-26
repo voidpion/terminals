@@ -1,0 +1,73 @@
+---
+title: "One Dark"
+description: "源自 Atom 编辑器的标志性暗色配色方案，平衡的色彩与舒适的对比度"
+website: "https://github.com/one-dark"
+github: "https://github.com/one-dark/vscode-one-dark-theme"
+tags: ["配色", "暗色", "Atom", "均衡"]
+featured: false
+order: 9
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal"]
+---
+
+## 简介
+
+One Dark 是 GitHub 开发的 Atom 编辑器的默认暗色主题，也是 Atom 时代最具标志性的视觉符号之一。它采用深灰蓝色背景搭配精心挑选的多彩前景色，整体风格既不过于冷峻也不过于温暖，追求一种恰到好处的中性平衡。One Dark 的色彩饱和度和对比度都处于适中水平，既保证了长时间使用的舒适度，又能清晰地区分不同的语法元素。这种"中庸之道"使它成为许多开发者的默认首选。
+
+尽管 Atom 编辑器已于 2022 年正式停止维护，One Dark 的影响力却丝毫未减。社区将其移植到了 VS Code、Vim/Neovim、JetBrains IDE 等主流编辑器以及各种终端模拟器中。其中最知名的移植版本是 VS Code 的 "One Dark Pro" 扩展，下载量超过数千万次。One Dark 还有一个对应的亮色变体 "One Light"，两者共享相似的设计语言但面向不同的使用环境。许多从 Atom 转向其他编辑器的开发者，第一件事往往就是安装 One Dark 主题。
+
+## 配色预览
+
+| 角色 | 颜色名 | 色值 |
+|------|--------|------|
+| 背景 | Background | `#282c34` |
+| 前景 | Foreground | `#abb2bf` |
+| 黑色 | Black | `#282c34` |
+| 红色 | Red | `#e06c75` |
+| 绿色 | Green | `#98c379` |
+| 黄色 | Yellow | `#e5c07b` |
+| 蓝色 | Blue | `#61afef` |
+| 紫色 | Magenta | `#c678dd` |
+| 青色 | Cyan | `#56b6c2` |
+| 白色 | White | `#abb2bf` |
+| 亮黑 | Bright Black | `#5c6370` |
+| 亮红 | Bright Red | `#e06c75` |
+| 亮绿 | Bright Green | `#98c379` |
+| 亮黄 | Bright Yellow | `#d19a66` |
+| 亮蓝 | Bright Blue | `#61afef` |
+| 亮紫 | Bright Magenta | `#c678dd` |
+| 亮青 | Bright Cyan | `#56b6c2` |
+| 亮白 | Bright White | `#ffffff` |
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+curl -LO https://raw.githubusercontent.com/one-dark/iterm-one-dark-theme/master/One%20Dark.itermcolors
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/one_dark.toml"]
+```
+
+### Kitty
+
+```bash
+kitty +kitten themes One Dark
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'One Dark (Gogh)'
+```
+
+## 适用场景
+
+One Dark 是一款极为"安全"的配色选择——它不会让任何人感到不适，适合绝大多数日常编码场景。其均衡的色彩和适中的对比度使其在各种光线条件下都能保持良好的可读性。对于团队协作项目，One Dark 是一个不错的推荐方案，因为它的中性风格不太可能引起审美上的争议。如果你刚从 Atom 转向其他编辑器或终端，安装 One Dark 可以帮助你快速找回熟悉的视觉感受。它也非常适合作为进一步探索其他配色方案的起点。

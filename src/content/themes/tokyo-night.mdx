@@ -1,0 +1,82 @@
+---
+title: "Tokyo Night"
+description: "以东京夜景为灵感的暗色配色方案，冷色调蓝紫为核心，兼顾美观与可读性"
+website: "https://github.com/enkia/tokyo-night-vscode-theme"
+github: "https://github.com/enkia/tokyo-night-vscode-theme"
+tags: ["配色", "暗色", "冷色调", "蓝紫"]
+featured: true
+order: 4
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal", "Hyper"]
+---
+
+## 简介
+
+Tokyo Night 是一款以东京夜晚霓虹灯光为灵感来源的暗色配色方案，由开发者 enkia 创建。它的核心设计理念是将东京夜间街景中璀璨的蓝紫色灯光与深邃的夜空融合在一起，打造出一种既现代又沉静的视觉氛围。配色以深蓝灰色为背景底色，搭配明亮但不刺眼的蓝色、紫色和青色作为前景高亮色，整体观感冷峻而优雅。
+
+Tokyo Night 最初作为 VS Code 主题发布，凭借其独特的美学风格迅速赢得了大量开发者的喜爱。社区随后将其移植到了几乎所有主流终端模拟器和编辑器中。该主题提供三种变体：**Night**（默认深色）、**Storm**（更深的背景色，对比度更高）和 **Day**（亮色变体），满足不同光线环境下的使用需求。其色彩搭配经过精心调校，确保语法高亮清晰可辨，长时间编码也不易产生视觉疲劳。
+
+## 配色预览
+
+| 角色 | 颜色名 | 色值 |
+|------|--------|------|
+| 背景 | Background | `#1a1b26` |
+| 前景 | Foreground | `#a9b1d6` |
+| 黑色 | Black | `#32344a` |
+| 红色 | Red | `#f7768e` |
+| 绿色 | Green | `#9ece6a` |
+| 黄色 | Yellow | `#e0af68` |
+| 蓝色 | Blue | `#7aa2f7` |
+| 紫色 | Magenta | `#ad8ee6` |
+| 青色 | Cyan | `#449dab` |
+| 白色 | White | `#787c99` |
+| 亮黑 | Bright Black | `#444b6a` |
+| 亮红 | Bright Red | `#ff7a93` |
+| 亮绿 | Bright Green | `#b9f27c` |
+| 亮黄 | Bright Yellow | `#ff9e64` |
+| 亮蓝 | Bright Blue | `#7da6ff` |
+| 亮紫 | Bright Magenta | `#bb9af7` |
+| 亮青 | Bright Cyan | `#0db9d7` |
+| 亮白 | Bright White | `#acb0d0` |
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+# 下载 Tokyo Night iTerm2 配色文件
+curl -LO https://raw.githubusercontent.com/enkia/tokyo-night-vscode-theme/master/tokyo-night.itermcolors
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/tokyo-night.toml"]
+```
+
+### Kitty
+
+```bash
+# 使用 Kitty 内置主题管理器
+kitty +kitten themes Tokyo Night
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'Tokyo Night'
+```
+
+### Windows Terminal
+
+```json
+// 在 settings.json 的 schemes 数组中添加 Tokyo Night 配色
+// 或通过 Windows Terminal 主题市场直接安装
+```
+
+## 适用场景
+
+Tokyo Night 非常适合长时间的夜间编码场景。其深蓝灰色背景与低对比度的前景色组合能有效降低屏幕对眼睛的刺激，特别推荐在暗光环境下使用。同时，蓝紫色调的语法高亮在代码审查和阅读时提供了出色的视觉层次感，便于快速区分不同的代码元素。如果你喜欢冷色调的美学风格，或者希望终端与 VS Code 保持一致的视觉体验，Tokyo Night 是一个绝佳的选择。此外，其三种变体可以灵活切换——白天用 Day 变体、晚上用 Night 或 Storm 变体。

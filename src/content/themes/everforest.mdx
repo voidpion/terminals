@@ -1,0 +1,76 @@
+---
+title: "Everforest"
+description: "以自然森林为灵感的绿色基调护眼配色方案，低对比度柔和舒适"
+website: "https://github.com/sainnhe/everforest"
+github: "https://github.com/sainnhe/everforest"
+tags: ["配色", "护眼", "绿色", "自然", "低对比度"]
+featured: false
+order: 11
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal"]
+---
+
+## 简介
+
+Everforest 是由中国开发者 sainnhe 创建的配色方案，灵感来源于常青森林的自然色调。正如其名字所暗示的，Everforest 以柔和的绿色为基调，搭配温暖的棕色、淡雅的橙色和克制的蓝色，模拟出漫步于阳光斑驳的森林小径时所感受到的视觉氛围。它的设计核心理念是"护眼"——通过精心控制色彩的饱和度和明度，将前景色与背景色之间的对比度维持在一个既清晰可读又不刺激眼睛的舒适区间。
+
+Everforest 提供了 Dark 和 Light 两种模式，每种模式又有 Hard、Medium（默认）和 Soft 三种对比度级别。与同为绿色系的 Gruvbox 相比，Everforest 的色彩更加柔和内敛，饱和度更低，给人一种"薄雾中的森林"而非"金秋的田野"的感觉。sainnhe 同时也是 Edge、Sonokai 和 Gruvbox Material 等配色方案的作者，在色彩设计领域有着丰富的经验和独到的审美。Everforest 在追求舒适编码体验的开发者中积累了稳定的用户群。
+
+## 配色预览
+
+| 角色 | 颜色名 | 色值（Dark Medium） |
+|------|--------|-------------------|
+| 背景 | bg0 | `#2d353b` |
+| 前景 | fg | `#d3c6aa` |
+| 黑色 | Black | `#343f44` |
+| 红色 | Red | `#e67e80` |
+| 绿色 | Green | `#a7c080` |
+| 黄色 | Yellow | `#dbbc7f` |
+| 蓝色 | Blue | `#7fbbb3` |
+| 紫色 | Magenta | `#d699b6` |
+| 青色 | Cyan | `#83c092` |
+| 白色 | White | `#d3c6aa` |
+| 亮黑 | Bright Black | `#475258` |
+| 亮红 | Bright Red | `#e67e80` |
+| 亮绿 | Bright Green | `#a7c080` |
+| 亮黄 | Bright Yellow | `#dbbc7f` |
+| 亮蓝 | Bright Blue | `#7fbbb3` |
+| 亮紫 | Bright Magenta | `#d699b6` |
+| 亮青 | Bright Cyan | `#83c092` |
+| 亮白 | Bright White | `#d3c6aa` |
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+# 从 iTerm2-Color-Schemes 项目获取 Everforest 配色
+curl -LO https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/schemes/Everforest%20Dark%20Medium.itermcolors
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+[colors.primary]
+background = "#2d353b"
+foreground = "#d3c6aa"
+```
+
+### Kitty
+
+```bash
+kitty +kitten themes Everforest Dark Medium
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'Everforest Dark (Gogh)'
+```
+
+## 适用场景
+
+Everforest 是为"健康编码"而生的配色方案。如果你经常需要连续数小时面对终端屏幕，Everforest 的低饱和度绿色基调能够有效减轻眼部疲劳。它特别适合搭配护眼显示器或开启夜间模式的屏幕使用。对于在自然光充足的环境中工作的用户，Everforest Light 变体提供了一种清新、自然的亮色体验。不过，由于整体色彩较为柔和，Everforest 在需要高可见度的场景（如投影演示）中可能不是最佳选择，建议在这类场景下切换到对比度更高的方案。

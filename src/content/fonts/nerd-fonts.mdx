@@ -1,0 +1,85 @@
+---
+title: "Nerd Fonts"
+description: "为开发者图标化的字体补丁集合，为任意等宽字体注入数千个图标字形"
+website: "https://www.nerdfonts.com/"
+github: "https://github.com/ryanoasis/nerd-fonts"
+tags: ["图标字体", "补丁", "开源"]
+featured: true
+order: 3
+ligatures: false
+nerd_font_variant: true
+styles: ["Various"]
+preview_text: "Terminal > ls -la ~/.config"
+---
+
+## 简介
+
+Nerd Fonts 并不是一款单独的字体，而是一个字体补丁项目。它由 Ryan L McIntyre 发起，目标是将数千个图标字形（包括 Powerline、Font Awesome、Devicons、Octicons、Material Design Icons 等）注入到现有的等宽编程字体中，生成带有完整图标支持的变体字体。这使得终端用户无需额外配置 fallback 字体，就能在命令行中显示文件类型图标、Git 状态符号、操作系统标志等丰富的视觉元素。
+
+Nerd Fonts 目前已为超过 50 款流行编程字体提供了补丁版本，包括 JetBrains Mono、Fira Code、Hack、Source Code Pro 等。项目在 GitHub 上拥有超过 50k Star，是终端美化生态中不可或缺的基础设施。无论你使用 Starship、Powerlevel10k 还是 Oh My Posh 等提示符主题，Nerd Font 都是确保图标正常渲染的首选方案。
+
+## 安装
+
+```bash
+# macOS — Homebrew（以 JetBrainsMono 为例）
+brew install --cask font-jetbrains-mono-nerd-font
+
+# 查看所有可用的 Nerd Font
+brew search nerd-font
+
+# Ubuntu/Debian — 手动安装
+mkdir -p ~/.local/share/fonts && cd ~/.local/share/fonts
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
+unzip JetBrainsMono.zip -d JetBrainsMono && fc-cache -fv
+
+# Windows — Scoop
+scoop bucket add nerd-fonts
+scoop install nerd-fonts/JetBrainsMono-NF
+
+# 使用官方安装脚本
+curl -fsSL https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/install.sh | bash -s -- JetBrainsMono
+```
+
+## 特性亮点
+
+- **海量图标**: 内置 10,000+ 图标字形，覆盖 Powerline、Font Awesome、Devicons、Codicons、Weather Icons 等主流图标集
+- **广泛兼容**: 为 50+ 款等宽字体提供补丁版本，几乎涵盖所有主流编程字体
+- **终端美化必备**: Starship、Powerlevel10k、Oh My Posh 等提示符主题的图标显示依赖 Nerd Font
+- **文件管理器支持**: lsd、eza、yazi 等现代终端文件管理器通过 Nerd Font 显示文件类型图标
+- **自定义补丁工具**: 提供 `font-patcher` 脚本，可以为任意字体手动添加图标字形
+- **开源免费**: 项目本身及所有补丁字体均遵循各自原始字体的开源许可证
+
+## 推荐配置
+
+### 终端模拟器
+
+```toml
+# Alacritty — ~/.config/alacritty/alacritty.toml
+[font]
+size = 14.0
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Regular"
+```
+
+```conf
+# Kitty — ~/.config/kitty/kitty.conf
+font_family      JetBrainsMono Nerd Font
+bold_font        auto
+italic_font      auto
+font_size        14.0
+```
+
+```lua
+-- WezTerm — ~/.wezterm.lua
+config.font = wezterm.font('JetBrainsMono Nerd Font')
+config.font_size = 14.0
+```
+
+### 验证安装
+
+安装完成后可在终端中运行以下命令，检查图标是否正确显示：
+
+```bash
+echo -e "\uf115 \ue711 \ue73c \uf09b \uf1d3 \uf308"
+```

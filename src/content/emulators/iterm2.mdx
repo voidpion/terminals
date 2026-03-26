@@ -1,0 +1,112 @@
+---
+title: "iTerm2"
+description: "macOS 上功能最强大的终端模拟器，支持分屏、热键、自动补全等高级功能"
+website: "https://iterm2.com"
+github: "https://github.com/gnachman/iTerm2"
+tags: ["macOS", "免费", "功能丰富"]
+featured: true
+order: 1
+platforms: ["macOS"]
+license: "GPL"
+gpu_accelerated: true
+multiplexer_builtin: true
+pricing: "free"
+screenshot: "/screenshots/iterm2.png"
+---
+
+## 简介
+
+iTerm2 是 macOS 平台上最受欢迎的终端模拟器，也是许多开发者替代系统自带 Terminal.app 的首选工具。它由 George Nachman 开发并持续维护，自 2010 年发布以来已成为 macOS 开发者生态中不可或缺的一部分。
+
+iTerm2 提供了远超系统终端的功能集，包括分屏窗口管理、热键窗口、自动补全、即时回放、触发器、Shell 集成等。它的 GPU 加速渲染引擎确保了即使在高负载输出场景下也能保持流畅的显示体验。
+
+对于需要同时管理多个终端会话的开发者来说，iTerm2 内置的窗口复用功能可以完全替代 tmux 或 screen，大幅简化工作流程。
+
+## 安装
+
+### 通过 Homebrew 安装（推荐）
+
+```bash
+brew install --cask iterm2
+```
+
+### 手动安装
+
+前往 [iTerm2 官网](https://iterm2.com/downloads.html) 下载最新稳定版的 `.zip` 文件，解压后将 `iTerm.app` 拖入"应用程序"文件夹即可。
+
+### 安装 Shell 集成
+
+启动 iTerm2 后，通过菜单安装 Shell 集成以获得完整功能体验：
+
+```bash
+# iTerm2 菜单 -> Install Shell Integration
+# 或手动安装
+curl -L https://iterm2.com/shell_integration/install_shell_integration.sh | bash
+```
+
+安装完成后重启终端，Shell 集成将提供命令状态提示、目录历史、上传下载等增强功能。
+
+## 核心特性
+
+- **分屏窗口管理** - 支持水平和垂直分屏，可自由拖拽调整窗口大小，内置标签页管理
+- **热键窗口** - 通过全局快捷键瞬间呼出/隐藏终端窗口，类似 Quake 风格的下拉终端
+- **GPU 加速渲染** - 基于 Metal API 的 GPU 渲染引擎，确保大量输出时依然流畅
+- **即时回放** - 按下 `Cmd+Opt+B` 可回放终端历史输出，像播放视频一样查看过去的终端内容
+- **自动补全** - 基于历史命令和当前上下文的智能补全建议
+- **触发器** - 根据终端输出内容自动执行操作（高亮、通知、静默等）
+- **Shell 集成** - 深度集成 Bash/Zsh/Fish，提供命令状态标记、目录书签、文件拖放
+- **密码管理器** - 内置密码管理，可安全地自动填充 SSH 密码和 sudo 密码
+- **配置文件系统** - 支持多套配置方案，可按主机、目录、命令自动切换配置
+- **Python API** - 提供完整的 Python 脚本接口，可编写自动化脚本扩展功能
+- **图像显示** - 支持在终端中直接显示图片（imgcat 协议）
+- **状态栏** - 可自定义的底部状态栏，显示 CPU、内存、Git 分支等信息
+
+## 配置推荐
+
+iTerm2 的配置可以通过 GUI 界面完成，也可以通过 `defaults write` 命令进行自动化配置。以下是一份推荐的基础配置脚本：
+
+```bash
+# 设置 iTerm2 偏好设置目录（便于通过 Git 同步配置）
+defaults write com.googlecode.iterm2 PrefsCustomFolder -string "~/.config/iterm2"
+defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
+
+# 启用 GPU 渲染
+defaults write com.googlecode.iterm2 UseMetal -bool true
+
+# 设置无限滚动缓冲区
+defaults write com.googlecode.iterm2 UnlimitedScrollback -bool true
+
+# 退出时不提示确认
+defaults write com.googlecode.iterm2 PromptOnQuit -bool false
+
+# 新标签页使用当前目录
+defaults write com.googlecode.iterm2 OpenNewTabAtWorkingDirectory -bool true
+```
+
+如果使用 JSON 格式的配置文件，可以将以下内容保存为 Profile：
+
+```json
+{
+  "Profiles": [
+    {
+      "Name": "Default",
+      "Guid": "default-profile",
+      "Normal Font": "MesloLGS-NF-Regular 14",
+      "Transparency": 0.05,
+      "Blur": true,
+      "Blur Radius": 20,
+      "Rows": 35,
+      "Columns": 120,
+      "Option Key Sends": 2,
+      "Scrollback Lines": 0,
+      "Unlimited Scrollback": true,
+      "GPU Drawing": true,
+      "Use Non-ASCII Font": false,
+      "Cursor Type": 2,
+      "Blinking Cursor": true
+    }
+  ]
+}
+```
+
+> **提示**：建议将 iTerm2 配置文件夹设为 `~/.config/iterm2` 并纳入版本控制，方便在多台设备之间同步配置。搭配 Nerd Font 字体（如 MesloLGS NF）可获得最佳的图标和符号显示效果。

@@ -1,0 +1,206 @@
+---
+title: "Kitty"
+description: "基于 GPU 加速的跨平台终端模拟器，支持图像协议和 Python 扩展，功能与性能兼备"
+website: "https://sw.kovidgoyal.net/kitty/"
+github: "https://github.com/kovidgoyal/kitty"
+tags: ["跨平台", "免费", "GPU加速", "可扩展"]
+featured: true
+order: 3
+platforms: ["macOS", "Linux"]
+license: "GPL"
+gpu_accelerated: true
+multiplexer_builtin: true
+pricing: "free"
+screenshot: "/screenshots/kitty.png"
+---
+
+## 简介
+
+Kitty 是由 Kovid Goyal 开发的现代化终端模拟器，使用 C 语言和 Python 编写，通过 OpenGL 实现 GPU 加速渲染。它在追求高性能的同时，提供了丰富的内置功能和强大的可扩展性，是少数兼顾性能与功能的终端模拟器之一。
+
+Kitty 最具特色的功能之一是其图像显示协议（Kitty Graphics Protocol）。该协议已成为终端图像显示的事实标准，被 Neovim、Ranger、viu 等众多工具所支持。通过这一协议，用户可以在终端中直接预览图片、甚至播放动画。
+
+Kitty 内置了窗口管理功能（称为"Kitty Windows"），支持标签页、分屏和窗口布局，无需依赖 tmux 等外部工具。同时，它提供了完整的 Python 扩展系统（Kittens），用户可以用 Python 编写自定义功能插件。
+
+## 安装
+
+### macOS
+
+```bash
+# 通过 Homebrew 安装（推荐）
+brew install --cask kitty
+
+# 或使用官方安装脚本
+curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+```
+
+### Linux
+
+```bash
+# 官方安装脚本（推荐，获取最新版）
+curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+
+# 安装后创建桌面快捷方式和命令链接
+mkdir -p ~/.local/bin
+ln -sf ~/.local/kitty.app/bin/kitty ~/.local/bin/kitty
+ln -sf ~/.local/kitty.app/bin/kitten ~/.local/bin/kitten
+
+# Ubuntu / Debian
+sudo apt install kitty
+
+# Arch Linux
+sudo pacman -S kitty
+
+# Fedora
+sudo dnf install kitty
+```
+
+### 验证安装
+
+```bash
+# 检查版本
+kitty --version
+
+# 打开内置的 Kitten 功能列表
+kitten --help
+
+# 在终端中显示一张图片（测试图像协议）
+kitten icat /path/to/image.png
+```
+
+## 核心特性
+
+- **GPU 加速渲染** - 基于 OpenGL 的渲染引擎，所有文本渲染均在 GPU 上完成，性能出色
+- **Kitty 图像协议** - 终端图像显示的事实标准，支持 PNG、GIF 动画等格式的直接显示
+- **内置窗口管理** - 支持标签页和多种分屏布局（Stack、Tall、Fat、Grid、Splits 等）
+- **Kittens 扩展系统** - 使用 Python 编写的插件系统，可创建自定义功能模块
+- **远程控制** - 通过 `kitten @` 命令远程控制运行中的 Kitty 实例
+- **Unicode 完整支持** - 出色的 Unicode 和 Emoji 渲染，包括连字（ligatures）支持
+- **主题系统** - 内置 `kitten themes` 命令，可从 200+ 主题中即时预览并切换
+- **SSH 增强** - 内置 `kitten ssh` 命令自动将 Kitty 的 terminfo 传输到远程服务器
+- **配置热加载** - 修改配置后按 `Ctrl+Shift+F5` 即时重新加载
+- **自定义着色器** - 支持自定义 GLSL 片段着色器，可实现独特的视觉效果
+- **剪贴板增强** - 支持从终端读写系统剪贴板，包括图像内容
+- **多实例单进程** - 多个 Kitty 窗口共享同一进程，减少内存占用
+
+## 配置推荐
+
+Kitty 的配置文件位于 `~/.config/kitty/kitty.conf`，使用简洁的 `key value` 格式。
+
+```conf
+# ~/.config/kitty/kitty.conf
+
+# ========== 字体设置 ==========
+font_family      JetBrains Mono
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+font_size        14.0
+
+# 启用连字显示
+disable_ligatures never
+
+# ========== 窗口与外观 ==========
+# 窗口内边距
+window_padding_width 8
+
+# 窗口透明度
+background_opacity 0.95
+
+# macOS 标题栏样式（titlebar-only 隐藏按钮）
+macos_titlebar_color background
+hide_window_decorations titlebar-only
+
+# 光标样式
+cursor_shape beam
+cursor_blink_interval 0.5
+
+# 确认关闭窗口的行为（0 = 不确认）
+confirm_os_window_close 0
+
+# ========== 滚动设置 ==========
+scrollback_lines 10000
+
+# 使用 less 查看完整滚动缓冲区
+scrollback_pager less --chop-long-lines --RAW-CONTROL-CHARS +INPUT_LINE_NUMBER
+
+# ========== 标签页设置 ==========
+# 标签页栏位置
+tab_bar_edge top
+# 标签页样式
+tab_bar_style powerline
+tab_powerline_style slanted
+# 标签页标题格式
+tab_title_template "{index}: {title}"
+# 活动标签页颜色
+active_tab_foreground   #1e1e2e
+active_tab_background   #cba6f7
+inactive_tab_foreground #cdd6f4
+inactive_tab_background #313244
+
+# ========== 窗口布局 ==========
+# 可用布局：fat, grid, horizontal, splits, stack, tall, vertical
+enabled_layouts splits, stack
+
+# ========== 快捷键设置 ==========
+# 使用 Ctrl+Shift 作为主修饰键（默认）
+kitty_mod ctrl+shift
+
+# 分屏操作
+map kitty_mod+- launch --location=hsplit --cwd=current
+map kitty_mod+\ launch --location=vsplit --cwd=current
+
+# 窗口导航
+map kitty_mod+h neighboring_window left
+map kitty_mod+l neighboring_window right
+map kitty_mod+k neighboring_window up
+map kitty_mod+j neighboring_window down
+
+# 调整窗口大小
+map kitty_mod+left  resize_window narrower 3
+map kitty_mod+right resize_window wider 3
+map kitty_mod+up    resize_window taller 3
+map kitty_mod+down  resize_window shorter 3
+
+# 标签页管理
+map kitty_mod+t new_tab_with_cwd
+map kitty_mod+1 goto_tab 1
+map kitty_mod+2 goto_tab 2
+map kitty_mod+3 goto_tab 3
+
+# 切换布局（在 splits 和 stack 之间切换实现最大化效果）
+map kitty_mod+z toggle_layout stack
+
+# 快速切换主题
+map kitty_mod+t kitten themes
+
+# ========== 高级设置 ==========
+# 允许远程控制
+allow_remote_control socket-only
+listen_on unix:/tmp/kitty
+
+# Shell 集成
+shell_integration enabled
+
+# macOS 设置
+macos_option_as_alt yes
+```
+
+可以将主题设置单独保存为文件并在主配置中引用：
+
+```conf
+# 在 kitty.conf 中引入主题文件
+include themes/current-theme.conf
+```
+
+使用内置主题管理器快速切换主题：
+
+```bash
+# 浏览并选择主题（交互式界面）
+kitten themes
+
+# 直接应用指定主题
+kitten themes --reload-in=all Catppuccin-Mocha
+```
+
+> **提示**：Kitty 的 `kitten ssh` 命令会自动处理远程服务器的 terminfo 配置问题，建议用它替代原生 `ssh` 命令。配合 Neovim 使用时，Kitty 图像协议可以在编辑器中直接预览图片。将 `allow_remote_control` 设为 `socket-only` 并配合脚本，可以实现非常灵活的自动化工作流。

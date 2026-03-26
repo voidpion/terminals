@@ -1,0 +1,73 @@
+---
+title: "tldr"
+description: "社区驱动的简化版命令手册"
+github: "https://github.com/tldr-pages/tldr"
+tags: ["文档", "帮助", "社区"]
+featured: false
+order: 11
+category: "productivity"
+replaces: "man"
+install_cmd: "brew install tldr"
+written_in: "Various"
+---
+
+## 简介
+
+tldr（Too Long; Didn't Read）是一个社区驱动的命令行工具手册项目，旨在为常用命令提供简洁、实用的示例说明。相比传统的 `man` 手册页面，tldr 用直白的语言和具体的使用示例来解释命令，让你在几秒钟内就能找到想要的用法。
+
+tldr 项目由全球数千名贡献者共同维护，涵盖了 Linux、macOS、Windows 等多个平台上的常用命令。每个页面都经过精心编写，包含最常见的使用场景和真实可用的命令示例。它不是 man 的完整替代，而是一个快速参考工具，帮助你迅速回忆起命令的核心用法。
+
+## 安装
+
+```bash
+# macOS
+brew install tldr
+
+# npm（Node.js 客户端）
+npm install -g tldr
+
+# pip（Python 客户端）
+pip install tldr
+
+# Cargo（Rust 客户端 tealdeer，更快）
+cargo install tealdeer
+```
+
+## 核心特性
+
+- **简洁实用**: 每个命令仅展示最常用的使用场景
+- **社区维护**: 数千名贡献者共同维护，内容持续更新
+- **跨平台**: 涵盖 Linux、macOS、Windows、Android 等平台
+- **多语言**: 支持中文等多种语言的翻译版本
+- **多客户端**: 提供 Node.js、Python、Rust 等多种客户端实现
+- **离线使用**: 缓存页面后可离线查询
+
+## 使用示例
+
+```bash
+# 查看命令的 tldr 页面
+tldr tar
+
+# 查看特定平台的命令
+tldr --platform osx diskutil
+
+# 更新本地缓存
+tldr --update
+
+# 查看中文版本（如果客户端支持）
+tldr -L zh tar
+
+# 列出所有可用的 tldr 页面
+tldr --list
+
+# 随机查看一个命令的用法
+tldr --random
+
+# 搜索相关命令
+tldr --search "compress"
+```
+
+## 推荐搭配
+
+- **fzf** — 用 `tldr --list | fzf --preview 'tldr {}'` 交互式查找命令
+- **bat** — 用 bat 高亮显示 tldr 输出

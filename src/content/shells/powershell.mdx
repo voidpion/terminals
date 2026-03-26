@@ -1,0 +1,149 @@
+---
+title: "PowerShell"
+description: "微软开源的跨平台任务自动化 Shell，基于 .NET 的对象管道彻底颠覆传统文本流"
+website: "https://learn.microsoft.com/en-us/powershell/"
+github: "https://github.com/PowerShell/PowerShell"
+tags: ["跨平台", "对象管道", ".NET", "自动化"]
+featured: true
+order: 16
+language: "C#"
+posix_compatible: false
+default_on: ["Windows"]
+config_file: "Microsoft.PowerShell_profile.ps1"
+---
+
+## 简介
+
+PowerShell 是微软开发的跨平台任务自动化解决方案，由命令行 Shell、脚本语言和配置管理框架三部分组成。与传统 Unix Shell 最根本的区别在于，PowerShell 的管道传递的不是纯文本字符串，而是完整的 .NET 对象。这意味着你可以直接访问对象的属性和方法，无需通过 `grep`、`awk`、`sed` 等工具对文本进行正则解析。这一设计让系统管理和自动化任务变得更加精确和可靠。
+
+PowerShell 最初（2006 年）是 Windows 独占的闭源产品（Windows PowerShell，基于 .NET Framework）。2016 年微软将其开源并发布了跨平台的 PowerShell Core（基于 .NET Core / .NET），可在 Windows、macOS 和 Linux 上运行。如今 PowerShell 7.x 是积极维护的版本，已成为 Windows 系统管理、Azure 云运维和 DevOps 自动化领域的核心工具。
+
+PowerShell 采用动词-名词（Verb-Noun）命名规范的 Cmdlet 体系，如 `Get-Process`、`Set-Item`、`Invoke-WebRequest`，使得命令具备高度的可发现性和一致性。结合强大的远程管理能力（PowerShell Remoting）、完整的模块生态（PowerShell Gallery），以及与 .NET 生态的深度集成，PowerShell 在企业级自动化场景中具有独特的优势。
+
+## 安装
+
+```bash
+# macOS
+brew install powershell/tap/powershell
+
+# Ubuntu 22.04 / 24.04
+sudo apt-get update
+sudo apt-get install -y wget apt-transport-https software-properties-common
+source /etc/os-release
+wget -q https://packages.microsoft.com/config/ubuntu/$VERSION_ID/packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+sudo apt-get update
+sudo apt-get install -y powershell
+
+# Fedora
+sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+sudo dnf install powershell
+
+# Arch Linux（AUR）
+yay -S powershell-bin
+
+# Windows（已内置 Windows PowerShell 5.1，安装最新版 PowerShell 7）
+winget install Microsoft.PowerShell
+
+# Docker
+docker run -it mcr.microsoft.com/powershell
+
+# 启动 PowerShell
+pwsh
+```
+
+## 核心特性
+
+- **对象管道**: 管道中传递的是 .NET 对象而非文本，`Get-Process | Where-Object CPU -gt 100 | Sort-Object CPU -Descending` 直接按属性筛选排序，无需文本解析
+- **Cmdlet 命名规范**: 所有命令遵循动词-名词格式（`Get-`、`Set-`、`New-`、`Remove-`），配合 `Get-Command` 和 `Get-Help` 实现高度可发现性
+- **强类型脚本语言**: 支持变量类型约束、函数参数验证、类定义、异常处理（try/catch/finally）等完整编程语言特性
+- **PowerShell Remoting**: 通过 WinRM 或 SSH 远程管理成百上千台机器，支持一对多并行执行
+- **模块与包管理**: 通过 PowerShell Gallery（`Install-Module`）安装社区模块，涵盖 Azure、AWS、VMware、Active Directory 等
+- **提供者（Provider）系统**: 用统一的文件系统式命令（`Get-ChildItem`、`Set-Item`）访问注册表、证书存储、环境变量等异构数据源
+- **跨平台一致性**: PowerShell 7 在 Windows、macOS、Linux 上行为基本一致，脚本可跨平台复用
+- **丰富的格式化输出**: `Format-Table`、`Format-List`、`ConvertTo-Json`、`Export-Csv` 等命令让数据展示和导出极为便捷
+- **错误处理机制**: 区分终止性错误和非终止性错误，支持 `$ErrorActionPreference`、`-ErrorAction` 参数精确控制错误行为
+
+## 配置推荐
+
+```powershell
+# $PROFILE 路径（通常为 ~/.config/powershell/Microsoft.PowerShell_profile.ps1）
+# 查看路径：echo $PROFILE
+
+# ---------- 模块加载 ----------
+# 智能补全增强（类似 Fish 的自动建议）
+Install-Module PSReadLine -Force -SkipPublisherCheck
+Set-PSReadLineOption -PredictionSource History
+Set-PSReadLineOption -PredictionViewStyle ListView
+Set-PSReadLineOption -EditMode Emacs
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
+
+# 美化提示符（类似 Starship）
+Install-Module oh-my-posh -Force
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/catppuccin.omp.json" | Invoke-Expression
+
+# 目录图标
+Install-Module Terminal-Icons -Force
+Import-Module Terminal-Icons
+
+# ---------- 实用别名 ----------
+Set-Alias -Name vim -Value nvim
+Set-Alias -Name ll -Value Get-ChildItem
+Set-Alias -Name grep -Value Select-String
+Set-Alias -Name which -Value Get-Command
+
+# ---------- 自定义函数 ----------
+# 创建目录并进入
+function mkcd {
+    param([string]$Path)
+    New-Item -ItemType Directory -Path $Path -Force | Out-Null
+    Set-Location $Path
+}
+
+# 快速查找文件
+function ff {
+    param([string]$Name)
+    Get-ChildItem -Recurse -Filter "*$Name*" -ErrorAction SilentlyContinue |
+        Select-Object FullName, Length, LastWriteTime
+}
+
+# 按大小列出前 10 大文件
+function top10 {
+    Get-ChildItem -File -Recurse -ErrorAction SilentlyContinue |
+        Sort-Object Length -Descending |
+        Select-Object -First 10 Name, @{N='SizeMB';E={[math]::Round($_.Length/1MB,2)}}, LastWriteTime
+}
+
+# Git 快捷命令
+function gs { git status }
+function gp { git pull --rebase }
+function gco { param([string]$Branch); git checkout $Branch }
+
+# ---------- 环境变量 ----------
+$env:EDITOR = "nvim"
+$env:PATH += [IO.Path]::PathSeparator + "$HOME/.local/bin"
+```
+
+## 与其他 Shell 的对比
+
+| 特性 | PowerShell | Bash | Zsh | Nushell |
+|------|-----------|------|-----|---------|
+| 管道数据模型 | .NET 对象 | 纯文本 | 纯文本 | 结构化表格 |
+| POSIX 兼容 | 否 | 是 | 是 | 否 |
+| 类型系统 | 完整（.NET 类型） | 无 | 无 | 内置类型 |
+| 远程管理 | 原生支持 | 需 SSH | 需 SSH | 不支持 |
+| Windows 集成 | 深度集成 | 需 WSL/Cygwin | 需 WSL | 一般 |
+| 命令可发现性 | 动词-名词规范 | 依赖 man | 依赖 man | 内置帮助 |
+| 模块生态 | PowerShell Gallery | 无统一源 | 无统一源 | 插件系统 |
+| 编写语言 | C# | C | C | Rust |
+
+## 实用技巧
+
+- 使用 `Get-Member`（简写 `gm`）探索任何对象的属性和方法：`Get-Process | Get-Member`
+- 使用 `Select-Object` 仅取需要的属性：`Get-Service | Select-Object Name, Status`
+- 用 `ConvertTo-Json` 和 `ConvertFrom-Json` 轻松处理 JSON 数据
+- `Invoke-RestMethod` 是内置的 HTTP 客户端，可直接返回解析后的对象
+- 善用 `$_`（管道当前对象）和 `ForEach-Object` 进行批量操作
+- 在脚本开头添加 `Set-StrictMode -Version Latest` 启用严格模式，提前捕获潜在错误
+
+PowerShell 的核心优势在于对象管道和 .NET 集成。如果你主要在 Windows 环境工作、需要管理 Active Directory / Azure / Microsoft 365，或者希望用一种强类型的脚本语言进行可靠的自动化操作，PowerShell 是无可替代的选择。即便在 macOS 和 Linux 上，它也是处理结构化数据和跨平台自动化的有力工具。

@@ -1,0 +1,75 @@
+---
+title: "Oh My Fish"
+description: "Fish Shell 的框架和插件管理器，提供丰富的主题与插件生态"
+github: "https://github.com/oh-my-fish/oh-my-fish"
+tags: ["框架", "Fish", "插件管理"]
+featured: false
+order: 35
+theme_type: "framework"
+compatible_with: ["Fish"]
+---
+
+## 简介
+
+Oh My Fish（简称 OMF）是 Fish Shell 生态中最知名的框架和包管理器。类似于 Zsh 生态中的 Oh My Zsh，它为 Fish Shell 用户提供了一套完整的框架体验——包括主题管理、插件安装、配置模板和社区维护的丰富插件仓库。通过简单的 `omf install` 命令，用户可以快速为 Fish Shell 添加各种功能扩展。
+
+Oh My Fish 的设计注重 Fish Shell 的原生特性，所有插件和主题都遵循 Fish 的设计哲学。框架本身的核心代码非常精简，不会显著影响 Shell 的启动速度。它维护着一个社区驱动的包仓库，收录了数百个经过审核的插件和主题，涵盖了从 Git 工具到 Node 版本管理等各类开发需求。
+
+## 安装
+
+```bash
+# 通过安装脚本安装
+curl https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install | fish
+
+# 离线安装
+git clone https://github.com/oh-my-fish/oh-my-fish
+cd oh-my-fish
+bin/install --offline
+```
+
+## 核心特性
+
+- **包管理器**: 简洁的 `omf install/remove/update` 命令管理插件和主题
+- **社区仓库**: 数百个经过审核的插件和主题，持续更新
+- **主题系统**: 丰富的提示符主题，一条命令即可切换
+- **快速初始化**: 框架核心精简，启动开销极小
+- **自动补全**: 为 omf 命令本身提供完整的 Tab 补全
+- **兼容性**: 与 Fisher 等其他包管理器可以共存
+
+## 使用方式
+
+```fish
+# 搜索可用的插件和主题
+omf search theme
+omf search plugin_name
+
+# 安装主题
+omf install bobthefish
+omf install agnoster
+
+# 安装插件
+omf install z            # 目录快速跳转
+omf install nvm          # Node 版本管理
+omf install bass         # 运行 Bash 工具
+omf install extract      # 通用解压命令
+omf install pj           # 项目目录跳转
+
+# 切换主题
+omf theme bobthefish
+
+# 列出已安装的包
+omf list
+
+# 更新所有包和框架
+omf update
+
+# 移除插件
+omf remove plugin_name
+
+# 查看包信息
+omf describe z
+
+# 创建自己的插件/主题模板
+omf new plugin my-plugin
+omf new theme my-theme
+```

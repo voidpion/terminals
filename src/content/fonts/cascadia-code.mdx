@@ -1,0 +1,89 @@
+---
+title: "Cascadia Code"
+description: "微软出品的开源编程字体，Windows Terminal 默认字体，内置丰富连字支持"
+github: "https://github.com/microsoft/cascadia-code"
+tags: ["编程字体", "微软", "连字", "开源"]
+featured: false
+order: 4
+ligatures: true
+nerd_font_variant: true
+styles: ["Regular", "Bold", "Italic", "Bold Italic", "Light", "SemiLight", "SemiBold", "ExtraLight"]
+preview_text: "Terminal > ls -la ~/.config"
+---
+
+## 简介
+
+Cascadia Code 是微软于 2019 年随 Windows Terminal 一同推出的开源等宽编程字体，由知名字体设计师 Aaron Bell 操刀。它是 Windows Terminal 的默认字体，也是微软首次专门为现代终端和代码编辑器设计的字体。Cascadia Code 在字形上采用了友好、圆润的设计风格，笔画自然流畅，兼具专业感与亲和力。
+
+Cascadia Code 内置了丰富的编程连字支持，能将 `===`、`!==`、`=>`、`<=` 等符号组合渲染为更具语义的连体形式。此外，微软还提供了不含连字的 Cascadia Mono 变体，以及专为 Powerline 提示符优化的 Cascadia Code PL 和 Cascadia Mono PL 变体，用户可根据需求自由选择。
+
+## 安装
+
+```bash
+# macOS — Homebrew
+brew install --cask font-cascadia-code
+brew install --cask font-caskaydia-cove-nerd-font  # Nerd Font 变体
+
+# Ubuntu/Debian
+sudo apt install fonts-cascadia-code
+
+# 手动安装 Nerd Font 变体
+mkdir -p ~/.local/share/fonts && cd ~/.local/share/fonts
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaCode.zip
+unzip CascadiaCode.zip -d CascadiaCode && fc-cache -fv
+
+# Windows — Scoop
+scoop bucket add nerd-fonts
+scoop install nerd-fonts/CascadiaCode-NF
+```
+
+## 特性亮点
+
+- **Windows Terminal 默认字体**: 微软官方钦定，与 Windows Terminal 配合体验最佳
+- **丰富连字**: 内置 200+ 编程连字，覆盖各种编程语言的常见符号组合
+- **多种变体**: 提供 Cascadia Code（连字）、Cascadia Mono（无连字）、PL（Powerline）三大系列
+- **8 种字重**: 从 ExtraLight 到 Bold，覆盖从纤细到醒目的多种显示需求
+- **草书斜体**: 斜体采用优雅的草书风格，在语义高亮中特别适合用于注释和关键字
+- **开源免费**: SIL OFL 许可证，可自由使用和修改
+
+## 推荐配置
+
+### 终端模拟器
+
+```toml
+# Alacritty — ~/.config/alacritty/alacritty.toml
+[font]
+size = 14.0
+[font.normal]
+family = "CaskaydiaCove Nerd Font"
+style = "Regular"
+[font.bold]
+family = "CaskaydiaCove Nerd Font"
+style = "Bold"
+```
+
+```conf
+# Kitty — ~/.config/kitty/kitty.conf
+font_family      CaskaydiaCove Nerd Font
+bold_font        auto
+italic_font      auto
+font_size        14.0
+```
+
+```lua
+-- WezTerm — ~/.wezterm.lua
+config.font = wezterm.font('CaskaydiaCove Nerd Font')
+config.font_size = 14.0
+config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
+```
+
+### VS Code
+
+```json
+{
+  "editor.fontFamily": "'Cascadia Code', 'CaskaydiaCove Nerd Font', monospace",
+  "editor.fontSize": 14,
+  "editor.fontLigatures": true,
+  "terminal.integrated.fontFamily": "'CaskaydiaCove Nerd Font'"
+}
+```

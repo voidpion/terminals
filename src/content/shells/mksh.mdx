@@ -1,0 +1,179 @@
+---
+title: "Mksh"
+description: "轻量级 Korn Shell 实现，Android 系统默认 Shell"
+website: "http://www.mirbsd.org/mksh.htm"
+tags: ["POSIX", "轻量", "Android", "KornShell"]
+featured: false
+order: 13
+language: "C"
+posix_compatible: true
+default_on: ["Android"]
+config_file: ".mkshrc"
+---
+
+## 简介
+
+Mksh（MirBSD Korn Shell）是 Korn Shell 的一个轻量级开源实现，由 Thorsten Glaser 为 MirBSD 操作系统开发并持续维护。Mksh 兼容 POSIX Shell 标准和大部分 AT&T ksh88 语法，同时保持了极小的代码体积和快速的执行性能。自 Android 4.0（Ice Cream Sandwich）起，Mksh 成为 Android 系统的默认 Shell（`/system/bin/sh`），这使它成为全球部署量最大的 Shell 之一——运行在数十亿台 Android 设备上。
+
+Mksh 的设计理念是在保持 Korn Shell 兼容性的同时追求精简和可移植性。它的代码量远小于 Bash 或 ksh93，编译后的二进制文件通常不到 300KB，非常适合资源受限的嵌入式环境。Mksh 支持的平台极为广泛，涵盖 Linux、BSD、macOS、Solaris、AIX、HP-UX、Cygwin、Android 等几乎所有 Unix-like 系统，甚至可以在一些非 Unix 平台上编译运行。
+
+Mksh 采用 ISC/BSD 许可证发布，适合在商业和嵌入式产品中使用。它提供了比 Dash 更丰富的交互式功能（如命令行编辑、历史搜索），又比 Bash 和 ksh93 轻量得多，是介于极简 POSIX Shell 和全功能 Shell 之间的理想选择。
+
+## 安装
+
+```bash
+# macOS
+brew install mksh
+
+# Ubuntu/Debian
+sudo apt install mksh
+
+# Fedora
+sudo dnf install mksh
+
+# Arch Linux
+sudo pacman -S mksh
+
+# Alpine Linux
+apk add mksh
+
+# Android（通过 Termux）
+pkg install mksh
+
+# 从源码编译
+wget https://www.mirbsd.org/MirOS/dist/mir/mksh/mksh-R59c.tgz
+tar xzf mksh-R59c.tgz && cd mksh
+sh Build.sh    # 使用 Build.sh 而非 configure
+sudo install -c -o root -g bin -m 555 mksh /usr/local/bin/mksh
+
+# 设为默认 Shell
+echo "$(which mksh)" | sudo tee -a /etc/shells
+chsh -s "$(which mksh)"
+```
+
+## 核心特性
+
+- **Android 系统 Shell**: 自 Android 4.0 起作为 `/system/bin/sh`，运行在数十亿设备上
+- **POSIX 与 ksh88 兼容**: 兼容 POSIX Shell 标准和大部分 ksh88 语法，可运行大量现有脚本
+- **极小体积**: 编译后二进制不到 300KB，远小于 Bash（约 1MB）和 ksh93（约 1.5MB）
+- **命令行编辑**: 支持 Emacs 和 Vi 编辑模式，具备历史搜索功能
+- **快速启动**: 启动速度极快，适合频繁创建子 Shell 的场景
+- **广泛可移植**: 支持几乎所有 Unix-like 平台，以及 Cygwin、MSYS2 等 Windows 环境
+- **宽松许可**: ISC/BSD 许可证，可自由用于商业产品和嵌入式系统
+- **UTF-8 支持**: 良好的 Unicode/UTF-8 处理能力
+- **Here String**: 支持 `<<<` here string 语法
+- **数组支持**: 支持索引数组（ksh88 风格），但不支持 ksh93 的关联数组
+
+## 配置推荐
+
+```ksh
+# ~/.mkshrc
+
+# ---------- 环境变量 ----------
+export EDITOR=vim
+export VISUAL=vim
+export PAGER=less
+export PATH="$HOME/.local/bin:$HOME/go/bin:$PATH"
+
+# ---------- 编辑模式 ----------
+set -o vi           # Vi 模式（或 set -o emacs）
+
+# ---------- 历史记录 ----------
+HISTFILE="$HOME/.mksh_history"
+HISTSIZE=10000
+
+# ---------- 提示符 ----------
+# 使用 PS1 和内置变量
+PS1='${USER:=$(id -un)}@${HOSTNAME:=$(hostname -s)}:${PWD##*/} $ '
+
+# ---------- 实用别名 ----------
+alias ll='ls -lah'
+alias la='ls -A'
+alias gs='git status'
+alias gp='git pull --rebase'
+alias dc='docker compose'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias h='fc -l -20'       # 显示最近 20 条历史
+
+# ---------- 实用函数 ----------
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+# 快速查找文件
+ff() {
+    find . -name "*$1*" -type f 2>/dev/null
+}
+
+# 快速查找目录
+fd() {
+    find . -name "*$1*" -type d 2>/dev/null
+}
+
+# 压缩/解压辅助
+extract() {
+    case "$1" in
+        *.tar.bz2) tar xjf "$1" ;;
+        *.tar.gz)  tar xzf "$1" ;;
+        *.tar.xz)  tar xJf "$1" ;;
+        *.zip)     unzip "$1" ;;
+        *.gz)      gunzip "$1" ;;
+        *)         print "不支持的格式: $1" ;;
+    esac
+}
+
+# ---------- Android/Termux 环境适配 ----------
+# 检测是否在 Android 环境
+if [ -d /system/app ] && [ -d /system/priv-app ]; then
+    # Android 特定配置
+    export TMPDIR=/data/local/tmp
+    alias pm='cmd package'
+    alias am='cmd activity'
+fi
+
+# Termux 环境适配
+if [ -n "$TERMUX_VERSION" ]; then
+    export PATH="$PREFIX/bin:$PATH"
+    alias open='termux-open'
+    alias share='termux-share'
+    alias clip='termux-clipboard-set'
+    alias paste='termux-clipboard-get'
+fi
+```
+
+## Mksh 与其他 Shell 对比
+
+| 特性 | Mksh | Bash | Dash | Ksh93 |
+|------|------|------|------|-------|
+| 二进制体积 | ~300KB | ~1MB | ~120KB | ~1.5MB |
+| POSIX 兼容 | 是 | 是 | 严格 | 是 |
+| 数组 | 索引数组 | 索引+关联 | 无 | 索引+关联 |
+| 浮点运算 | 否 | 否 | 否 | 是 |
+| 命令行编辑 | 是 | 是 | 否 | 是 |
+| 许可证 | ISC/BSD | GPL | BSD | EPL |
+| 交互式功能 | 中等 | 丰富 | 基本 | 丰富 |
+| Android 默认 | 是 | 否 | 否 | 否 |
+
+## Android 开发中的 Mksh
+
+在 Android 系统开发和调试中，Mksh 是不可或缺的工具。通过 `adb shell` 连接到 Android 设备时，你实际上就在使用 Mksh。以下是一些常见场景：
+
+```sh
+# 通过 adb 使用 mksh
+adb shell
+
+# 查看系统属性
+getprop ro.build.version.release
+
+# 查看运行中的进程
+ps -A | grep com.android
+
+# 检查存储空间
+df -h /data
+
+# logcat 过滤
+logcat -s MyApp:V
+```
+
+Mksh 在轻量级 Korn Shell 领域占据着独特的生态位。它比 Dash 功能更丰富，比 Bash 更轻量，比 ksh93 更便于移植。对于 Android 开发者、嵌入式系统工程师以及追求精简高效的 Shell 用户来说，Mksh 是一个值得关注的优秀选择。

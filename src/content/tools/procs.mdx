@@ -1,0 +1,101 @@
+---
+title: "procs"
+description: "现代化的进程查看工具"
+github: "https://github.com/dalance/procs"
+tags: ["进程管理", "系统监控", "Rust"]
+featured: false
+order: 17
+category: "system"
+replaces: "ps"
+install_cmd: "brew install procs"
+written_in: "Rust"
+---
+
+## 简介
+
+procs 是一个用 Rust 编写的现代化进程查看工具，作为传统 `ps` 命令的增强替代品。它提供彩色输出、人类可读的格式、关键字搜索以及丰富的进程信息展示，让查看和管理系统进程变得更加轻松直观。
+
+相比 `ps` 需要记忆各种参数标志（如 `ps aux`、`ps -ef` 等），procs 默认就能展示最有用的信息，包括 CPU 使用率、内存占用、TCP/UDP 端口、读写速率等。它支持按关键字搜索进程、树形视图展示进程关系，还能以 Docker 容器维度聚合显示进程，是系统管理和调试排查的得力助手。
+
+## 安装
+
+```bash
+# macOS
+brew install procs
+
+# Ubuntu/Debian (snap)
+sudo snap install procs
+
+# Cargo
+cargo install procs
+```
+
+## 核心特性
+
+- **彩色输出**: 不同类型的信息以不同颜色展示
+- **关键字搜索**: 直接用关键字搜索进程，无需 `grep`
+- **丰富信息**: 默认显示端口、读写速率等扩展信息
+- **树形视图**: 以树状结构展示进程父子关系
+- **Docker 集成**: 识别并显示进程所属的 Docker 容器
+- **分页器支持**: 内容过多时自动调用分页器
+
+## 使用示例
+
+```bash
+# 显示所有进程（默认带彩色输出）
+procs
+
+# 关键字搜索进程
+procs node
+
+# 精确匹配搜索
+procs --or "exact_name"
+
+# 树形视图显示进程
+procs --tree
+
+# 按 CPU 使用率排序
+procs --sortd cpu
+
+# 按内存使用率排序
+procs --sortd mem
+
+# 显示特定 PID 的进程
+procs --pid 1234
+
+# 显示监听特定端口的进程
+procs --port 8080
+
+# 以 watch 模式实时刷新（每 2 秒）
+procs --watch 2
+
+# 仅显示特定用户的进程
+procs --user root
+
+# 输出为 JSON 格式（方便脚本处理）
+procs --json
+```
+
+### 配置文件
+
+```toml
+# ~/.config/procs/config.toml
+# 自定义显示的列
+[[columns]]
+kind = "Pid"
+style = "BrightYellow"
+
+[[columns]]
+kind = "Username"
+style = "BrightGreen"
+
+[[columns]]
+kind = "Command"
+style = "BrightWhite"
+```
+
+## 推荐搭配
+
+- **htop / btop** — 交互式进程管理和系统监控
+- **jq** — 处理 procs 的 JSON 输出
+- **fd** — 查找进程相关的文件

@@ -1,0 +1,88 @@
+---
+title: "Monaspace"
+description: "GitHub 出品的超级字体家族，5 种等宽风格与纹理愈合技术引领编程字体新范式"
+github: "https://github.com/githubnext/monaspace"
+tags: ["编程字体", "GitHub", "纹理愈合", "连字"]
+featured: false
+order: 8
+ligatures: true
+nerd_font_variant: false
+styles: ["Argon", "Krypton", "Neon", "Radon", "Xenon"]
+preview_text: "Terminal > ls -la ~/.config"
+---
+
+## 简介
+
+Monaspace 是 GitHub 于 2023 年底推出的全新编程字体家族，由 GitHub Next 团队与知名字体工作室 Lettermatic 联合设计。它打破了传统"一款编程字体只有一种风格"的范式，一次性推出了五种视觉风格迥异的等宽字体：Argon（人文主义风格）、Krypton（机械风格）、Neon（新哥特风格）、Radon（手写风格）和 Xenon（衬线风格），开发者可以在不同的编码场景中混合搭配使用。
+
+Monaspace 最具创新性的技术是"纹理愈合"（Texture Healing）。传统等宽字体中，窄字符（如 `i`、`l`）和宽字符（如 `m`、`w`）被迫占据相同宽度，导致窄字符两侧留白过多。纹理愈合技术通过 OpenType 特性动态调整字符的视觉宽度，在保持等宽对齐的同时优化字间距分布，使整体阅读体验更加均匀舒适。
+
+## 安装
+
+```bash
+# macOS — Homebrew
+brew install --cask font-monaspace
+
+# 从 GitHub Releases 下载
+curl -fLO https://github.com/githubnext/monaspace/releases/latest/download/monaspace-v1.101.zip
+unzip monaspace-v1.101.zip
+
+# Linux — 手动安装
+mkdir -p ~/.local/share/fonts
+cp monaspace-v1.101/fonts/otf/*.otf ~/.local/share/fonts/
+fc-cache -fv
+
+# Windows — 手动安装
+# 从 GitHub Releases 页面下载 zip 文件后右键安装字体文件
+```
+
+## 特性亮点
+
+- **五种等宽风格**: Argon、Krypton、Neon、Radon、Xenon 五种设计风格，满足不同审美和场景
+- **纹理愈合技术**: 创新的 Texture Healing 动态优化字符间距，等宽排列中的阅读体验更均匀
+- **风格混合搭配**: 五种字体可以在同一编辑器中混合使用，例如注释用 Radon 手写体、代码用 Neon
+- **丰富连字**: 内置大量编程连字，与纹理愈合技术配合效果出众
+- **GitHub 出品**: 由 GitHub Next 团队主导设计，与 GitHub 代码浏览体验高度契合
+- **完整字重覆盖**: 每种风格均提供从 Light 到 Bold 的多种字重
+
+## 推荐配置
+
+### 终端模拟器
+
+```toml
+# Alacritty — ~/.config/alacritty/alacritty.toml
+[font]
+size = 14.0
+[font.normal]
+family = "Monaspace Neon"
+style = "Regular"
+[font.bold]
+family = "Monaspace Neon"
+style = "Bold"
+```
+
+```conf
+# Kitty — ~/.config/kitty/kitty.conf
+font_family      Monaspace Neon
+bold_font        auto
+italic_font      auto
+font_size        14.0
+```
+
+```lua
+-- WezTerm — ~/.wezterm.lua
+config.font = wezterm.font('Monaspace Neon')
+config.font_size = 14.0
+config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1', 'dlig=1' }
+```
+
+### VS Code
+
+```json
+{
+  "editor.fontFamily": "'Monaspace Neon', 'Monaspace Argon', monospace",
+  "editor.fontSize": 14,
+  "editor.fontLigatures": "'calt', 'liga', 'dlig', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05'"
+}
+```
+

@@ -1,0 +1,52 @@
+---
+title: "Ayu"
+description: "简约现代的配色方案，提供 Light、Mirage、Dark 三种变体，风格清爽干净"
+github: "https://github.com/ayu-theme/ayu-colors"
+tags: ["配色", "简约", "现代", "多变体"]
+featured: false
+order: 14
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal"]
+---
+
+## 简介
+
+Ayu 是一款追求简约与现代感的配色方案，最初为 Sublime Text 设计，后被广泛移植到各类终端和编辑器中。它的设计哲学强调色彩的节制——每种颜色都有明确的语义用途，避免视觉上的杂乱与混乱。整体调色板以低饱和度的暖色为主，搭配清晰的对比度，使代码结构在视觉上一目了然。
+
+Ayu 提供三种风格变体：**Light** 是明快的浅色主题，适合日间明亮环境使用；**Mirage** 是介于明暗之间的柔和暗色调，背景带有微妙的蓝灰色调；**Dark** 则是纯粹的深色方案，采用接近纯黑的背景，适合夜间长时间编码。三种变体共享相同的设计语言和色彩逻辑，因此在不同光照条件下切换时可以无缝过渡。
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+# 从社区移植项目获取 Ayu 配色文件
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+# 导入下载的 .itermcolors 文件即可
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+# 从 alacritty-theme 仓库获取 ayu 主题文件
+import = ["~/.config/alacritty/themes/ayu-dark.toml"]
+```
+
+### Windows Terminal
+
+```json
+// 在 settings.json 的 schemes 数组中添加 Ayu 配色
+// 然后在对应 profile 中设置 "colorScheme": "Ayu Dark"
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'Ayu Dark (Gogh)'
+```
+
+## 适用场景
+
+Ayu 非常适合追求干净、无干扰编码环境的开发者。如果你觉得很多主题的配色过于花哨或饱和度太高，Ayu 的克制风格会让你感到舒适。它特别适合前端开发和文档撰写等需要长时间阅读代码的场景。Mirage 变体作为折中选择，在大多数光照环境下都能提供良好的可读性，是日常开发的理想默认主题。对于使用多台设备、在不同环境间频繁切换的用户，三种变体的无缝切换体验尤为实用。

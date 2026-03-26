@@ -1,0 +1,133 @@
+---
+title: "Oils (OSH + YSH)"
+description: "Bash 的升级路径，OSH 完全兼容 Bash 语法，YSH 提供现代化的脚本编写体验"
+website: "https://oils.pub/"
+github: "https://github.com/oils-for-unix/oils"
+tags: ["Bash兼容", "现代化", "脚本", "渐进升级"]
+featured: false
+order: 6
+language: "Python/C++"
+posix_compatible: true
+default_on: []
+config_file: "oshrc"
+---
+
+## 简介
+
+Oils 是一个旨在为 Bash 提供平滑升级路径的 Shell 项目，包含两个紧密关联的 Shell：OSH 和 YSH。OSH（Oil Shell - POSIX/Bash 兼容模式）可以直接运行现有的 Bash 和 POSIX sh 脚本，同时提供更好的错误信息和更严格的模式；YSH（前称 Oil Language）则是一门全新设计的 Shell 语言，拥有 JSON 风格的数据结构、正则表达式字面量、以及更一致的语法。两者可以在同一个文件中混合使用，让用户以渐进方式从 Bash 迁移到更现代的写法。
+
+Oils 的核心理念是"不要抛弃现有生态"。你不需要一次性重写所有脚本，而是可以先用 OSH 运行现有代码，然后逐步将关键部分升级为 YSH 语法。这种渐进式迁移策略让 Oils 在保守与创新之间找到了独特的平衡点。项目由 Andy Chu 发起，他在博客中深入分析了 Shell 语言的各种设计缺陷，并在 YSH 中逐一修复。
+
+## 安装
+
+```bash
+# 从源码构建（推荐）
+git clone https://github.com/oils-for-unix/oils.git
+cd oils
+build/py.sh
+
+# 也可以安装预编译版本
+# 下载地址：https://oils.pub/release/
+
+# Homebrew (macOS)
+brew install oils-for-unix
+
+# Nix
+nix-env -i oils-for-unix
+
+# 使用 OSH 模式（Bash 兼容）
+osh
+
+# 使用 YSH 模式（现代语法）
+ysh
+
+# 设为默认 Shell
+echo $(which osh) | sudo tee -a /etc/shells
+chsh -s $(which osh)
+```
+
+## 核心特性
+
+- **Bash 完全兼容（OSH 模式）**: 可直接运行绝大多数 Bash 脚本，包括复杂的条件表达式、数组操作和进程替换，是真正的 Bash 替代品而非子集
+- **现代化语法（YSH 模式）**: 提供 `var`/`const`/`setvar` 声明、`if (x > 0)` 表达式语法、`proc` 函数定义等现代特性
+- **JSON 风格数据结构**: YSH 原生支持 `List` 和 `Dict` 类型，语法类似 JSON/Python，例如 `var d = {name: 'foo', count: 42}`
+- **Eggex 正则表达式**: YSH 引入了可读性更强的正则表达式语法 Eggex，例如 `/ digit+ '.' digit+ /` 替代传统的 `[0-9]+\.[0-9]+`
+- **更好的错误处理**: 内置 `try`/`catch` 机制，并且默认启用类似 `set -e` 的严格模式，减少静默失败
+- **严格模式**: `shopt --set strict:all` 开启所有严格检查，在兼容模式下也能捕获常见的 Bash 陷阱
+- **详细的错误信息**: 比 Bash 更精确的错误定位和更清晰的错误描述，帮助调试复杂脚本
+- **渐进迁移**: 同一文件中可以混合 OSH 和 YSH 语法，通过 `shopt` 逐步启用新特性
+
+## 配置推荐
+
+```bash
+# ~/.config/oils/oshrc（OSH 模式配置）
+
+# ---------- 启用严格模式 ----------
+shopt --set strict:all          # 启用所有严格检查
+shopt --set ysh:upgrade         # 启用 YSH 兼容的升级特性
+
+# ---------- 环境变量 ----------
+export EDITOR=nvim
+export PATH="$HOME/.local/bin:$HOME/go/bin:$PATH"
+
+# ---------- 实用别名 ----------
+alias ll='ls -lah'
+alias gs='git status'
+alias gp='git pull --rebase'
+
+# ---------- YSH 风格的函数（在 osh 中也可用） ----------
+proc mkcd (dir) {
+    mkdir -p $dir
+    cd $dir
+}
+
+# 使用 JSON 数据结构
+proc show-config {
+    var config = {
+        shell: 'oils',
+        mode: 'ysh',
+        strict: true,
+    }
+    json write (config)
+}
+
+# ---------- 使用 Eggex 正则 ----------
+# YSH 中更可读的正则表达式
+proc is-email (s) {
+    if (s ~ / <capture word+ > '@' <capture word+ '.' word+ > /) {
+        echo "User: $[_group(1)], Domain: $[_group(2)]"
+    } else {
+        echo "Not a valid email"
+    }
+}
+
+# ---------- 错误处理 ----------
+proc safe-rm (path) {
+    if test -e $path {
+        try {
+            rm -rf $path
+            echo "Removed: $path"
+        }
+        if (_status !== 0) {
+            echo "Failed to remove: $path" >&2
+        }
+    } else {
+        echo "Path does not exist: $path" >&2
+    }
+}
+```
+
+## Bash 到 YSH 语法对照
+
+| 功能 | Bash 语法 | YSH 语法 |
+|------|-----------|----------|
+| 变量声明 | `x=hello` | `var x = 'hello'` |
+| 数组 | `arr=(a b c)` | `var arr = ['a', 'b', 'c']` |
+| 关联数组 | `declare -A d; d[k]=v` | `var d = {k: 'v'}` |
+| 条件判断 | `if [[ $x -gt 0 ]]; then` | `if (x > 0) {` |
+| 函数定义 | `function f() { ... }` | `proc f (...) { ... }` |
+| 命令替换 | `$(cmd)` | `$(cmd)` 或 `$[expr]` |
+| 正则匹配 | `[[ $s =~ regex ]]` | `if (s ~ /eggex/) {` |
+| 错误处理 | `set -e` | `try { ... }` |
+
+Oils 特别适合那些拥有大量 Bash 脚本、想要逐步现代化但又不能一次性重写的团队。OSH 可以作为 Bash 的直接替代品使用，而 YSH 则为未来的脚本编写提供了更安全、更易读的选择。

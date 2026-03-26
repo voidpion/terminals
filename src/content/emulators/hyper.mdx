@@ -1,0 +1,194 @@
+---
+title: "Hyper"
+description: "基于 Electron 和 Web 技术构建的跨平台终端模拟器，支持丰富的插件生态系统"
+screenshot: "/screenshots/hyper.png"
+website: "https://hyper.is/"
+github: "https://github.com/vercel/hyper"
+tags: ["跨平台", "免费", "Electron", "可扩展"]
+featured: true
+order: 7
+platforms: ["macOS", "Windows", "Linux"]
+license: "MIT"
+gpu_accelerated: false
+multiplexer_builtin: false
+pricing: "free"
+---
+
+## 简介
+
+Hyper 是由 Vercel（前 ZEIT）团队开发的开源终端模拟器，基于 Electron 框架和 Web 技术（HTML、CSS、JavaScript）构建。它的核心理念是将 Web 开发的灵活性和丰富生态引入终端模拟器领域，使得任何熟悉前端开发的人都可以轻松地定制和扩展终端功能。
+
+Hyper 的最大优势在于其插件生态系统。由于底层基于 Web 技术，开发者可以使用 npm 包的形式创建和分发插件，从视觉主题到功能增强几乎无所不能。社区已经积累了数百个插件，覆盖了状态栏、搜索增强、标签页美化、窗口管理等各种需求。
+
+Hyper 使用 xterm.js 作为终端模拟引擎，配置文件为 JavaScript 格式（`.hyper.js`），支持热加载。虽然在纯粹的性能指标上不及 Rust 或 C 编写的原生终端模拟器，但 Hyper 凭借其极低的定制门槛和丰富的插件生态，吸引了大量追求个性化和可扩展性的用户。
+
+## 安装
+
+### macOS
+
+```bash
+# 通过 Homebrew 安装（推荐）
+brew install --cask hyper
+
+# 或从官网下载 .dmg 安装包
+# 访问 https://hyper.is/ 点击 Download
+```
+
+### Linux
+
+```bash
+# Ubuntu / Debian（下载 .deb 包）
+wget -O hyper.deb https://releases.hyper.is/download/deb
+sudo dpkg -i hyper.deb
+sudo apt-get install -f
+
+# Arch Linux（通过 AUR）
+yay -S hyper
+
+# Fedora / RHEL（下载 .rpm 包）
+wget -O hyper.rpm https://releases.hyper.is/download/rpm
+sudo rpm -i hyper.rpm
+
+# Snap（通用方法）
+sudo snap install hyper --classic
+```
+
+### Windows
+
+```powershell
+# 通过 Scoop 安装
+scoop install hyper
+
+# 通过 Chocolatey 安装
+choco install hyper
+
+# 或从官网下载安装程序
+# 访问 https://hyper.is/ 下载 .exe 安装包
+```
+
+## 核心特性
+
+- **Web 技术栈** - 基于 Electron + xterm.js，前端开发者可以轻松定制和扩展
+- **丰富的插件生态** - 数百个社区插件，通过 npm 安装和管理，涵盖主题、功能增强等
+- **JavaScript 配置** - 配置文件使用 JavaScript，可使用编程逻辑动态生成配置
+- **主题系统** - 大量精美主题可选，支持自定义 CSS 样式和背景
+- **跨平台一致** - 在 macOS、Windows 和 Linux 上提供一致的外观和行为
+- **多标签页** - 内置标签页管理，支持拖拽排列和快捷键切换
+- **分屏支持** - 支持水平和垂直分屏，在同一标签页中运行多个终端
+- **快捷键自定义** - 灵活的快捷键配置，可覆盖默认绑定或添加新绑定
+- **自动更新** - 内置自动更新机制，始终保持最新版本
+- **URL 识别** - 自动检测终端中的 URL，支持点击直接在浏览器中打开
+- **配置热加载** - 修改配置文件后自动重新加载，无需重启终端
+- **开源社区** - MIT 许可证，由 Vercel 和开源社区共同维护
+
+## 配置推荐
+
+Hyper 的配置文件位于 `~/.hyper.js`，使用 JavaScript 模块格式。
+
+```javascript
+// ~/.hyper.js
+"use strict";
+module.exports = {
+  config: {
+    // ========== 外观设置 ==========
+    // 字体设置
+    fontSize: 14,
+    fontFamily: '"JetBrains Mono", "Fira Code", Menlo, monospace',
+    fontWeight: "normal",
+    fontWeightBold: "bold",
+
+    // 行高
+    lineHeight: 1.2,
+
+    // 光标样式：'BEAM', 'UNDERLINE', 'BLOCK'
+    cursorShape: "BEAM",
+    cursorBlink: true,
+    cursorColor: "rgba(248,28,229,0.8)",
+
+    // 配色方案
+    foregroundColor: "#cdd6f4",
+    backgroundColor: "#1e1e2e",
+    selectionColor: "rgba(88,91,112,0.3)",
+    borderColor: "#1e1e2e",
+
+    // 终端颜色（ANSI 16 色）
+    colors: {
+      black: "#45475a",
+      red: "#f38ba8",
+      green: "#a6e3a1",
+      yellow: "#f9e2af",
+      blue: "#89b4fa",
+      magenta: "#f5c2e7",
+      cyan: "#94e2d5",
+      white: "#bac2de",
+      lightBlack: "#585b70",
+      lightRed: "#f38ba8",
+      lightGreen: "#a6e3a1",
+      lightYellow: "#f9e2af",
+      lightBlue: "#89b4fa",
+      lightMagenta: "#f5c2e7",
+      lightCyan: "#94e2d5",
+      lightWhite: "#a6adc8",
+    },
+
+    // 窗口内边距
+    padding: "10px 14px",
+
+    // 窗口透明度（macOS）
+    opacity: 0.95,
+
+    // ========== 行为设置 ==========
+    // Shell 路径（留空使用系统默认）
+    shell: "",
+    shellArgs: ["--login"],
+
+    // 环境变量
+    env: {
+      TERM: "xterm-256color",
+    },
+
+    // 响铃提示
+    bell: false,
+
+    // 复制时自动选中
+    copyOnSelect: true,
+
+    // 默认列数和行数
+    cols: 120,
+    rows: 35,
+
+    // 快捷键配置
+    keymaps: {
+      // 示例：自定义快捷键
+    },
+  },
+
+  // ========== 插件列表 ==========
+  plugins: [
+    "hyper-search",             // 终端内搜索
+    "hyper-pane",               // 增强的分屏导航
+    "hyper-active-tab",         // 高亮活动标签页
+    "hypercwd",                 // 新标签页使用当前目录
+    "hyper-tab-icons",          // 标签页显示进程图标
+  ],
+
+  // 本地插件路径（开发自定义插件时使用）
+  localPlugins: [],
+};
+```
+
+插件管理：
+
+```bash
+# 通过命令行安装插件
+hyper install hyper-search
+hyper install hyper-pane
+
+# 卸载插件
+hyper uninstall hyper-search
+
+# 查看已安装的插件
+hyper list
+```
+
+> **提示**：Hyper 的性能不如 Alacritty、Kitty 等原生终端模拟器，但它的可扩展性是其核心竞争力。如果你是前端开发者并且喜欢高度定制化的工作环境，Hyper 是一个很好的选择。推荐安装 `hyper-search`（终端搜索）和 `hypercwd`（新标签页继承目录）这两个基础插件。由于基于 Electron，Hyper 的内存占用相对较高，在低配机器上可能不够流畅。

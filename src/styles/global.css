@@ -1,0 +1,97 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  /* Terminal-inspired color palette (Tokyo Night) */
+  --color-terminal-bg: #1a1b26;
+  --color-terminal-surface: #24283b;
+  --color-terminal-fg: #a9b1d6;
+  --color-terminal-heading: #c0caf5;
+  --color-terminal-green: #9ece6a;
+  --color-terminal-blue: #7aa2f7;
+  --color-terminal-purple: #bb9af7;
+  --color-terminal-cyan: #7dcfff;
+  --color-terminal-red: #f7768e;
+  --color-terminal-yellow: #e0af68;
+  --color-terminal-orange: #ff9e64;
+  --color-terminal-border: #292e42;
+
+  /* Light mode colors */
+  --color-light-bg: #f5f5f5;
+  --color-light-surface: #ffffff;
+  --color-light-fg: #343b58;
+  --color-light-heading: #1a1b26;
+  --color-light-border: #d5d5d5;
+
+  /* Fonts */
+  --font-sans: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+/* Dark mode (default) */
+[data-theme="dark"] {
+  background-color: var(--color-terminal-bg);
+  color: var(--color-terminal-fg);
+}
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4 {
+  color: var(--color-terminal-heading);
+}
+
+[data-theme="dark"] a {
+  color: var(--color-terminal-blue);
+}
+
+[data-theme="dark"] a:hover {
+  color: var(--color-terminal-cyan);
+}
+
+/* Light mode */
+[data-theme="light"] {
+  background-color: var(--color-light-bg);
+  color: var(--color-light-fg);
+}
+
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4 {
+  color: var(--color-light-heading);
+}
+
+/* Code blocks terminal style */
+pre {
+  font-family: var(--font-mono);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+[data-theme="dark"] pre {
+  background-color: var(--color-terminal-surface) !important;
+  border: 1px solid var(--color-terminal-border);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+[data-theme="dark"] :not(pre) > code {
+  background-color: var(--color-terminal-surface);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+}

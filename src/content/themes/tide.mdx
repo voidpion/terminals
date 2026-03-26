@@ -1,0 +1,61 @@
+---
+title: "Tide"
+description: "Fish Shell 的现代化提示符框架，被誉为 Fish 版的 Powerlevel10k"
+github: "https://github.com/IlanCosman/tide"
+tags: ["Fish", "提示符", "Powerline"]
+featured: false
+order: 26
+theme_type: "prompt"
+compatible_with: ["Fish"]
+---
+
+## 简介
+
+Tide 是专为 Fish Shell 设计的现代化提示符框架，灵感来源于 Zsh 生态中广受好评的 Powerlevel10k。它提供了一套交互式配置向导，让用户可以在几分钟内完成个性化的提示符定制，无需手动编辑任何配置文件。
+
+Tide 在性能方面表现出色，采用了异步渲染机制来获取 Git 状态等耗时信息。它支持多种布局风格——从简约的单行模式到信息丰富的 Powerline 双行模式，都能流畅运行。对于 Fish Shell 用户来说，Tide 是获得类似 Powerlevel10k 体验的最佳选择。
+
+## 安装
+
+```bash
+# 使用 Fisher 插件管理器安装（推荐）
+fisher install IlanCosman/tide@v6
+
+# 安装后运行配置向导
+tide configure
+```
+
+配置向导会引导你选择：提示符风格、是否使用 Powerline 字符、信息密度和布局等选项。
+
+## 核心特性
+
+- **交互式配置向导**: 可视化选择提示符风格，所见即所得
+- **异步 Git 检测**: 大型仓库下依然保持提示符即时响应
+- **多种布局风格**: Lean、Classic、Rainbow、Powerline 等多种预设
+- **右侧提示符**: 支持在终端右侧显示额外信息
+- **智能上下文**: 自动检测并显示 Node、Python、Rust、Go 等语言环境
+- **双行提示符**: 上行显示信息，下行保持输入区域整洁
+
+## 配置推荐
+
+```fish
+# 重新运行配置向导
+tide configure
+
+# 手动配置各项目（在 Fish 中执行）
+# 设置左侧提示符项目
+set -g tide_left_prompt_items pwd git newline character
+
+# 设置右侧提示符项目
+set -g tide_right_prompt_items status cmd_duration context node python rust
+
+# 自定义图标和颜色
+set -g tide_git_icon ""
+set -g tide_character_icon "❯"
+set -g tide_pwd_icon ""
+set -g tide_pwd_color_dirs blue
+
+# 设置提示符连接线
+set -g tide_left_prompt_frame_enabled true
+set -g tide_prompt_add_newline_before true
+```

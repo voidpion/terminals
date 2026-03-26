@@ -1,0 +1,46 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import CardGrid from '../../components/CardGrid.astro';
+import { getAllTags, getAllEntriesByTag, collectionMeta } from '../../lib/collections';
+import type { CollectionName } from '../../lib/collections';
+
+export async function getStaticPaths() {
+  const tags = await getAllTags();
+  return tags.map((tag) => ({ params: { tag } }));
+}
+
+const { tag } = Astro.params;
+const results = await getAllEntriesByTag(tag!);
+
+// Group by collection
+const grouped = results.reduce((acc, { collection, entry }) => {
+  if (!acc[collection]) acc[collection] = [];
+  acc[collection].push(entry);
+  return acc;
+}, {} as Record<CollectionName, any[]>);
+---
+
+<PageLayout title={`${tag} — Terminal 百科`} description={`包含标签「${tag}」的所有条目`}>
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold dark:text-terminal-heading text-light-heading mb-2">
+      <span class="font-mono dark:text-terminal-fg/60 text-light-fg/60">#</span> {tag}
+    </h1>
+    <p class="dark:text-terminal-fg/70 text-light-fg/70">
+      共 {results.length} 个相关条目
+    </p>
+  </div>
+
+  {Object.entries(grouped).map(([collection, entries]) => (
+    <section class="mb-10">
+      <h2 class="text-xl font-semibold mb-4 dark:text-terminal-heading text-light-heading">
+        {collectionMeta[collection as CollectionName].label}
+      </h2>
+      <CardGrid>
+        {entries.map((entry: any) => (
+          <ToolCard entry={entry} collection={collection} />
+        ))}
+      </CardGrid>
+    </section>
+  ))}
+</PageLayout>

@@ -1,0 +1,76 @@
+---
+title: "httpie"
+description: "人性化的 HTTP 客户端"
+website: "https://httpie.io/"
+github: "https://github.com/httpie/cli"
+tags: ["HTTP", "API", "Python"]
+featured: false
+order: 28
+category: "network"
+replaces: "curl"
+install_cmd: "brew install httpie"
+written_in: "Python"
+---
+
+## 简介
+
+HTTPie 是一款使用 Python 编写的命令行 HTTP 客户端，旨在让与 Web 服务的交互变得尽可能简单和直观。相比 `curl` 的复杂参数，HTTPie 提供了简洁的语法、彩色格式化的输出以及对 JSON 的原生支持，大幅降低了 API 调试和测试的门槛。
+
+HTTPie 的设计哲学是"为人类设计的 HTTP 客户端"。它能自动检测和格式化 JSON 响应、支持会话持久化、提供直觉式的请求体语法，并且内置了丰富的认证方式。无论是日常 API 开发调试，还是快速测试 Web 服务，HTTPie 都能让你事半功倍。
+
+## 安装
+
+```bash
+# macOS
+brew install httpie
+
+# pip
+pip install httpie
+
+# Ubuntu/Debian
+sudo apt install httpie
+```
+
+## 核心特性
+
+- **直觉语法**: `http GET url` 替代 `curl -X GET url`，简洁明了
+- **JSON 原生**: 默认发送和格式化 JSON，自动设置 Content-Type
+- **彩色输出**: 响应头和响应体带有语法高亮和格式化缩进
+- **会话支持**: 支持会话持久化，自动保存 cookies 和认证信息
+- **文件上传**: 简单直观的文件上传和表单提交语法
+- **认证内置**: 支持 Basic、Digest、Bearer Token 等多种认证方式
+
+## 使用示例
+
+```bash
+# GET 请求
+http httpbin.org/get
+
+# 带查询参数的 GET 请求
+http httpbin.org/get name==value sort==desc
+
+# POST JSON 数据
+http POST httpbin.org/post name=John age:=30 admin:=true
+
+# POST 表单数据
+http -f POST httpbin.org/post name=John email=john@example.com
+
+# 自定义请求头
+http GET api.example.com Authorization:"Bearer token123"
+
+# 文件上传
+http -f POST api.example.com/upload file@./photo.jpg
+
+# 下载文件
+http --download https://example.com/file.zip
+
+# 仅显示响应头
+http --headers GET example.com
+
+# 使用会话（保持 cookies）
+http --session=api POST api.example.com/login user=admin pass=secret
+http --session=api GET api.example.com/dashboard
+
+# 输出请求和响应的完整信息
+http --verbose POST api.example.com/data key=value
+```

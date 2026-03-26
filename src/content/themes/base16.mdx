@@ -1,0 +1,52 @@
+---
+title: "Base16"
+description: "标准化的 16 色配色架构，提供 200+ 配色方案模板，覆盖几乎所有终端和编辑器"
+github: "https://github.com/tinted-theming/base16-schemes"
+tags: ["配色", "架构", "标准化", "模板系统"]
+featured: false
+order: 17
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal", "Hyper"]
+---
+
+## 简介
+
+Base16 与其说是一个配色方案，不如说是一套配色架构体系。它定义了一个由 16 种颜色组成的标准规范，并基于这个规范创建了 200 多种具体的配色方案。其核心理念是：通过规范化的颜色槽位（base00 至 base0F），让同一套配色方案能够通过模板系统自动适配到不同的应用程序中。这意味着一旦你选定了一个 Base16 方案，终端、编辑器、Shell 工具等都可以自动获得一致的配色。
+
+Base16 项目目前由 Tinted Theming 社区维护，生态系统极为庞大。方案库中收录了从经典的 Monokai、Solarized 到社区原创的各种风格，涵盖暖色、冷色、高对比度、低对比度等几乎所有偏好方向。模板系统支持的目标应用也极为广泛——从 Alacritty、Kitty 等终端模拟器，到 Vim、Emacs 等编辑器，再到 tmux、fzf、rofi 等各类工具。如果你追求全套工具链视觉统一，Base16 是最系统化的解决方案。
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+# 从 base16-iterm2 仓库获取配色文件
+git clone https://github.com/tinted-theming/base16-iterm2.git
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+# 从 tinted-theming/base16-alacritty 获取主题文件
+import = ["~/.config/alacritty/themes/base16-ocean.toml"]
+```
+
+### Kitty
+
+```bash
+# 使用 kitty 内置主题管理
+kitty +kitten themes Base16
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua — WezTerm 内置大量 Base16 方案
+config.color_scheme = 'Base16 Ocean (base16)'
+```
+
+## 适用场景
+
+Base16 特别适合对工作环境视觉一致性有强迫症的开发者。如果你使用大量不同的终端工具和编辑器，并希望它们全部保持统一的配色风格，Base16 的模板系统能帮你以最小的配置成本实现这个目标。它也非常适合喜欢频繁尝试新配色的用户——200 多种方案意味着你可以每天换一种配色而不会重复。对于主题开发者和设计师，Base16 的架构规范也是理解和创建配色方案的优秀参考。

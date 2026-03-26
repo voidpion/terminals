@@ -1,0 +1,68 @@
+---
+title: "sd"
+description: "更直观的文本查找替换工具"
+github: "https://github.com/chmln/sd"
+tags: ["文本处理", "Rust", "替换"]
+featured: false
+order: 25
+category: "search"
+replaces: "sed"
+install_cmd: "brew install sd"
+written_in: "Rust"
+---
+
+## 简介
+
+sd 是一款使用 Rust 编写的文本查找替换工具，旨在提供比 `sed` 更简单直观的使用体验。它采用现代正则表达式语法（与 JavaScript 和 Python 一致），告别了 sed 中令人困惑的转义规则和分隔符选择问题。
+
+sd 的设计理念是让文本替换变得简单自然。你只需要提供查找模式和替换文本即可，无需记忆复杂的命令格式。同时 sd 使用了高效的正则引擎，在处理大文件时性能表现优异，是日常文本处理和代码重构的实用工具。
+
+## 安装
+
+```bash
+# macOS
+brew install sd
+
+# Ubuntu/Debian
+sudo apt install sd
+
+# Cargo
+cargo install sd
+```
+
+## 核心特性
+
+- **直观语法**: 无需 `s/foo/bar/g` 的格式，直接 `sd foo bar` 即可
+- **现代正则**: 使用标准正则语法，无需额外转义
+- **字符串模式**: 支持纯字符串匹配模式，避免正则干扰
+- **原地修改**: 默认直接修改文件内容，也支持预览模式
+- **管道友好**: 完美支持标准输入输出管道
+- **高性能**: Rust 编写，处理大文件速度极快
+
+## 使用示例
+
+```bash
+# 基本替换（通过管道）
+echo "hello world" | sd 'world' 'rust'
+
+# 直接修改文件内容
+sd 'old_function' 'new_function' src/*.py
+
+# 使用正则表达式捕获组
+echo "2024-01-15" | sd '(\d{4})-(\d{2})-(\d{2})' '$2/$3/$1'
+
+# 纯字符串模式（不解析正则）
+sd -F 'func()' 'function()' main.go
+
+# 批量重命名变量
+sd 'userName' 'user_name' src/**/*.rs
+
+# 配合 find 使用
+find . -name '*.md' -exec sd 'old_link' 'new_link' {} +
+
+# 预览替换结果（不修改文件）
+sd -p 'error' 'warning' log.txt
+
+# 多行替换
+echo -e "line1\nline2\nline3" | sd 'line1\nline2' 'replaced'
+```

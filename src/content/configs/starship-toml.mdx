@@ -1,0 +1,273 @@
+---
+title: "starship.toml 配置指南"
+description: "Starship 跨 Shell 提示符配置方案，打造信息丰富且美观的命令行提示符"
+tags: ["Starship", "提示符", "跨Shell"]
+featured: true
+order: 5
+config_type: "prompt"
+target_tool: "Starship"
+filename: "starship.toml"
+---
+
+## 简介
+
+Starship 是一个用 Rust 编写的跨 Shell 提示符工具，支持 Bash、Zsh、Fish、PowerShell 等几乎所有主流 Shell。它的核心理念是"快速、可定制、智能"——只在当前目录与某种工具相关时才显示对应模块，保持提示符简洁而信息丰富。
+
+配置文件位于 `~/.config/starship.toml`，使用 TOML 格式。本配置提供了一套完整的模块方案，覆盖 Git 状态、编程语言版本、容器环境、Kubernetes 上下文等常见开发场景，适合全栈开发者直接使用。
+
+## 完整配置
+
+```toml
+# ============================================================
+# ~/.config/starship.toml — Starship 提示符配置
+# ============================================================
+
+# ---------- 全局格式 ----------
+# 自定义模块排列顺序
+# 未列出的模块不会显示（除非使用 $all）
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$docker_context\
+$kubernetes\
+$nodejs\
+$python\
+$rust\
+$golang\
+$java\
+$lua\
+$ruby\
+$php\
+$terraform\
+$aws\
+$cmd_duration\
+$line_break\
+$character"""
+
+# 右侧提示符 — 显示时间
+right_format = """$time"""
+
+# 命令间插入空行，视觉更清晰
+add_newline = true
+
+# ---------- 核心模块 ----------
+
+# 提示符字符 — 根据上条命令是否成功变色
+[character]
+success_symbol = "[❯](bold green)"    # 成功时绿色
+error_symbol = "[❯](bold red)"        # 失败时红色
+vimcmd_symbol = "[❮](bold cyan)"      # Vim 普通模式青色
+
+# 目录显示
+[directory]
+truncation_length = 4                  # 最多显示 4 级目录
+truncation_symbol = "…/"               # 截断时的省略符
+home_symbol = "~"                      # HOME 目录显示为 ~
+read_only = " 🔒"                      # 只读目录标识
+style = "bold blue"
+
+# 用户名 — 仅在 SSH 或 root 时显示
+[username]
+show_always = false                    # 本地普通用户不显示
+style_user = "bold green"
+style_root = "bold red"
+format = "[$user]($style)@"
+
+# 主机名 — 仅在 SSH 时显示
+[hostname]
+ssh_only = true
+style = "bold yellow"
+format = "[$hostname]($style):"
+
+# ---------- Git 模块 ----------
+
+# Git 分支
+[git_branch]
+symbol = " "                          # 分支图标
+style = "bold purple"
+format = "on [$symbol$branch(:$remote_branch)]($style) "
+truncation_length = 30                 # 分支名超过 30 字符截断
+truncation_symbol = "…"
+
+# Git 提交哈希 — 仅在 detached HEAD 时显示
+[git_commit]
+commit_hash_length = 7
+tag_symbol = "🏷️ "
+only_detached = true
+
+# Git 状态 — 显示工作区变更概况
+[git_status]
+style = "bold red"
+format = '([\[$all_status$ahead_behind\]]($style) )'
+conflicted = "⚔️ "                     # 合并冲突
+ahead = "⇡${count}"                   # 领先远程
+behind = "⇣${count}"                  # 落后远程
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"  # 分叉
+untracked = "?${count}"               # 未跟踪文件
+stashed = "📦 "                        # 暂存区有内容
+modified = "!${count}"                 # 已修改
+staged = "+${count}"                   # 已暂存
+renamed = "»${count}"                  # 已重命名
+deleted = "✘${count}"                  # 已删除
+
+# Git 操作状态（rebase、merge 等）
+[git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+rebase = "REBASING"
+merge = "MERGING"
+revert = "REVERTING"
+cherry_pick = "CHERRY-PICKING"
+bisect = "BISECTING"
+
+# ---------- 编程语言模块 ----------
+
+# Node.js
+[nodejs]
+symbol = " "
+format = "[$symbol($version)]($style) "
+detect_files = ["package.json", ".node-version", ".nvmrc"]
+detect_folders = ["node_modules"]
+style = "bold green"
+
+# Python
+[python]
+symbol = " "
+format = '[${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style) '
+detect_files = ["requirements.txt", "setup.py", "pyproject.toml", "Pipfile", ".python-version"]
+style = "bold yellow"
+python_binary = ["python3", "python"]
+
+# Rust
+[rust]
+symbol = " "
+format = "[$symbol($version)]($style) "
+style = "bold red"
+
+# Go
+[golang]
+symbol = " "
+format = "[$symbol($version)]($style) "
+style = "bold cyan"
+detect_files = ["go.mod", "go.sum", "go.work"]
+
+# Java
+[java]
+symbol = " "
+format = "[$symbol($version)]($style) "
+style = "bold red"
+detect_files = ["pom.xml", "build.gradle", "build.gradle.kts", "build.sbt", ".java-version"]
+
+# Lua
+[lua]
+symbol = " "
+format = "[$symbol($version)]($style) "
+style = "bold blue"
+
+# Ruby
+[ruby]
+symbol = " "
+format = "[$symbol($version)]($style) "
+style = "bold red"
+detect_files = ["Gemfile", ".ruby-version"]
+
+# PHP
+[php]
+symbol = " "
+format = "[$symbol($version)]($style) "
+style = "bold purple"
+
+# ---------- 容器与云 ----------
+
+# Docker
+[docker_context]
+symbol = " "
+format = "[$symbol$context]($style) "
+style = "bold blue"
+only_with_files = true                 # 仅在有 Docker 文件时显示
+detect_files = ["docker-compose.yml", "docker-compose.yaml", "Dockerfile", "compose.yml", "compose.yaml"]
+
+# Kubernetes
+[kubernetes]
+disabled = false                       # 默认关闭，按需开启
+symbol = "☸ "
+format = '[$symbol$context(\($namespace\))]($style) '
+style = "bold cyan"
+detect_files = ["k8s", "kubernetes"]
+
+# Terraform
+[terraform]
+symbol = "💠 "
+format = "[$symbol$workspace]($style) "
+style = "bold purple"
+
+# AWS
+[aws]
+symbol = "☁️ "
+format = '[$symbol($profile)(\($region\))]($style) '
+style = "bold orange"
+
+# ---------- 辅助模块 ----------
+
+# 命令执行时间 — 超过 3 秒才显示
+[cmd_duration]
+min_time = 3_000                       # 最小 3000 毫秒
+format = "took [$duration]($style) "
+style = "bold yellow"
+show_milliseconds = false
+show_notifications = false             # 不弹系统通知
+
+# 时间 — 显示在右侧提示符
+[time]
+disabled = false
+format = "[$time]($style)"
+style = "dimmed white"
+time_format = "%H:%M"                  # 时:分 格式
+use_12hr = false
+
+# ---------- 禁用不常用的模块 ----------
+# 如不需要以下模块，保持 disabled = true
+[battery]
+disabled = true
+
+[package]
+disabled = true                        # npm/cargo 包版本，通常不需要
+
+[memory_usage]
+disabled = true
+
+[env_var]
+disabled = true
+```
+
+## 配置说明
+
+### 全局格式
+
+`format` 字段控制所有模块的排列顺序。使用 `\` 续行让配置更易读。未在 `format` 中列出的模块不会显示，这比逐个设置 `disabled = true` 更简洁。`right_format` 将时间放在右侧，不占用主提示符空间。
+
+### 智能检测
+
+大多数语言模块都有 `detect_files` 和 `detect_folders` 配置。Starship 只在检测到相关文件时才激活对应模块——进入 Python 项目显示 Python 版本，进入 Node.js 项目显示 Node 版本，无关模块自动隐藏。这种按需显示的机制是 Starship 的核心优势。
+
+### Git 状态
+
+Git 状态模块通过符号和计数直观展示工作区状态：`+3` 表示 3 个文件已暂存，`!2` 表示 2 个文件已修改，`?1` 表示 1 个未跟踪文件。`⇡⇣` 显示与远程分支的领先/落后提交数，帮助你判断是否需要 push 或 pull。
+
+### 性能考量
+
+Starship 使用 Rust 编写，即便开启大量模块也能保持亚 100ms 的响应速度。但 `kubernetes` 模块和某些云平台模块可能引入额外延迟（需要调用外部 CLI），如果不常用建议保持 `disabled = true`。
+
+## 常用技巧
+
+- 使用 `starship explain` 命令查看当前提示符中每个模块的含义
+- 使用 `starship timings` 查看每个模块的渲染耗时，定位性能瓶颈
+- 使用 `starship preset` 可以一键切换到官方预设主题（如 Nerd Font Symbols、Bracketed Segments 等）
+- 在 `format` 中使用 `$fill` 模块可以在左右提示符之间填充空格或字符
+- 可以通过 `[custom.xxx]` 定义完全自定义的模块，执行任意命令并显示结果
+- 每个模块都支持 `when` 条件，可以基于环境变量或命令返回值决定是否显示
+- Starship 支持通过 `STARSHIP_CONFIG` 环境变量指定不同配置文件，方便在不同场景间切换

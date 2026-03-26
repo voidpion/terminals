@@ -1,0 +1,54 @@
+---
+title: "fzf"
+description: "命令行模糊查找器，支持文件、历史记录、进程等的快速模糊搜索"
+website: "https://junegunn.github.io/fzf/"
+github: "https://github.com/junegunn/fzf"
+tags: ["搜索", "模糊查找", "效率工具"]
+featured: true
+order: 1
+category: "search"
+replaces: "find + grep"
+install_cmd: "brew install fzf"
+written_in: "Go"
+---
+
+## 简介
+
+fzf 是一个通用的命令行模糊查找器，可以用于搜索任何列表数据：文件、命令历史、进程、Git 分支等。它速度极快，交互体验流畅，是终端效率工具的必备神器。
+
+## 安装
+
+```bash
+# macOS
+brew install fzf
+
+# Ubuntu/Debian
+sudo apt install fzf
+
+# 从源码安装
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+```
+
+## 核心功能
+
+- **文件搜索**: 直接运行 `fzf` 即可模糊搜索当前目录下所有文件
+- **历史搜索**: `Ctrl+R` 模糊搜索命令历史，比默认的反向搜索好用得多
+- **目录跳转**: `Alt+C` 模糊搜索并进入子目录
+- **自动补全**: `**<Tab>` 触发路径模糊补全
+
+## 配置推荐
+
+```bash
+# 在 .zshrc 或 .bashrc 中添加
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --preview "bat --color=always {}"'
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+```
+
+## 推荐搭配
+
+- **ripgrep** — 配合 fzf 实现代码级搜索
+- **bat** — 在 fzf 预览窗口中高亮显示文件内容
+- **fd** — 替代 find，作为 fzf 的默认搜索后端
+- **zoxide** — 智能目录跳转，可与 fzf 集成

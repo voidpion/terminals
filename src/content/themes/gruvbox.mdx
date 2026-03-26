@@ -1,0 +1,73 @@
+---
+title: "Gruvbox"
+description: "复古暖色调配色方案，以土黄、橘红为特色，提供 Dark 和 Light 两种模式"
+website: "https://github.com/morhetz/gruvbox"
+github: "https://github.com/morhetz/gruvbox"
+tags: ["配色", "暖色调", "复古", "双模式"]
+featured: false
+order: 7
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal"]
+---
+
+## 简介
+
+Gruvbox 是由开发者 morhetz（Pavel Pertsev）创建的 Vim 配色方案，后来逐渐扩展到终端模拟器和其他编辑器中。它的设计灵感来源于复古计算和旧式 CRT 显示器的暖色调视觉风格，以土黄色、橘红色、棕绿色为核心色彩，营造出一种温暖、舒适且略带怀旧感的编程环境。Gruvbox 的背景色选用了带有明显暖色倾向的深灰棕色，与主流冷色调暗色方案形成了鲜明的差异化。
+
+Gruvbox 提供 Dark 和 Light 两种模式，每种模式又有 Hard、Medium（默认）和 Soft 三种对比度等级，总共六种组合可供选择。这种灵活性使得用户能够根据环境光线和个人偏好精确调节视觉体验。Gruvbox 的配色经过了仔细的对比度计算，确保在 WCAG 无障碍标准下保持良好的可读性。该方案在 Vim/Neovim 社区中拥有极高的人气，许多资深 Vim 用户将其视为"最舒适的编码配色"。
+
+## 配色预览
+
+| 角色 | 颜色名 | 色值（Dark） |
+|------|--------|-------------|
+| 背景 | bg | `#282828` |
+| 前景 | fg | `#ebdbb2` |
+| 黑色 | dark0 | `#282828` |
+| 红色 | neutral_red | `#cc241d` |
+| 绿色 | neutral_green | `#98971a` |
+| 黄色 | neutral_yellow | `#d79921` |
+| 蓝色 | neutral_blue | `#458588` |
+| 紫色 | neutral_purple | `#b16286` |
+| 青色 | neutral_aqua | `#689d6a` |
+| 白色 | light4 | `#a89984` |
+| 亮红 | bright_red | `#fb4934` |
+| 亮绿 | bright_green | `#b8bb26` |
+| 亮黄 | bright_yellow | `#fabd2f` |
+| 亮蓝 | bright_blue | `#83a598` |
+| 亮紫 | bright_purple | `#d3869b` |
+| 亮青 | bright_aqua | `#8ec07c` |
+| 亮白 | light1 | `#ebdbb2` |
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+git clone https://github.com/herrbischoff/iterm2-gruvbox.git ~/iterm2-gruvbox
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+# 选择对应的 .itermcolors 文件
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/gruvbox_dark.toml"]
+```
+
+### Kitty
+
+```bash
+kitty +kitten themes Gruvbox Dark
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'Gruvbox Dark (Gogh)'
+```
+
+## 适用场景
+
+Gruvbox 非常适合偏好暖色调视觉风格的开发者，特别是长期使用 Vim/Neovim 的用户。它温暖的色调在秋冬季节使用时尤为舒适，能营造出一种"壁炉旁编程"的惬意氛围。Gruvbox 的中等对比度使其在大多数光线条件下都表现良好，Dark Hard 变体在需要更高对比度时也能胜任。如果你厌倦了千篇一律的冷色调暗色方案，想尝试一种与众不同的复古暖色体验，Gruvbox 绝对值得一试。

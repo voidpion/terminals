@@ -1,0 +1,81 @@
+---
+title: "fd"
+description: "更快更友好的 find 替代品"
+github: "https://github.com/sharkdp/fd"
+tags: ["搜索", "文件查找", "Rust"]
+featured: true
+order: 9
+category: "search"
+replaces: "find"
+install_cmd: "brew install fd"
+written_in: "Rust"
+---
+
+## 简介
+
+fd 是一个用 Rust 编写的文件查找工具，旨在成为 Unix 系统中经典 `find` 命令的简洁、高效替代品。它拥有更直觉的语法、彩色输出和出色的性能表现，让文件搜索变得轻松愉快。
+
+fd 默认采用智能搜索策略：自动忽略 `.gitignore` 中列出的文件和隐藏文件，支持正则表达式和 glob 模式匹配，同时在多核处理器上利用并行遍历加速搜索。对于大多数常见的文件查找任务，fd 的命令比 `find` 简短得多，且速度通常快 5 倍以上。
+
+## 安装
+
+```bash
+# macOS
+brew install fd
+
+# Ubuntu/Debian
+sudo apt install fd-find
+# 注意：Ubuntu 中命令名可能是 fdfind
+
+# Cargo
+cargo install fd-find
+```
+
+## 核心特性
+
+- **简洁语法**: `fd pattern` 即可搜索，无需复杂参数
+- **极速搜索**: 基于 Rust 的并行目录遍历，速度远超 find
+- **智能过滤**: 默认忽略 `.gitignore` 匹配项和隐藏文件
+- **彩色输出**: 搜索结果带颜色高亮，文件类型一目了然
+- **正则支持**: 默认使用正则表达式匹配，也支持 glob 模式
+- **Unicode 感知**: 完整的 Unicode 文件名支持
+
+## 使用示例
+
+```bash
+# 搜索文件名包含 "readme" 的文件（大小写不敏感）
+fd readme
+
+# 搜索特定扩展名的文件
+fd -e py
+
+# 搜索特定扩展名并包含关键字
+fd -e js "config"
+
+# 使用 glob 模式
+fd -g "*.tar.gz"
+
+# 搜索隐藏文件和 .gitignore 中的文件
+fd -H -I "pattern"
+
+# 查找所有空目录
+fd --type d --empty
+
+# 搜索并批量执行命令（类似 find -exec）
+fd -e png --exec convert {} {.}.jpg
+
+# 限制搜索深度
+fd -d 2 "pattern"
+
+# 搜索特定类型（f=文件, d=目录, l=链接）
+fd --type f "pattern"
+
+# 排除特定目录
+fd --exclude node_modules "pattern"
+```
+
+## 推荐搭配
+
+- **fzf** — 将 fd 作为 fzf 的默认查找后端
+- **ripgrep** — fd 找文件，rg 搜内容，黄金搭档
+- **bat** — 预览搜索结果时高亮显示文件内容

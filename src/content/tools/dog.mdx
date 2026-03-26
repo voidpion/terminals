@@ -1,0 +1,71 @@
+---
+title: "dog"
+description: "现代化的 DNS 查询工具"
+github: "https://github.com/ogham/dog"
+tags: ["DNS", "网络", "Rust"]
+featured: false
+order: 23
+category: "network"
+replaces: "dig"
+install_cmd: "brew install dog"
+written_in: "Rust"
+---
+
+## 简介
+
+dog 是一款使用 Rust 编写的现代化 DNS 查询工具，由 exa（eza 的前身）的作者 ogham 开发。它作为传统 `dig` 命令的替代品，提供了更简洁的语法、彩色高亮的输出以及对 DNS-over-TLS 和 DNS-over-HTTPS 等现代协议的原生支持。
+
+与 `dig` 繁杂的输出格式不同，dog 默认只展示最关键的查询结果，输出清晰易读。它还支持 JSON 输出格式，便于脚本处理和自动化。对于需要频繁进行 DNS 调试和排查的开发者和运维人员，dog 是一个极佳的效率工具。
+
+## 安装
+
+```bash
+# macOS
+brew install dog
+
+# Linux (下载预编译二进制)
+# 请从 GitHub Releases 页面下载对应平台的二进制文件
+
+# Cargo
+cargo install dog-dns
+```
+
+## 核心特性
+
+- **简洁输出**: 默认展示关键信息，比 dig 更加清晰易读
+- **彩色高亮**: 不同记录类型使用不同颜色，一目了然
+- **现代协议**: 原生支持 DNS-over-TLS (DoT) 和 DNS-over-HTTPS (DoH)
+- **JSON 输出**: 支持 JSON 格式输出，方便程序化处理
+- **多记录类型**: 支持 A、AAAA、MX、TXT、CNAME、NS 等所有常见记录类型
+- **灵活语法**: 参数顺序自由，使用直观
+
+## 使用示例
+
+```bash
+# 查询 A 记录
+dog example.com
+
+# 查询特定记录类型
+dog example.com MX
+dog example.com AAAA
+dog example.com TXT
+
+# 指定 DNS 服务器
+dog example.com @8.8.8.8
+dog example.com @1.1.1.1
+
+# 使用 DNS-over-HTTPS
+dog example.com --https @https://cloudflare-dns.com/dns-query
+
+# 使用 DNS-over-TLS
+dog example.com --tls @dns.google
+
+# 输出 JSON 格式
+dog example.com A --json
+
+# 查询多种记录类型
+dog example.com A AAAA MX NS
+
+# 显示查询耗时
+dog example.com --time
+```

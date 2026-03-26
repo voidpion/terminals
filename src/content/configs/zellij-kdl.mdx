@@ -1,0 +1,317 @@
+---
+title: "config.kdl 配置指南"
+description: "一份全面的 Zellij 终端多路复用器配置方案，涵盖快捷键、主题、面板、标签页、布局与插件设置"
+tags: ["Zellij", "多路复用", "Rust"]
+featured: false
+order: 14
+config_type: "multiplexer"
+target_tool: "Zellij"
+filename: "config.kdl"
+---
+
+## 简介
+
+Zellij 是用 Rust 编写的新一代终端多路复用器，以直观的 UI、内置布局系统和 WebAssembly 插件架构著称。配置文件位于 `~/.config/zellij/config.kdl`，采用 KDL（KDL Document Language）格式——一种类似 XML 但更简洁的节点式语法。
+
+与 tmux 相比，Zellij 提供了开箱即用的状态栏提示、模式切换指引和浮动面板等现代特性。本文提供一份完整的 KDL 配置，覆盖快捷键绑定、主题定制、UI 选项、面板/标签页行为和插件配置。
+
+## 完整配置
+
+```kdl
+// ============================================================
+// ~/.config/zellij/config.kdl — Zellij 配置文件
+// ============================================================
+
+// ---------- 1. 全局选项 ----------
+
+// 默认 Shell
+default_shell "zsh"
+
+// 默认布局（位于 ~/.config/zellij/layouts/）
+default_layout "compact"
+
+// 默认模式：normal | locked
+default_mode "normal"
+
+// 鼠标支持
+mouse_mode true
+
+// 滚动缓冲区大小
+scroll_buffer_size 50000
+
+// 复制到系统剪贴板
+copy_on_select true
+
+// 复制时使用的命令（macOS 用 pbcopy，Linux 用 xclip）
+copy_command "pbcopy"
+
+// 选择文本后自动取消选区
+scrollback_editor "nvim"
+
+// 连接到已有会话时的行为：attach（附加）| 不设置则创建新会话
+// session_serialization true
+
+// 简化 UI（隐藏提示文字）
+simplified_ui false
+
+// 圆角面板边框（需要终端支持）
+pane_frames true
+
+// 镜像会话（多人协作时有用）
+mirror_session false
+
+// 退出时的行为提示
+on_force_close "detach"
+
+// ---------- 2. 主题配置 ----------
+// 使用内置主题或自定义主题
+theme "custom"
+
+themes {
+    // 自定义 One Dark 风格主题
+    custom {
+        fg "#abb2bf"
+        bg "#282c34"
+        black "#282c34"
+        red "#e06c75"
+        green "#98c379"
+        yellow "#e5c07b"
+        blue "#61afef"
+        magenta "#c678dd"
+        cyan "#56b6c2"
+        white "#abb2bf"
+        orange "#d19a66"
+    }
+}
+
+// ---------- 3. UI 选项 ----------
+ui {
+    pane_frames {
+        // 圆角边框
+        rounded_corners true
+        // 隐藏单面板时的边框
+        hide_session_name false
+    }
+}
+
+// ---------- 4. 插件配置 ----------
+plugins {
+    // 标签栏插件（底部状态栏）
+    tab-bar location="zellij:tab-bar"
+    // 状态栏插件（显示快捷键提示）
+    status-bar location="zellij:status-bar"
+    // 紧凑状态栏
+    compact-bar location="zellij:compact-bar"
+    // Strider 文件管理器侧栏
+    strider location="zellij:strider"
+    // 会话管理器
+    session-manager location="zellij:session-manager"
+}
+
+// ---------- 5. 快捷键绑定 ----------
+keybinds clear-defaults=true {
+
+    // -- 通用绑定（所有模式下生效） --
+    shared_except "locked" {
+        // 切换到锁定模式
+        bind "Ctrl g" { SwitchToMode "Locked"; }
+        // 切换到面板模式
+        bind "Ctrl p" { SwitchToMode "Pane"; }
+        // 切换到标签模式
+        bind "Ctrl t" { SwitchToMode "Tab"; }
+        // 切换到调整大小模式
+        bind "Ctrl n" { SwitchToMode "Resize"; }
+        // 切换到滚动模式
+        bind "Ctrl s" { SwitchToMode "Scroll"; }
+        // 切换到会话模式
+        bind "Ctrl o" { SwitchToMode "Session"; }
+        // 切换到移动模式
+        bind "Ctrl h" { SwitchToMode "Move"; }
+        // 退出当前面板
+        bind "Ctrl q" { Quit; }
+        // 新建面板
+        bind "Alt n" { NewPane; }
+        // 水平分屏
+        bind "Alt -" { NewPane "Down"; }
+        // 垂直分屏
+        bind "Alt \\" { NewPane "Right"; }
+        // 切换浮动面板
+        bind "Alt f" { ToggleFloatingPanes; }
+        // Vim 风格面板切换（无需进入面板模式）
+        bind "Alt h" { MoveFocusOrTab "Left"; }
+        bind "Alt l" { MoveFocusOrTab "Right"; }
+        bind "Alt j" { MoveFocus "Down"; }
+        bind "Alt k" { MoveFocus "Up"; }
+        // 快速切换标签页
+        bind "Alt 1" { GoToTab 1; }
+        bind "Alt 2" { GoToTab 2; }
+        bind "Alt 3" { GoToTab 3; }
+        bind "Alt 4" { GoToTab 4; }
+        bind "Alt 5" { GoToTab 5; }
+    }
+
+    // -- 锁定模式：仅允许解锁 --
+    locked {
+        bind "Ctrl g" { SwitchToMode "Normal"; }
+    }
+
+    // -- 面板模式 --
+    pane {
+        bind "Esc" "Enter" { SwitchToMode "Normal"; }
+        // 方向切换
+        bind "h" "Left" { MoveFocus "Left"; }
+        bind "l" "Right" { MoveFocus "Right"; }
+        bind "j" "Down" { MoveFocus "Down"; }
+        bind "k" "Up" { MoveFocus "Up"; }
+        // 新建面板
+        bind "n" { NewPane; SwitchToMode "Normal"; }
+        bind "-" { NewPane "Down"; SwitchToMode "Normal"; }
+        bind "\\" { NewPane "Right"; SwitchToMode "Normal"; }
+        // 关闭当前面板
+        bind "x" { CloseFocus; SwitchToMode "Normal"; }
+        // 全屏切换
+        bind "f" { ToggleFocusFullscreen; SwitchToMode "Normal"; }
+        // 浮动面板
+        bind "w" { ToggleFloatingPanes; SwitchToMode "Normal"; }
+        // 嵌入浮动面板
+        bind "e" { TogglePaneEmbedOrFloating; SwitchToMode "Normal"; }
+        // 重命名面板
+        bind "c" { SwitchToMode "RenamePane"; PaneNameInput 0; }
+    }
+
+    // -- 标签页模式 --
+    tab {
+        bind "Esc" "Enter" { SwitchToMode "Normal"; }
+        // 切换标签
+        bind "h" "Left" { GoToPreviousTab; }
+        bind "l" "Right" { GoToNextTab; }
+        // 新建标签页
+        bind "n" { NewTab; SwitchToMode "Normal"; }
+        // 关闭标签页
+        bind "x" { CloseTab; SwitchToMode "Normal"; }
+        // 重命名标签页
+        bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
+        // 切换同步输入（同时输入到所有面板）
+        bind "s" { ToggleActiveSyncTab; SwitchToMode "Normal"; }
+        // 断开标签页为独立窗口
+        bind "b" { BreakPane; SwitchToMode "Normal"; }
+        // 编号切换
+        bind "1" { GoToTab 1; SwitchToMode "Normal"; }
+        bind "2" { GoToTab 2; SwitchToMode "Normal"; }
+        bind "3" { GoToTab 3; SwitchToMode "Normal"; }
+        bind "4" { GoToTab 4; SwitchToMode "Normal"; }
+        bind "5" { GoToTab 5; SwitchToMode "Normal"; }
+    }
+
+    // -- 调整大小模式 --
+    resize {
+        bind "Esc" "Enter" { SwitchToMode "Normal"; }
+        bind "h" "Left" { Resize "Increase Left"; }
+        bind "j" "Down" { Resize "Increase Down"; }
+        bind "k" "Up" { Resize "Increase Up"; }
+        bind "l" "Right" { Resize "Increase Right"; }
+        bind "H" { Resize "Decrease Left"; }
+        bind "J" { Resize "Decrease Down"; }
+        bind "K" { Resize "Decrease Up"; }
+        bind "L" { Resize "Decrease Right"; }
+        // 等分所有面板
+        bind "=" { Resize "Increase"; }
+        bind "-" { Resize "Decrease"; }
+    }
+
+    // -- 滚动模式 --
+    scroll {
+        bind "Esc" { SwitchToMode "Normal"; }
+        // Vim 风格滚动
+        bind "j" "Down" { ScrollDown; }
+        bind "k" "Up" { ScrollUp; }
+        bind "d" { HalfPageScrollDown; }
+        bind "u" { HalfPageScrollUp; }
+        // 搜索
+        bind "/" { SwitchToMode "EnterSearch"; SearchInput 0; }
+        // 用编辑器打开回滚缓冲区
+        bind "e" { EditScrollback; SwitchToMode "Normal"; }
+    }
+
+    // -- 搜索模式 --
+    entersearch {
+        bind "Esc" { SwitchToMode "Scroll"; }
+        bind "Enter" { SwitchToMode "Search"; }
+    }
+
+    search {
+        bind "Esc" { SwitchToMode "Normal"; }
+        bind "n" { Search "down"; }
+        bind "N" { Search "up"; }
+        bind "c" { SearchToggleOption "CaseSensitivity"; }
+        bind "w" { SearchToggleOption "Wrap"; }
+        bind "o" { SearchToggleOption "WholeWord"; }
+    }
+
+    // -- 会话模式 --
+    session {
+        bind "Esc" "Enter" { SwitchToMode "Normal"; }
+        // 分离会话（后台运行）
+        bind "d" { Detach; }
+        // 打开会话管理器
+        bind "w" {
+            LaunchOrFocusPlugin "session-manager" {
+                floating true
+                move_to_focused_tab true
+            };
+            SwitchToMode "Normal";
+        }
+    }
+
+    // -- 移动模式 --
+    move {
+        bind "Esc" "Enter" { SwitchToMode "Normal"; }
+        bind "h" "Left" { MovePane "Left"; }
+        bind "j" "Down" { MovePane "Down"; }
+        bind "k" "Up" { MovePane "Up"; }
+        bind "l" "Right" { MovePane "Right"; }
+        bind "n" "Tab" { MovePane; }
+    }
+
+    // -- 重命名标签页模式 --
+    renametab {
+        bind "Esc" { UndoRenameTab; SwitchToMode "Tab"; }
+        bind "Enter" { SwitchToMode "Normal"; }
+    }
+
+    // -- 重命名面板模式 --
+    renamepane {
+        bind "Esc" { UndoRenamePane; SwitchToMode "Pane"; }
+        bind "Enter" { SwitchToMode "Normal"; }
+    }
+}
+
+// ---------- 6. 环境变量 ----------
+env {
+    // TERM 类型（确保 256 色支持）
+    // TERM "xterm-256color"
+}
+```
+
+## 配置说明
+
+### 模式系统
+Zellij 采用模态操作——不同模式下同一按键执行不同功能。`Normal` 为默认模式，输入直接传递给终端程序；通过 `Ctrl+P` 进入面板模式、`Ctrl+T` 进入标签模式等。底部状态栏会实时显示当前模式和可用快捷键。`clear-defaults=true` 清除内置绑定后完全自定义。
+
+### 主题与 UI
+`themes` 块定义颜色方案，`theme` 指定使用哪个方案。Zellij 的状态栏、边框、提示文字都会使用主题颜色。`rounded_corners` 启用圆角面板边框，需要终端支持 Unicode 绘图字符。
+
+### 插件系统
+Zellij 原生支持 WebAssembly 插件。内置插件包括 `tab-bar`（标签栏）、`status-bar`（状态提示）、`strider`（文件浏览器）和 `session-manager`（会话管理）。第三方插件可从 URL 或本地路径加载。
+
+### 浮动面板
+`Alt+F` 可切换浮动面板模式——面板覆盖在已有布局之上，适合临时执行命令、查看日志等不需要永久占据屏幕空间的任务。
+
+## 常用技巧
+
+- **快速启动布局**：创建 `~/.config/zellij/layouts/dev.kdl` 定义开发布局，然后 `zellij --layout dev` 一键启动预设的多面板工作环境。
+- **会话管理**：`Ctrl+O` 进入会话模式后按 `d` 分离，`zellij attach` 重新连接。`zellij ls` 列出所有活跃会话。
+- **同步输入**：在标签模式下按 `s` 开启同步输入，所有面板同时接收键盘输入，批量操作多台服务器时非常实用。
+- **编辑回滚**：滚动模式下按 `e` 将整个回滚缓冲区在 `$EDITOR` 中打开，可用 Vim/Neovim 的全部搜索和编辑能力处理终端输出。
+- **紧凑模式**：设置 `default_layout "compact"` 使用精简状态栏，仅显示标签名和模式提示，为终端内容留出更多空间。
+- **配置热重载**：修改 `config.kdl` 后无需重启 Zellij，新打开的面板和标签页会自动使用最新配置。

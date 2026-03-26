@@ -1,0 +1,64 @@
+---
+title: "ripgrep"
+description: "面向行的搜索工具，递归搜索目录中的正则表达式模式，速度极快"
+website: "https://github.com/BurntSushi/ripgrep"
+github: "https://github.com/BurntSushi/ripgrep"
+tags: ["搜索", "正则", "Rust"]
+featured: true
+order: 2
+category: "search"
+replaces: "grep"
+install_cmd: "brew install ripgrep"
+written_in: "Rust"
+---
+
+## 简介
+
+ripgrep（命令名 `rg`）是一个面向行的搜索工具，能够递归搜索当前目录中匹配正则表达式的内容。它默认遵循 `.gitignore` 规则，速度极快，通常比 GNU grep、ack、ag 等工具快很多。
+
+## 安装
+
+```bash
+# macOS
+brew install ripgrep
+
+# Ubuntu/Debian
+sudo apt install ripgrep
+
+# Cargo
+cargo install ripgrep
+```
+
+## 核心功能
+
+- **极速搜索**: 利用 Rust 的性能优势和智能并行处理
+- **默认智能**: 自动忽略 `.gitignore` 中的文件、隐藏文件和二进制文件
+- **Unicode 支持**: 完整的 Unicode 正则表达式支持
+- **压缩文件搜索**: 支持搜索 gzip、bzip2、xz、lzma 等压缩文件
+
+## 常用命令
+
+```bash
+# 基本搜索
+rg "pattern"
+
+# 搜索特定文件类型
+rg "pattern" -t py
+
+# 显示上下文行
+rg "pattern" -C 3
+
+# 仅显示文件名
+rg "pattern" -l
+
+# 正则搜索
+rg "fn\s+\w+\(" -t rust
+
+# 替换内容（预览）
+rg "old_name" --replace "new_name"
+```
+
+## 推荐搭配
+
+- **fzf** — 与 fzf 集成实现交互式搜索
+- **bat** — 搜索结果高亮查看

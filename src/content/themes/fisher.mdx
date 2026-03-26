@@ -1,0 +1,75 @@
+---
+title: "Fisher"
+description: "极简 Fish Shell 插件管理器，零配置文件、零开销的优雅设计"
+github: "https://github.com/jorgebucaran/fisher"
+tags: ["Fish", "插件管理", "极简"]
+featured: false
+order: 36
+theme_type: "framework"
+compatible_with: ["Fish"]
+---
+
+## 简介
+
+Fisher 是 Fish Shell 最受欢迎的插件管理器之一，由 Jorge Bucaran 创建。它的设计哲学是极致简洁——整个管理器只有一个文件，没有框架开销，没有额外的配置文件，对 Shell 启动速度零影响。Fisher 安装的插件直接集成到 Fish 的配置目录中，就像你手动安装的一样自然。
+
+与 Oh My Fish 等框架级别的解决方案不同，Fisher 专注于做好一件事：管理插件。它不引入框架概念，不改变 Fish 的工作方式，只是提供了一种优雅的方式来安装、更新和卸载插件。Fisher 支持从 GitHub 仓库、Git URL 甚至本地目录安装插件，并通过一个 `fish_plugins` 文件记录已安装的插件列表，方便在不同机器间同步配置。
+
+## 安装
+
+```bash
+# 一条命令安装 Fisher
+curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish \
+  | source && fisher install jorgebucaran/fisher
+
+# 安装完成后即可使用
+fisher --version
+```
+
+## 核心特性
+
+- **零开销**: 不影响 Shell 启动速度，插件像原生安装一样运行
+- **单文件实现**: 整个管理器仅一个 Fish 函数文件
+- **声明式管理**: `fish_plugins` 文件记录插件列表，支持版本控制
+- **多来源支持**: 从 GitHub、Git URL、本地目录安装插件
+- **并发安装**: 多个插件同时下载，安装速度快
+- **兼容性好**: 与 Oh My Fish 的插件格式兼容
+
+## 使用方式
+
+```fish
+# 安装插件
+fisher install jorgebucaran/hydro          # 提示符主题
+fisher install PatrickF1/fzf.fish          # fzf 集成
+fisher install jethrokuan/z                # 目录跳转
+fisher install IlanCosman/tide@v6          # Tide 提示符
+fisher install jorgebucaran/autopair.fish  # 自动配对括号
+
+# 从 Git URL 安装
+fisher install https://github.com/owner/repo.git
+
+# 安装特定版本/分支
+fisher install IlanCosman/tide@v5
+
+# 列出已安装的插件
+fisher list
+
+# 更新所有插件
+fisher update
+
+# 更新指定插件
+fisher update jorgebucaran/hydro
+
+# 卸载插件
+fisher remove jorgebucaran/hydro
+
+# 通过 fish_plugins 文件批量管理
+# ~/.config/fish/fish_plugins 文件内容示例：
+# jorgebucaran/fisher
+# jorgebucaran/hydro
+# PatrickF1/fzf.fish
+# jethrokuan/z
+
+# 根据 fish_plugins 文件同步安装
+fisher update
+```

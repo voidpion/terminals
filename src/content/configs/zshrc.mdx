@@ -1,0 +1,173 @@
+---
+title: ".zshrc 配置指南"
+description: "一份结构清晰、注释完整的 .zshrc 配置方案，涵盖环境变量、别名、插件管理与按键绑定"
+tags: ["Zsh", "Shell配置", "效率"]
+featured: true
+order: 1
+config_type: "shell"
+target_tool: "Zsh"
+filename: ".zshrc"
+---
+
+## 简介
+
+`.zshrc` 是 Zsh 启动时自动加载的用户配置文件，位于 `~/.zshrc`。一份组织良好的 `.zshrc` 能显著提升终端操作效率——从智能补全、快捷别名到插件生态，都在这里集中管理。本文提供一份经过实战检验的完整配置，适合作为起点进行个性化定制。
+
+## 完整配置
+
+```bash
+# ============================================================
+# ~/.zshrc — Zsh 用户配置文件
+# ============================================================
+
+# ---------- 1. 插件管理器 (zinit) ----------
+# zinit 是高性能的 Zsh 插件管理器，支持延迟加载
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+if [[ ! -d "$ZINIT_HOME" ]]; then
+  mkdir -p "$(dirname $ZINIT_HOME)"
+  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+source "${ZINIT_HOME}/zinit.zsh"
+
+# ---------- 2. 插件加载 ----------
+# 语法高亮 — 命令输入时实时着色
+zinit light zsh-users/zsh-syntax-highlighting
+
+# 自动建议 — 根据历史记录灰色提示补全
+zinit light zsh-users/zsh-autosuggestions
+
+# 补全增强 — 社区维护的额外补全规则
+zinit light zsh-users/zsh-completions
+
+# fzf-tab — 用 fzf 替换默认的 Tab 补全菜单
+zinit light Aloxaf/fzf-tab
+
+# ---------- 3. 补全系统初始化 ----------
+autoload -Uz compinit && compinit
+zinit cdreplay -q
+
+# 补全样式：大小写不敏感匹配
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+# 补全列表着色
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+# fzf-tab 不显示预览（可按需开启）
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+
+# ---------- 4. 环境变量 ----------
+export EDITOR="nvim"
+export VISUAL="nvim"
+export LANG="zh_CN.UTF-8"
+export LC_ALL="zh_CN.UTF-8"
+
+# PATH — 按优先级从高到低排列
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="/opt/homebrew/bin:$PATH"
+
+# 工具专属变量
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+export BAT_THEME="TwoDark"
+
+# ---------- 5. 历史记录 ----------
+HISTSIZE=10000               # 内存中保留条数
+SAVEHIST=$HISTSIZE           # 写入文件条数
+HISTFILE=~/.zsh_history
+HISTDUP=erase                # 去除重复
+setopt appendhistory         # 追加而非覆盖
+setopt sharehistory          # 多终端共享历史
+setopt hist_ignore_space     # 空格开头的命令不记录
+setopt hist_ignore_all_dups  # 去除所有重复
+setopt hist_save_no_dups     # 保存时去重
+setopt hist_find_no_dups     # 搜索时去重
+
+# ---------- 6. 常用别名 ----------
+# 文件与目录
+alias ls='eza --color=auto --icons'
+alias ll='eza -lah --icons --git'
+alias tree='eza --tree --level=3 --icons'
+alias cat='bat --paging=never'
+
+# Git 快捷操作
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+alias gl='git log --oneline --graph --decorate -20'
+alias gd='git diff'
+
+# 安全操作 — 覆盖/删除前确认
+alias rm='rm -i'
+alias mv='mv -i'
+alias cp='cp -i'
+
+# 实用工具
+alias reload='source ~/.zshrc && echo "✔ .zshrc reloaded"'
+alias myip='curl -s ifconfig.me'
+alias ports='lsof -i -P -n | grep LISTEN'
+
+# ---------- 7. 按键绑定 ----------
+bindkey -e                          # 使用 Emacs 模式
+bindkey '^p' history-search-backward  # Ctrl+P 向上搜索历史
+bindkey '^n' history-search-forward   # Ctrl+N 向下搜索历史
+bindkey '^[[A' history-search-backward # 上箭头搜索历史
+bindkey '^[[B' history-search-forward  # 下箭头搜索历史
+bindkey '^w' backward-kill-word       # Ctrl+W 删除前一个单词
+bindkey '^a' beginning-of-line        # Ctrl+A 跳到行首
+bindkey '^e' end-of-line              # Ctrl+E 跳到行尾
+
+# ---------- 8. 外部工具集成 ----------
+# Starship 提示符
+eval "$(starship init zsh)"
+
+# zoxide 智能目录跳转（替代 cd）
+eval "$(zoxide init --cmd cd zsh)"
+
+# fzf 快捷键绑定
+source <(fzf --zsh) 2>/dev/null
+
+# fnm / nvm — Node 版本管理
+eval "$(fnm env --use-on-cd)" 2>/dev/null
+```
+
+## 关键部分说明
+
+### 环境变量
+
+环境变量区域集中管理 `PATH`、编辑器偏好和语言设置。建议将 `PATH` 修改统一放在一处，避免散落在文件各处导致排查困难。`FZF_DEFAULT_OPTS` 和 `BAT_THEME` 等工具变量也归入此区。
+
+### 别名
+
+别名分为三组：**文件操作**（用 `eza`、`bat` 替代默认命令）、**Git 快捷键**（高频操作缩写）、**安全别名**（防止误删）。如果别名超过 20 条，建议拆分到 `~/.zsh_aliases` 并用 `source` 引入。
+
+### 插件
+
+配置使用 zinit 作为插件管理器，核心插件只有四个，保持启动速度。zinit 支持 `turbo` 模式延迟加载，如果插件较多可进一步优化：
+
+```bash
+# 延迟加载示例
+zinit ice wait lucid
+zinit light zsh-users/zsh-syntax-highlighting
+```
+
+### 按键绑定
+
+采用 Emacs 模式，上/下箭头绑定为前缀历史搜索——输入 `git` 后按上箭头只会显示以 `git` 开头的历史命令，比全量翻阅高效得多。
+
+## 推荐插件列表
+
+| 插件 | 说明 |
+|------|------|
+| **zsh-syntax-highlighting** | 实时语法着色，错误命令显示红色 |
+| **zsh-autosuggestions** | 根据历史记录自动灰色提示 |
+| **zsh-completions** | 社区维护的大量额外补全规则 |
+| **fzf-tab** | 用 fzf 接管 Tab 补全，支持预览 |
+| **zsh-vi-mode** | 更好的 Vi 模式支持（替代内置） |
+| **zsh-history-substring-search** | 子串历史搜索，比前缀搜索更灵活 |
+| **fast-syntax-highlighting** | syntax-highlighting 的高性能替代 |
+| **you-should-use** | 当你输入全名时提醒已有别名 |
+
+## 维护建议
+
+- 每季度清理不再使用的别名和插件，保持配置精简
+- 用 `time zsh -i -c exit` 定期检测启动耗时，目标控制在 200ms 以内
+- 将 `.zshrc` 纳入 dotfiles 仓库进行版本管理

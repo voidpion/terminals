@@ -1,0 +1,89 @@
+---
+title: "Sheldon"
+description: "Rust 编写的快速 Shell 插件管理器，支持 Zsh 和 Bash 的现代化方案"
+website: "https://sheldon.cli.rs/"
+github: "https://github.com/rossmacarthur/sheldon"
+tags: ["插件管理", "Rust", "Zsh", "Bash"]
+featured: false
+order: 38
+theme_type: "framework"
+compatible_with: ["Zsh", "Bash"]
+---
+
+## 简介
+
+Sheldon 是一个使用 Rust 编写的快速 Shell 插件管理器，支持 Zsh 和 Bash。与传统的 Shell 脚本实现的插件管理器不同，Sheldon 作为一个编译好的原生二进制程序运行，在插件解析、下载和生成加载脚本等环节都具有显著的性能优势。它通过 TOML 配置文件来声明式地管理插件，语法清晰直观。
+
+Sheldon 的设计理念是将插件管理与 Shell 本身解耦。它不依赖任何特定 Shell 的特性来实现核心功能，而是生成一段标准的 Shell 脚本供你 source。这种架构让 Sheldon 能够同时支持 Zsh 和 Bash，并且未来可以轻松扩展到其他 Shell。对于追求性能和现代化工具链的用户来说，Sheldon 是值得尝试的插件管理方案。
+
+## 安装
+
+```bash
+# 使用 Homebrew 安装
+brew install sheldon
+
+# 使用 Cargo 安装
+cargo install sheldon --locked
+
+# 初始化配置
+sheldon init --shell zsh
+# 或
+sheldon init --shell bash
+```
+
+在 Shell 配置文件中加载：
+
+```bash
+# Zsh — ~/.zshrc
+eval "$(sheldon source)"
+
+# Bash — ~/.bashrc
+eval "$(sheldon source)"
+```
+
+## 核心特性
+
+- **Rust 性能**: 原生二进制执行，插件解析和加载速度极快
+- **TOML 配置**: 声明式配置文件，语法清晰易于版本控制
+- **多来源支持**: GitHub、Git URL、本地目录、远程脚本等多种插件来源
+- **模板系统**: 灵活的模板系统控制插件如何被 source
+- **锁文件**: 生成 lock 文件确保可重复安装
+- **跨 Shell**: 单一工具管理 Zsh 和 Bash 的插件
+
+## 使用方式
+
+编辑配置文件 `~/.config/sheldon/plugins.toml`：
+
+```toml
+shell = "zsh"
+
+# 从 GitHub 安装插件
+[plugins.zsh-autosuggestions]
+github = "zsh-users/zsh-autosuggestions"
+
+[plugins.zsh-syntax-highlighting]
+github = "zsh-users/zsh-syntax-highlighting"
+
+[plugins.zsh-completions]
+github = "zsh-users/zsh-completions"
+
+# 从 Oh My Zsh 加载插件
+[plugins.ohmyzsh-git]
+github = "ohmyzsh/ohmyzsh"
+dir = "plugins/git"
+use = ["*.plugin.zsh"]
+
+# 本地插件
+[plugins.local-config]
+local = "~/.zsh/custom"
+use = ["*.zsh"]
+```
+
+```bash
+# 常用命令
+sheldon lock     # 生成/更新锁文件
+sheldon source   # 输出加载脚本
+sheldon add      # 添加插件
+sheldon remove   # 移除插件
+sheldon edit     # 编辑配置文件
+```

@@ -1,0 +1,51 @@
+---
+title: "Material Theme"
+description: "基于 Material Design 设计语言的配色方案，提供 Oceanic、Palenight、Darker 等多种风格"
+website: "https://material-theme.com/"
+github: "https://github.com/material-theme/vsc-material-theme"
+tags: ["配色", "Material Design", "Google", "多变体"]
+featured: false
+order: 15
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal", "Hyper"]
+---
+
+## 简介
+
+Material Theme 是基于 Google Material Design 设计语言打造的编辑器与终端配色方案，是最早将 Material Design 的色彩理念引入代码编辑领域的项目之一。它的配色遵循 Material Design 的色彩系统，使用经过精心挑选的色板，让代码在视觉上既具有层次感又保持和谐统一。项目提供了多个变体，其中最受欢迎的包括 **Oceanic**（海洋蓝绿色调）、**Palenight**（柔和的紫蓝夜色）和 **Darker**（深邃的纯暗色）。
+
+Material Theme 在 VS Code 插件市场拥有数百万下载量，其影响力远超编辑器本身——社区将其配色方案移植到了几乎所有主流终端模拟器中。每种变体都有独特的视觉个性：Oceanic 以青绿色为主调，给人以清新沉稳的感觉；Palenight 的紫蓝背景带来一种神秘优雅的氛围；Darker 则以极深的背景色最大化内容对比度。三种风格各有拥趸，你可以根据个人喜好和使用环境自由选择。
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+# 从社区移植项目获取对应的 .itermcolors 文件
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/material-theme.toml"]
+```
+
+### Kitty
+
+```bash
+# 从 kitty-themes 仓库获取 Material 主题
+kitty +kitten themes Material
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'Material Palenight (base16)'
+```
+
+## 适用场景
+
+Material Theme 特别适合习惯了 Google 产品设计风格的开发者，以及在 VS Code 中已经使用 Material Theme 并希望终端与编辑器配色保持一致的用户。Oceanic 变体适合全栈开发和日常使用，Palenight 深受前端开发者喜爱，而 Darker 变体则是偏好高对比度暗色环境用户的首选。如果你在团队中推行统一的开发环境视觉规范，Material Theme 丰富的生态覆盖让它成为一个安全的选择。

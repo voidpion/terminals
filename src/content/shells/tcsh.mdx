@@ -1,0 +1,132 @@
+---
+title: "Tcsh"
+description: "C Shell 增强版，以 C 语言风格语法和强大的交互式编辑著称"
+website: "https://www.tcsh.org/"
+github: "https://github.com/tcsh-org/tcsh"
+tags: ["C语法", "BSD", "经典", "命令行编辑"]
+featured: false
+order: 12
+language: "C"
+posix_compatible: false
+default_on: ["FreeBSD"]
+config_file: ".tcshrc"
+---
+
+## 简介
+
+Tcsh 是 C Shell（csh）的增强版本，由 Ken Greer 于 1981 年在卡内基梅隆大学开始开发，后来由 Paul Placeway 和 Christos Zoulas 等人持续改进。Tcsh 在原版 csh 的基础上增加了命令行编辑、可编程补全、拼写纠正、作业控制增强等重要的交互式功能。其名称中的"T"来源于 TENEX 操作系统，该系统以出色的命令行补全功能闻名。
+
+Tcsh 的语法继承自 Bill Joy 于 1978 年为 BSD Unix 编写的 C Shell，采用类 C 语言的语法风格——使用 `if (condition) then ... endif` 而非 Bourne Shell 的 `if condition; then ... fi`。这种语法设计在当时深受 C 程序员欢迎，但也带来了一些被广泛讨论的问题，Tom Christiansen 的经典文章《Csh Programming Considered Harmful》就指出了 C Shell 在脚本编程方面的种种缺陷，如引号处理不一致、缺少函数支持等。
+
+尽管如此，Tcsh 在 BSD 系统（尤其是 FreeBSD）中仍然保持着重要地位，长期作为 FreeBSD 的 root 用户默认 Shell。许多从 BSD 传统走来的系统管理员对 Tcsh 的交互式使用体验有着深厚的情感。Tcsh 也是最早实现 Tab 补全和命令行编辑的 Shell 之一，在这方面有着开创性贡献。
+
+## 安装
+
+```bash
+# macOS（系统可能已预装 tcsh）
+brew install tcsh
+
+# Ubuntu/Debian
+sudo apt install tcsh
+
+# Fedora
+sudo dnf install tcsh
+
+# Arch Linux
+sudo pacman -S tcsh
+
+# FreeBSD（已预装）
+pkg install tcsh
+
+# 设为默认 Shell
+echo "$(which tcsh)" | sudo tee -a /etc/shells
+chsh -s "$(which tcsh)"
+```
+
+## 核心特性
+
+- **命令行编辑**: 支持 Emacs 和 Vi 编辑模式，是最早实现此功能的 Shell 之一
+- **可编程补全**: `complete` 内置命令可为任意命令定制 Tab 补全规则，功能丰富
+- **拼写纠正**: 自动检测并纠正命令和文件名的拼写错误，可通过 `set correct` 控制
+- **C 语言风格语法**: 使用 `foreach`、`switch`、`while` 等类 C 控制结构，C 程序员容易上手
+- **历史替换**: 强大的 `!` 历史替换机制，如 `!!`（上条命令）、`!$`（上条最后参数）、`!:s/old/new/`（历史替换）
+- **周期性命令**: `sched` 命令可在 Shell 内调度定时任务
+- **自动登出**: `autologout` 变量可设置空闲超时自动登出，增强安全性
+- **目录栈**: 内置 `pushd`、`popd`、`dirs` 目录栈管理
+- **事件钩子**: 支持 `periodic`、`precmd`、`postcmd` 等特殊别名，在特定时机执行自定义操作
+- **即时文件名补全**: `set autolist` 自动列出匹配项，`set autoexpand` 自动展开历史和变量
+
+## 配置推荐
+
+```tcsh
+# ~/.tcshrc
+
+# ---------- 基本设置 ----------
+set prompt = '%B%n@%m%b:%~%# '   # 粗体用户名@主机:路径 提示符
+set autolist                      # Tab 自动列出补全选项
+set autoexpand                    # 自动展开历史引用
+set correct = cmd                 # 命令拼写纠正（cmd/all）
+set complete = enhance            # 增强补全（忽略大小写，- 与 _ 等价）
+set nobeep                        # 关闭蜂鸣声
+set color                         # 启用彩色输出
+set colorcat                      # cat 命令彩色输出
+
+# ---------- 历史记录 ----------
+set history = 10000               # 内存中保留历史条目数
+set savehist = (10000 merge)      # 保存历史并合并多会话历史
+set histdup = erase               # 消除重复历史
+
+# ---------- 编辑模式 ----------
+bindkey -v                        # Vi 模式（或 bindkey -e 使用 Emacs 模式）
+
+# ---------- 环境变量 ----------
+setenv EDITOR vim
+setenv PAGER less
+setenv PATH "${HOME}/.local/bin:${PATH}"
+
+# ---------- 别名 ----------
+alias ll    'ls -lah'
+alias la    'ls -A'
+alias gs    'git status'
+alias gp    'git pull --rebase'
+alias ..    'cd ..'
+alias ...   'cd ../..'
+alias h     'history 25'
+
+# ---------- 补全规则 ----------
+# 为 ssh 命令补全主机名
+complete ssh 'p/1/$hostnames/'
+# 为 kill 命令补全进程信号
+complete kill 'c/-/S/'
+# 为 man 命令补全手册章节
+complete man 'p/1/c/'
+
+# ---------- 安全设置 ----------
+set rmstar                        # rm * 时要求确认
+set autologout = (60 10)          # 60 分钟空闲自动登出，10 分钟锁屏
+
+# ---------- 特殊别名（事件钩子）----------
+# 每次显示提示符前执行
+alias precmd 'echo -n "\033]0;${USER}@${HOST}:${cwd}\007"'
+
+# ---------- 键绑定增强 ----------
+bindkey "^R" i-search-back        # Ctrl+R 向后增量搜索
+bindkey "^W" backward-delete-word # Ctrl+W 删除前一个单词
+```
+
+## Tcsh vs Bash 语法对比
+
+| 功能 | Tcsh / Csh | Bash / sh |
+|------|-----------|-----------|
+| 变量赋值 | `set var = value` | `var=value` |
+| 环境变量 | `setenv VAR value` | `export VAR=value` |
+| 条件判断 | `if (expr) then ... endif` | `if [ expr ]; then ... fi` |
+| 循环 | `foreach i (list) ... end` | `for i in list; do ... done` |
+| Switch | `switch (val) ... endsw` | `case val in ... esac` |
+| 别名 | `alias name 'cmd'` | `alias name='cmd'` |
+| 函数 | 不支持（仅别名） | `name() { ... }` |
+| 管道状态 | 不支持 | `$PIPESTATUS` |
+| Here Document | 有限支持 | `<< EOF ... EOF` |
+| 输入重定向 | `<` | `<` / `<<<` |
+
+Tcsh 在交互式使用方面有着独特的魅力，尤其是其强大的补全系统和历史机制。但在脚本编程方面，由于缺少函数支持和一些 POSIX 特性，现代最佳实践通常建议使用 Bourne 系列 Shell（如 Bash、Ksh）编写脚本，而保留 Tcsh 作为交互式 Shell 使用。

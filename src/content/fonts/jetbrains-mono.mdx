@@ -1,0 +1,122 @@
+---
+title: "JetBrains Mono"
+description: "JetBrains 出品的开源等宽编程字体，专为代码阅读优化，内置连字支持"
+website: "https://www.jetbrains.com/lp/mono/"
+github: "https://github.com/JetBrains/JetBrainsMono"
+tags: ["编程字体", "等宽", "连字", "开源"]
+featured: true
+order: 1
+ligatures: true
+nerd_font_variant: true
+styles: ["Regular", "Bold", "Italic", "Bold Italic", "Thin", "Light", "Medium", "ExtraBold", "SemiBold", "ExtraLight"]
+preview_text: "Terminal > ls -la ~/.config"
+---
+
+## 简介
+
+JetBrains Mono 是 JetBrains 公司于 2020 年推出的开源等宽编程字体，专门为开发者的代码阅读体验而设计。它在字形设计上做了大量针对编程场景的优化：增大了小写字母的高度（x-height），使代码在小字号下依然清晰可辨；特别处理了容易混淆的字符（如 `0Oo`、`1lI`、`!|`），确保在终端和编辑器中不会误读。
+
+JetBrains Mono 内置了 138 种代码连字（ligature），可以将 `!=`、`>=`、`=>` 等常见编程符号组合渲染为更具语义的连体形式，同时保持每个字符占据等宽空间，不影响代码对齐。
+
+Nerd Font 社区为其提供了 **JetBrainsMono Nerd Font** 变体，预置了数千个图标字形，是终端美化方案的首选字体之一。
+
+## 安装
+
+```bash
+# macOS — Homebrew
+brew install --cask font-jetbrains-mono
+brew install --cask font-jetbrains-mono-nerd-font  # Nerd Font 变体
+
+# Ubuntu/Debian
+sudo apt install fonts-jetbrains-mono
+
+# 手动安装 Nerd Font 变体
+mkdir -p ~/.local/share/fonts && cd ~/.local/share/fonts
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
+unzip JetBrainsMono.zip -d JetBrainsMono && fc-cache -fv
+
+# Windows — Scoop
+scoop bucket add nerd-fonts
+scoop install nerd-fonts/JetBrainsMono-NF
+```
+
+## 核心特性
+
+- **增大的 x-height**: 小写字母高度比同类字体高约 8%，在 12-14px 小字号下可读性显著提升
+- **138 种代码连字**: 覆盖箭头（`->`、`=>`）、比较（`!=`、`>=`、`<=`）、逻辑运算符等常见组合
+- **字符辨识优化**: `0` 带点号、`l` 带尾部弯曲、`1` 带衬线，从根源避免混淆
+- **10 种字重**: 从 Thin 到 ExtraBold 共 10 种字重，灵活适应不同场景
+- **Nerd Font 变体**: 内嵌 Powerline、Font Awesome、Devicons 等图标集
+- **开源免费**: 采用 OFL-1.1 许可证，个人和商业使用均免费
+
+## 配置推荐
+
+### 终端模拟器
+
+```toml
+# Alacritty — ~/.config/alacritty/alacritty.toml
+[font]
+size = 14.0
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Regular"
+[font.bold]
+family = "JetBrainsMono Nerd Font"
+style = "Bold"
+```
+
+```conf
+# Kitty — ~/.config/kitty/kitty.conf
+font_family      JetBrainsMono Nerd Font
+bold_font        auto
+italic_font      auto
+font_size        14.0
+```
+
+```lua
+-- WezTerm — ~/.wezterm.lua
+config.font = wezterm.font('JetBrainsMono Nerd Font')
+config.font_size = 14.0
+```
+
+### VS Code
+
+```json
+{
+  "editor.fontFamily": "'JetBrains Mono', 'JetBrainsMono Nerd Font', monospace",
+  "editor.fontSize": 14,
+  "editor.fontLigatures": true,
+  "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font'"
+}
+```
+
+### 连字开关
+
+如果你不喜欢连字效果，可以在各工具中关闭：
+
+```json
+// VS Code — 关闭连字
+{ "editor.fontLigatures": false }
+```
+
+```conf
+# Kitty — 关闭连字
+disable_ligatures always
+```
+
+## 与 Fira Code 的对比
+
+| 特性 | JetBrains Mono | Fira Code |
+|------|---------------|-----------|
+| 连字数量 | 138 种 | 125+ 种 |
+| 字重数量 | 10 种 | 6 种 |
+| x-height | 较大 | 标准 |
+| 字形风格 | 简洁几何 | 圆润柔和 |
+
+两者都是优秀的编程字体，选择主要取决于个人审美偏好。
+
+## 推荐搭配
+
+- **Powerlevel10k / Starship** — Nerd Font 变体完美支持提示符主题的图标显示
+- **Catppuccin 配色** — 柔和配色搭配 JetBrains Mono 的清晰字形，长时间编码舒适度极佳
+- **Neovim / VS Code** — 编辑器与终端统一使用同一字体，保持视觉一致性

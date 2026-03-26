@@ -1,0 +1,89 @@
+---
+title: "Source Code Pro"
+description: "Adobe 出品的开源等宽编程字体，经典设计与极佳可读性的典范"
+github: "https://github.com/adobe-fonts/source-code-pro"
+tags: ["编程字体", "Adobe", "经典", "开源"]
+featured: false
+order: 6
+ligatures: false
+nerd_font_variant: true
+styles: ["Regular", "Bold", "Italic", "Bold Italic", "Light", "Medium", "SemiBold", "Black", "ExtraLight"]
+preview_text: "Terminal > ls -la ~/.config"
+---
+
+## 简介
+
+Source Code Pro 是 Adobe 于 2012 年发布的开源等宽编程字体，由字体设计师 Paul D. Hunt 设计。它是 Adobe Source 字体家族（Source Sans、Source Serif、Source Code Pro）中的等宽成员，也是最早一批由大型软件公司推出的开源编程字体。其字形设计严谨、工整，在各种字号下都有出色的可读性表现，是一款真正经得起时间考验的经典之作。
+
+Source Code Pro 在字形设计上充分考虑了编程场景的需求。`0`（零）采用虚线点标记与 `O`（大写 O）明确区分，`1`（一）、`l`（小写 L）、`I`（大写 i）三者各有独特的字形特征。它提供了 9 种字重，从 ExtraLight 到 Black，覆盖面极广。虽然不支持连字功能，但凭借其简洁纯粹的设计风格，依然拥有大量忠实用户。
+
+## 安装
+
+```bash
+# macOS — Homebrew
+brew install --cask font-source-code-pro
+brew install --cask font-sauce-code-pro-nerd-font  # Nerd Font 变体
+
+# Ubuntu/Debian
+sudo apt install fonts-source-code-pro
+
+# 手动安装 Nerd Font 变体
+mkdir -p ~/.local/share/fonts && cd ~/.local/share/fonts
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/SourceCodePro.zip
+unzip SourceCodePro.zip -d SourceCodePro && fc-cache -fv
+
+# Windows — Scoop
+scoop bucket add nerd-fonts
+scoop install nerd-fonts/SourceCodePro-NF
+```
+
+## 特性亮点
+
+- **Adobe 出品**: 专业字体设计团队打造，字形品质经过严格审核
+- **经典可读**: 字形工整严谨，笔画清晰分明，在各种字号下均有优秀的可读性
+- **字符辨识度高**: `0`/`O`、`1`/`l`/`I` 等易混淆字符有明确的区分设计
+- **9 种字重**: 从 ExtraLight 到 Black 覆盖全面，满足不同显示场景的需求
+- **完善斜体**: 真正的斜体设计（非简单倾斜），在语义高亮中显示效果优美
+- **广泛预装**: 在多个 Linux 发行版和 IDE 中预装，开箱即用
+- **开源免费**: SIL OFL 许可证，个人和商业使用均免费
+
+## 推荐配置
+
+### 终端模拟器
+
+```toml
+# Alacritty — ~/.config/alacritty/alacritty.toml
+[font]
+size = 14.0
+[font.normal]
+family = "SauceCodePro Nerd Font"
+style = "Regular"
+[font.bold]
+family = "SauceCodePro Nerd Font"
+style = "Bold"
+```
+
+```conf
+# Kitty — ~/.config/kitty/kitty.conf
+font_family      SauceCodePro Nerd Font
+bold_font        auto
+italic_font      auto
+font_size        14.0
+```
+
+```lua
+-- WezTerm — ~/.wezterm.lua
+config.font = wezterm.font('SauceCodePro Nerd Font')
+config.font_size = 14.0
+```
+
+### VS Code
+
+```json
+{
+  "editor.fontFamily": "'Source Code Pro', 'SauceCodePro Nerd Font', monospace",
+  "editor.fontSize": 14,
+  "editor.fontLigatures": false,
+  "terminal.integrated.fontFamily": "'SauceCodePro Nerd Font'"
+}
+```

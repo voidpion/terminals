@@ -1,0 +1,100 @@
+---
+title: "zellij"
+description: "Rust 编写的现代终端复用器"
+website: "https://zellij.dev/"
+github: "https://github.com/zellij-org/zellij"
+tags: ["终端复用", "面板管理", "Rust"]
+featured: false
+order: 18
+category: "multiplexer"
+install_cmd: "brew install zellij"
+written_in: "Rust"
+---
+
+## 简介
+
+Zellij 是一个用 Rust 编写的现代终端复用器，定位为 tmux 和 screen 的替代品。它最大的亮点是开箱即用的友好体验：界面底部始终显示可用的快捷键提示，新用户无需背诵任何按键组合即可上手操作，同时也为高级用户提供了丰富的自定义选项。
+
+Zellij 引入了独特的布局系统和插件架构，支持使用 WebAssembly（WASM）编写插件来扩展功能。它原生支持浮动面板和堆叠面板，提供了比传统终端复用器更灵活的窗口管理方式。内置的会话管理功能让你可以轻松保存和恢复工作环境，而 Rust 的内存安全保证也让 Zellij 在稳定性方面表现出色。
+
+## 安装
+
+```bash
+# macOS
+brew install zellij
+
+# Cargo
+cargo install zellij
+
+# 下载预编译二进制
+curl -L https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz | tar xz
+```
+
+## 核心特性
+
+- **快捷键提示**: 界面底部实时显示可用操作，学习成本极低
+- **浮动面板**: 支持浮动窗口，灵活叠放管理
+- **布局系统**: 可定义和保存自定义布局模板
+- **WASM 插件**: 使用 WebAssembly 编写插件扩展功能
+- **会话管理**: 内置会话持久化，断线后自动恢复
+- **多模式切换**: 面板模式、标签模式、调整模式等多种操作模式
+
+## 使用示例
+
+```bash
+# 启动 zellij
+zellij
+
+# 使用指定布局启动
+zellij --layout compact
+
+# 创建命名会话
+zellij -s my-project
+
+# 列出所有会话
+zellij list-sessions
+
+# 附加到已有会话
+zellij attach my-project
+
+# 如果会话存在则附加，否则创建新会话
+zellij attach --create my-project
+
+# 终止指定会话
+zellij kill-session my-project
+
+# 终止所有会话
+zellij kill-all-sessions
+
+# 生成自动补全脚本
+zellij setup --generate-completion zsh
+```
+
+### 常用快捷键
+
+```text
+Ctrl+p          进入面板模式
+  方向键 / hjkl   在面板间切换
+  n              新建面板
+  d              关闭当前面板
+  f              全屏切换
+
+Ctrl+t          进入标签模式
+  n              新建标签
+  方向键          切换标签
+  r              重命名标签
+
+Ctrl+n          进入调整模式
+  方向键          调整面板大小
+
+Ctrl+s          进入滚动模式
+Ctrl+o          进入会话模式
+  d              分离会话
+  w              会话管理器
+```
+
+## 推荐搭配
+
+- **neovim** — 在 Zellij 面板中运行 Neovim
+- **lazygit** — 在浮动面板中快速打开 Git 管理
+- **btop** — 在独立面板中监控系统资源

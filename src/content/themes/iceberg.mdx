@@ -1,0 +1,51 @@
+---
+title: "Iceberg"
+description: "以冰山为灵感的蓝色系暗色配色方案，色调冷静柔和，适合长时间编码"
+website: "https://cocopon.github.io/iceberg.vim/"
+github: "https://github.com/cocopon/iceberg.vim"
+tags: ["配色", "蓝色系", "暗色", "Vim"]
+featured: false
+order: 16
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal"]
+---
+
+## 简介
+
+Iceberg 是一款以冰山为灵感的暗色配色方案，最初由日本开发者 cocopon 为 Vim 创建。它的设计核心是打造一个冷静、克制的蓝色系视觉环境——背景采用深邃的蓝灰色，前景文字和语法高亮则使用不同明度和饱和度的蓝色调，偶尔点缀以绿色、紫色和橙色作为语义区分。整体效果如同远眺北极冰山，宁静而深沉。
+
+Iceberg 的色彩设计非常注重科学性，所有颜色都在 CIELAB 色彩空间中经过精确调校，确保在人眼感知上的亮度差异均匀一致。这意味着不同语法元素之间的视觉区分度恰到好处，既不会因对比度不足而模糊，也不会因色彩过于跳跃而造成视觉干扰。这种学术般严谨的色彩工程使得 Iceberg 在长时间使用时的舒适度极高，很多用户反馈使用 Iceberg 后明显减少了眼部疲劳。
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+# 从 iceberg 官网或社区移植项目下载 .itermcolors 文件
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/iceberg-dark.toml"]
+```
+
+### Kitty
+
+```conf
+# 在 kitty.conf 中引入 Iceberg 主题
+include themes/iceberg.conf
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'iceberg-dark'
+```
+
+## 适用场景
+
+Iceberg 非常适合在夜间或低光照环境中长时间编码的开发者。它的蓝色基调与大多数暗色主题的灰色或黑色背景形成了鲜明的个性区分，让你的终端窗口在众多深色界面中脱颖而出。对于 Vim 和 Neovim 用户来说，Iceberg 提供了最原生的支持体验。如果你是后端开发者，经常需要长时间盯着日志和命令行输出，Iceberg 柔和的蓝色调能有效降低视觉压力，值得一试。

@@ -1,0 +1,80 @@
+---
+title: "foot"
+description: "Wayland 原生的极简终端模拟器，以极致的速度和低资源占用著称"
+screenshot: "/screenshots/foot.png"
+website: "https://codeberg.org/dnkl/foot"
+tags: ["Linux", "Wayland", "轻量", "免费"]
+featured: false
+order: 11
+platforms: ["Linux"]
+license: "MIT"
+gpu_accelerated: false
+multiplexer_builtin: false
+pricing: "free"
+---
+
+## 简介
+
+foot 是一款专为 Wayland 显示协议设计的轻量级终端模拟器，由 Daniel Eklöf 使用 C 语言编写。它的设计哲学是"快速、轻量、极简"，只做终端模拟该做的事，不添加任何多余的功能。在众多终端模拟器中，foot 以其极低的输入延迟和极快的渲染速度而闻名。
+
+foot 不依赖 GPU 加速，而是通过高度优化的 CPU 渲染路径来实现出色的性能。它直接使用 Wayland 的共享内存缓冲区（wl_shm）进行渲染，避免了 GPU 渲染管线的开销和复杂性。这种设计使得 foot 在低配置硬件和没有独立显卡的系统上同样表现优异。
+
+foot 还提供了一个独特的服务器模式（foot --server），允许多个终端窗口共享同一个服务器进程，从而大幅降低内存占用。在需要同时打开大量终端窗口的场景中，这一功能优势明显。
+
+需要注意的是，foot 仅支持 Wayland 环境，不支持 X11。如果你使用的是 Sway、Hyprland、River 等 Wayland 合成器，foot 是一个极佳的终端选择。
+
+## 安装
+
+### 通过包管理器安装
+
+```bash
+# Arch Linux（推荐）
+sudo pacman -S foot
+
+# Fedora
+sudo dnf install foot
+
+# Ubuntu 23.04+
+sudo apt install foot
+
+# Void Linux
+sudo xbps-install foot
+
+# Alpine Linux
+sudo apk add foot
+
+# Gentoo
+sudo emerge -av x11-terms/foot
+```
+
+### 从源码编译
+
+```bash
+# 安装构建依赖（以 Fedora 为例）
+sudo dnf install meson ninja-build gcc \
+  wayland-devel wayland-protocols-devel \
+  pixman-devel fontconfig-devel freetype-devel \
+  libxkbcommon-devel utf8proc-devel
+
+# 克隆源码并编译
+git clone https://codeberg.org/dnkl/foot.git
+cd foot
+mkdir build && meson setup build --buildtype=release
+ninja -C build
+sudo ninja -C build install
+```
+
+## 核心特性
+
+- **Wayland 原生** - 专为 Wayland 设计，直接使用 Wayland 协议，无 X11 兼容层开销
+- **极低延迟** - 在延迟基准测试中名列前茅，输入响应几乎无感知延迟
+- **CPU 渲染优化** - 基于 wl_shm 的高效 CPU 渲染，不依赖 GPU，兼容性极佳
+- **服务器模式** - `foot --server` 允许多终端共享进程，大幅减少内存占用
+- **Sixel 图像支持** - 支持 Sixel 图像协议，可在终端中显示图片
+- **搜索功能** - 内置文本搜索，支持正则表达式和 URL 检测
+- **字体回退** - 自动字体回退机制，确保 Unicode 和 Emoji 字符正确显示
+- **IME 支持** - 完善的输入法支持，适合非英语用户
+- **真彩色** - 完整的 24-bit 真彩色支持
+- **轻量级配置** - 使用 INI 格式配置文件，选项精简、文档完善
+- **PGO 优化** - 官方支持 Profile-Guided Optimization 编译，进一步提升性能
+- **快速滚动** - 优化的滚动缓冲区实现，大量输出场景下依然流畅

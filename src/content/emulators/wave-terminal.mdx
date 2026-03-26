@@ -1,0 +1,113 @@
+---
+title: "Wave Terminal"
+description: "现代化开源终端，支持内联渲染文件、Markdown、图表等富内容，重新定义终端体验"
+screenshot: "/screenshots/wave-terminal.webp"
+website: "https://waveterm.dev/"
+github: "https://github.com/wavetermdev/waveterm"
+tags: ["跨平台", "免费", "现代化", "开源"]
+featured: false
+order: 18
+platforms: ["macOS", "Windows", "Linux"]
+license: "Apache-2.0"
+gpu_accelerated: false
+multiplexer_builtin: true
+pricing: "free"
+---
+
+## 简介
+
+Wave Terminal 是一款现代化的开源终端模拟器，其核心理念是将终端从纯文本界面扩展为能够内联渲染富内容的工作环境。在 Wave Terminal 中，用户可以直接在终端里查看图片、预览 Markdown 文档、渲染数据图表、浏览网页，甚至编辑代码文件，而无需切换到其他应用。
+
+Wave Terminal 采用 Go 和 TypeScript 构建，使用 Electron 作为前端框架。它的设计目标不是替代传统终端，而是在保留完整终端功能的基础上，增加一个"内容渲染层"。当检测到特定类型的输出时，Wave Terminal 会自动将其渲染为可视化内容，使开发者能够在终端工作流中更高效地处理信息。
+
+Wave Terminal 内置了标签页和分屏功能，支持在一个窗口中同时运行多个终端会话和内容预览面板。它的界面设计现代美观，提供了暗色和亮色主题，并支持自定义样式。作为 Apache-2.0 协议下的开源项目，它拥有活跃的社区和持续的功能迭代。
+
+## 安装
+
+### macOS
+
+```bash
+# 通过 Homebrew 安装（推荐）
+brew install --cask wave
+
+# 或从官网下载
+# 访问 https://waveterm.dev/ 下载 .dmg 安装包
+```
+
+### Linux
+
+```bash
+# Debian / Ubuntu（.deb 包）
+# 从 GitHub Releases 下载最新的 .deb 包
+sudo dpkg -i waveterm-linux-x86_64.deb
+
+# Arch Linux（AUR）
+yay -S waveterm-bin
+
+# 通用 AppImage
+# 从 GitHub Releases 下载 .AppImage 文件
+chmod +x WaveTerm-linux-x86_64.AppImage
+./WaveTerm-linux-x86_64.AppImage
+```
+
+### Windows
+
+```powershell
+# 通过 Winget 安装
+winget install CommandLine.Wave
+
+# 或从官网下载 .exe 安装程序
+# 访问 https://waveterm.dev/ 下载 Windows 安装包
+```
+
+### 验证安装
+
+启动 Wave Terminal 后，可以尝试以下命令测试内联渲染功能：
+
+```bash
+# 预览 Markdown 文件
+wsh view readme.md
+
+# 预览图片
+wsh view screenshot.png
+
+# 预览 CSV 数据
+wsh view data.csv
+```
+
+## 核心特性
+
+- **内联文件预览** - 在终端中直接渲染 Markdown、图片、CSV、JSON 等文件内容
+- **内置代码编辑器** - 集成代码编辑器，支持语法高亮，无需离开终端即可编辑文件
+- **网页内嵌浏览** - 可在终端窗格中直接打开和浏览网页，适合查阅文档
+- **数据可视化** - 支持在终端中渲染数据图表，适合数据分析和监控场景
+- **标签页与分屏** - 内置灵活的标签页和窗格管理，支持拖拽布局调整
+- **AI 集成** - 内置 AI 助手功能，可在终端中直接与 AI 对话获取帮助
+- **远程连接** - 原生支持 SSH 远程连接管理，可在远程服务器上使用全部功能
+- **主题与样式** - 提供多种内置主题，支持自定义配色和界面样式
+- **跨平台支持** - 原生支持 macOS、Windows 和 Linux 三大平台
+- **开源免费** - 基于 Apache-2.0 协议完全开源，社区驱动开发
+- **块（Block）系统** - 独特的内容块架构，每个命令输出、文件预览都是独立可操作的块
+- **工作区管理** - 支持创建多个工作区，不同项目使用不同的终端环境和布局
+
+### wsh 命令工具
+
+Wave Terminal 提供了 `wsh` 命令行工具，用于触发各种内联渲染功能：
+
+```bash
+# 预览文件（自动识别文件类型并选择合适的渲染方式）
+wsh view file.md
+wsh view image.png
+wsh view data.json
+
+# 编辑文件（在终端内打开编辑器）
+wsh edit config.yaml
+
+# 打开网页
+wsh web https://example.com
+
+# 创建新的终端块
+wsh run -- htop
+```
+
+> **提示**：Wave Terminal 特别适合需要在终端和图形界面之间频繁切换的工作场景。例如前端开发者可以在一个窗格中运行开发服务器，另一个窗格中预览 API 文档，再用一个窗格编辑配置文件——这一切都在同一个终端窗口中完成。配合 SSH 远程连接功能，还可以在远程服务器上直接预览日志文件和查看图表。

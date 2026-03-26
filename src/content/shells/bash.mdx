@@ -1,0 +1,137 @@
+---
+title: "Bash"
+description: "GNU 项目的标准 Shell，几乎所有 Linux 发行版的默认交互式 Shell"
+website: "https://www.gnu.org/software/bash/"
+tags: ["交互式", "脚本", "POSIX", "Linux默认"]
+featured: true
+order: 4
+language: "C"
+posix_compatible: true
+default_on: ["Ubuntu", "Fedora", "Debian", "CentOS", "大部分 Linux 发行版"]
+config_file: ".bashrc"
+---
+
+## 简介
+
+Bash（Bourne Again Shell）是由 Brian Fox 为 GNU 项目编写的自由软件 Shell，于 1989 年首次发布，作为 Bourne Shell（sh）的替代品。Bash 是目前使用最广泛的 Unix Shell，几乎所有主流 Linux 发行版都将其作为默认的交互式登录 Shell。它在完全兼容 POSIX sh 标准的基础上，加入了大量实用的扩展特性，包括命令行编辑、命令历史、目录栈、整数运算、数组、正则匹配等。
+
+作为事实上的 Shell 标准，Bash 拥有最庞大的脚本生态和最广泛的文档资源。绝大多数 Linux 系统管理教程、CI/CD 流水线、容器启动脚本以及自动化运维工具都以 Bash 作为默认脚本语言。无论你使用哪款终端模拟器或操作系统，掌握 Bash 都是系统管理和软件开发的基本功。Bash 目前由 Chet Ramey 维护，最新的 5.x 系列引入了可联想的补全（programmable completion）改进、nameref 变量、`${parameter@operator}` 参数变换等现代特性。
+
+## 安装
+
+```bash
+# macOS（系统自带 Bash 3.2，建议通过 Homebrew 升级到 5.x）
+brew install bash
+# 升级后需将新版 Bash 加入合法 Shell 列表
+echo "$(brew --prefix)/bin/bash" | sudo tee -a /etc/shells
+chsh -s "$(brew --prefix)/bin/bash"
+
+# Ubuntu/Debian
+sudo apt update && sudo apt install bash
+
+# Fedora
+sudo dnf install bash
+
+# Arch Linux
+sudo pacman -S bash
+
+# 从源码编译（获取最新版）
+wget https://ftp.gnu.org/gnu/bash/bash-5.2.tar.gz
+tar xzf bash-5.2.tar.gz && cd bash-5.2
+./configure && make && sudo make install
+```
+
+## 核心特性
+
+- **POSIX 兼容**: 完全兼容 POSIX sh 标准，同时提供大量扩展语法，是编写可移植脚本的首选 Shell
+- **命令行编辑**: 支持 Emacs 和 Vi 两种编辑模式，可通过 Readline 库进行细粒度定制
+- **可编程补全**: 通过 `complete` 和 `compgen` 内置命令实现上下文感知的 Tab 补全，bash-completion 项目提供了数千个命令的补全规则
+- **命令历史**: 支持历史搜索（Ctrl+R）、历史扩展（`!!`、`!$`、`!-2`）、带时间戳记录等功能
+- **数组与关联数组**: 支持索引数组和关联数组（Bash 4.0+），可处理结构化数据
+- **进程替换**: `<(command)` 和 `>(command)` 语法可将命令输出当作文件使用，方便数据流处理
+- **Here String**: `<<<` 语法将字符串直接作为命令的标准输入，比 `echo | command` 更简洁
+- **正则表达式匹配**: `[[ string =~ regex ]]` 语法支持在条件测试中直接使用正则表达式
+- **Coproc**: `coproc` 关键字可创建协进程，实现双向管道通信
+- **调试支持**: 内置 `set -x`（xtrace）、`trap DEBUG`、`BASH_SOURCE`/`BASH_LINENO` 等调试机制
+
+## 配置推荐
+
+```bash
+# ~/.bashrc
+
+# ---------- 历史记录配置 ----------
+HISTSIZE=50000                   # 内存中保留的历史条目数
+HISTFILESIZE=100000              # 历史文件最大条目数
+HISTCONTROL=ignoreboth:erasedups # 忽略以空格开头的命令及重复条目
+HISTTIMEFORMAT="%F %T "         # 记录命令执行时间
+shopt -s histappend              # 追加历史而非覆盖
+PROMPT_COMMAND="history -a; $PROMPT_COMMAND"  # 每条命令后立即写入历史文件
+
+# ---------- Shell 行为 ----------
+shopt -s checkwinsize   # 自动调整终端窗口大小
+shopt -s cdspell        # 自动纠正 cd 命令的拼写错误
+shopt -s dirspell       # 自动纠正目录名拼写
+shopt -s globstar       # 启用 ** 递归通配（Bash 4.0+）
+shopt -s nocaseglob     # 通配符不区分大小写
+shopt -s autocd         # 输入目录名直接 cd（Bash 4.0+）
+
+# ---------- 命令行编辑 ----------
+set -o vi               # 使用 Vi 模式（默认为 Emacs 模式）
+bind 'set show-all-if-ambiguous on'     # 首次 Tab 就显示所有补全
+bind 'set completion-ignore-case on'    # 补全忽略大小写
+
+# ---------- 提示符 ----------
+PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+
+# ---------- 实用别名 ----------
+alias ll='ls -lah --color=auto'
+alias la='ls -A --color=auto'
+alias gs='git status'
+alias gp='git pull --rebase'
+alias gco='git checkout'
+alias dc='docker compose'
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# ---------- 实用函数 ----------
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+# 解压万能函数
+extract() {
+    case "$1" in
+        *.tar.bz2) tar xjf "$1" ;;
+        *.tar.gz)  tar xzf "$1" ;;
+        *.tar.xz)  tar xJf "$1" ;;
+        *.zip)     unzip "$1" ;;
+        *.gz)      gunzip "$1" ;;
+        *.bz2)     bunzip2 "$1" ;;
+        *)         echo "无法识别的格式: $1" ;;
+    esac
+}
+
+# ---------- 补全增强 ----------
+# 安装 bash-completion（大多数发行版自带）
+[[ -r /usr/share/bash-completion/bash_completion ]] && \
+    source /usr/share/bash-completion/bash_completion
+# macOS (Homebrew)
+[[ -r "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]] && \
+    source "$(brew --prefix)/etc/profile.d/bash_completion.sh"
+```
+
+## 实用技巧
+
+| 快捷键/语法 | 功能说明 |
+|-------------|---------|
+| `Ctrl+R` | 反向搜索历史命令 |
+| `!!` | 重复上一条命令（如 `sudo !!`） |
+| `!$` | 引用上一条命令的最后一个参数 |
+| `Alt+.` | 插入上一条命令的最后一个参数 |
+| `Ctrl+A` / `Ctrl+E` | 跳到行首 / 行尾 |
+| `Ctrl+U` / `Ctrl+K` | 删除到行首 / 删除到行尾 |
+| `{a,b,c}` | 花括号扩展，生成多个字符串 |
+| `$((expr))` | 算术运算 |
+| `<(cmd)` | 进程替换，将命令输出当文件使用 |
+
+Bash 作为最普及的 Shell，其最大优势在于通用性——你编写的 Bash 脚本几乎可以在任何 Linux/macOS 系统上直接运行，无需额外安装。如果你需要在交互体验上做更多提升，可以搭配 bash-completion、fzf、starship 等工具使用。

@@ -1,0 +1,208 @@
+---
+title: "config 配置指南"
+description: "SSH 客户端配置方案，涵盖主机管理、连接复用、代理跳转与安全加固"
+tags: ["SSH", "远程连接", "安全"]
+featured: false
+order: 12
+config_type: "other"
+target_tool: "SSH"
+filename: "config"
+---
+
+## 简介
+
+SSH（Secure Shell）是远程服务器管理的基石工具，而 `~/.ssh/config` 配置文件可以极大简化日常 SSH 操作。通过合理配置，你可以为不同主机设置别名、指定密钥、启用连接复用、配置代理跳转等，从而将冗长的 SSH 命令简化为简短的 `ssh myserver`。
+
+配置文件位于 `~/.ssh/config`，采用声明式的 `Host` 块结构。SSH 按从上到下的顺序匹配 Host 模式，第一个匹配的值生效（后续同名选项被忽略），因此特定主机的配置应放在通配符 `Host *` 之前。本文提供一份涵盖主机管理、连接复用、安全加固和代理跳转的完整配置。
+
+## 完整配置
+
+```ssh-config
+# ============================================================
+# ~/.ssh/config — SSH 客户端配置文件
+# 文档: man ssh_config
+# ============================================================
+# 注意: 此文件权限应为 600 (chmod 600 ~/.ssh/config)
+# 特定主机配置放在前面，通配符 Host * 放在最后
+
+# ---------- 1. 工作服务器 ----------
+# 直接使用 ssh work 即可连接
+Host work
+    HostName 10.0.1.100
+    User deploy
+    Port 22
+    IdentityFile ~/.ssh/id_ed25519_work
+    # 连接后自动转发本地代理（方便在服务器上使用 Git）
+    ForwardAgent yes
+
+# ---------- 2. 生产服务器（通过跳板机） ----------
+# ssh production 会自动通过 bastion 跳转连接
+Host production
+    HostName 192.168.10.50
+    User admin
+    Port 22
+    IdentityFile ~/.ssh/id_ed25519_work
+    # 通过跳板机连接（ProxyJump 替代旧版 ProxyCommand）
+    ProxyJump bastion
+    # 禁止代理转发（生产环境安全考虑）
+    ForwardAgent no
+
+# ---------- 3. 跳板机（堡垒机） ----------
+Host bastion
+    HostName bastion.example.com
+    User jump
+    Port 2222
+    IdentityFile ~/.ssh/id_ed25519_work
+    # 跳板机不需要分配伪终端
+    RequestTTY no
+    # 跳板机不需要长连接
+    ControlMaster no
+
+# ---------- 4. 数据库服务器（通过端口转发访问） ----------
+Host db-tunnel
+    HostName 192.168.10.60
+    User dbadmin
+    IdentityFile ~/.ssh/id_ed25519_work
+    ProxyJump bastion
+    # 本地端口转发：本机 3306 -> 远程 127.0.0.1:3306
+    LocalForward 3306 127.0.0.1:3306
+    # 不执行远程命令，仅建立隧道
+    RequestTTY no
+    # 后台运行（-f 的配置文件等效项，可选）
+    # ExitOnForwardFailure yes
+
+# ---------- 5. 多台同类服务器（通配符匹配） ----------
+# ssh web1, ssh web2, ssh web3 均可匹配
+Host web?
+    HostName %h.prod.example.com
+    User deploy
+    Port 22
+    IdentityFile ~/.ssh/id_ed25519_work
+    ProxyJump bastion
+
+# ---------- 6. 开发/测试服务器 ----------
+Host dev
+    HostName dev.example.com
+    User developer
+    IdentityFile ~/.ssh/id_ed25519_personal
+    # 动态端口转发（SOCKS5 代理）
+    # DynamicForward 1080
+    # 远程端口转发：让服务器访问本机的开发服务
+    # RemoteForward 8080 127.0.0.1:3000
+
+# ---------- 7. GitHub / GitLab ----------
+# Git 操作通过 SSH 协议时使用此配置
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_github
+    # GitHub 不支持代理转发，明确禁止
+    ForwardAgent no
+    # 如果处于受限网络，可通过 HTTPS 端口连接
+    # HostName ssh.github.com
+    # Port 443
+
+Host gitlab.com
+    HostName gitlab.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_gitlab
+    ForwardAgent no
+
+# ---------- 8. 个人云服务器 ----------
+Host mycloud
+    HostName 203.0.113.42
+    User root
+    Port 62222
+    IdentityFile ~/.ssh/id_ed25519_personal
+    # 自动在服务器上创建反向隧道
+    # RemoteForward 9090 127.0.0.1:9090
+
+# ---------- 9. 连接复用（全局生效） ----------
+# ControlMaster 在同一台主机上复用已有的 SSH 连接
+# 大幅减少重复认证和连接建立的耗时
+Host *
+    # 启用连接复用
+    ControlMaster auto
+    # 控制套接字路径（%r=用户名, %h=主机名, %p=端口）
+    ControlPath ~/.ssh/sockets/%r@%h-%p
+    # 断开后保持连接 10 分钟（方便快速重连）
+    ControlPersist 600
+
+# ---------- 10. 保活设置（全局生效） ----------
+    # 每 60 秒发送一次保活包（防止连接被防火墙断开）
+    ServerAliveInterval 60
+    # 最多容忍 3 次无响应后断开
+    ServerAliveCountMax 3
+
+# ---------- 11. 安全加固（全局生效） ----------
+    # 优先使用的公钥认证算法
+    PubkeyAcceptedAlgorithms ssh-ed25519,sk-ssh-ed25519@openssh.com,rsa-sha2-512,rsa-sha2-256
+
+    # 密钥交换算法（优先使用安全的算法）
+    KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512
+
+    # 加密算法（优先使用 ChaCha20 和 AES-GCM）
+    Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+
+    # MAC 算法（优先 ETM 模式）
+    MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com
+
+    # 严格主机密钥检查（首次连接会提示确认）
+    StrictHostKeyChecking ask
+
+    # 主机密钥数据库文件
+    UserKnownHostsFile ~/.ssh/known_hosts
+
+    # 哈希主机名（防止 known_hosts 泄露连接过的主机信息）
+    HashKnownHosts yes
+
+    # 禁用密码认证（仅使用密钥认证，更安全）
+    # PasswordAuthentication no
+
+    # 仅向匹配的主机提供对应的密钥（避免泄露密钥指纹）
+    IdentitiesOnly yes
+
+    # 禁用 X11 转发（不需要图形界面时应关闭）
+    ForwardX11 no
+
+    # 日志级别（调试连接问题时可改为 DEBUG）
+    LogLevel ERROR
+
+    # 连接超时（秒）
+    ConnectTimeout 15
+
+    # 验证服务器 DNS 记录（如果支持 SSHFP）
+    # VerifyHostKeyDNS yes
+
+    # 自动将新主机密钥添加到 known_hosts
+    # 设为 no 可强制手动确认每个新主机
+    UpdateHostKeys yes
+```
+
+## 配置说明
+
+### 主机别名与模式匹配
+
+每个 `Host` 块定义一组连接参数。`Host` 后的名称是别名，可以是精确名称（如 `work`）或通配符模式（如 `web?` 匹配 `web1`、`web2` 等）。`%h` 占位符会被替换为实际匹配的主机名，`%r` 替换为用户名，`%p` 替换为端口号。
+
+### 连接复用
+
+`ControlMaster auto` 配合 `ControlPath` 和 `ControlPersist` 实现 SSH 连接复用。首次连接时建立主连接，后续到同一主机的 SSH 会话会复用该连接，无需重新认证。这对频繁执行 `scp`、`rsync` 或 Git 操作的场景效果尤为明显。注意需要手动创建 `~/.ssh/sockets/` 目录。
+
+### 代理跳转
+
+`ProxyJump` 是 OpenSSH 7.3+ 引入的现代跳转方式，替代了旧版的 `ProxyCommand ssh -W %h:%p bastion`。它支持链式跳转（如 `ProxyJump bastion1,bastion2`），更简洁也更安全。通过跳板机访问内网服务器是企业环境中的常见需求。
+
+### 安全加固
+
+全局 `Host *` 中的安全选项限制了可使用的加密算法，排除了已知不安全的算法。`IdentitiesOnly yes` 确保 SSH 只向服务器发送指定的密钥，避免在密钥较多时暴露不必要的密钥指纹。`HashKnownHosts` 对 `known_hosts` 中的主机名进行哈希处理，即使文件泄露也不会暴露你连接过的主机列表。
+
+## 常用技巧
+
+- **控制套接字目录**：使用连接复用前需运行 `mkdir -p ~/.ssh/sockets`，否则连接会因套接字路径不存在而失败
+- **文件权限**：SSH 对权限要求严格——`~/.ssh/` 目录应为 `700`，`config` 和私钥文件应为 `600`，否则 SSH 会拒绝使用
+- **密钥生成**：推荐使用 Ed25519 算法生成密钥：`ssh-keygen -t ed25519 -C "your@email.com"`，比 RSA 更短更安全
+- **测试配置**：运行 `ssh -G hostname` 可查看某个主机最终生效的所有配置选项，用于排查配置问题
+- **调试连接**：连接失败时使用 `ssh -vvv hostname` 开启详细日志，可定位认证、密钥、网络等各层面的问题
+- **端口转发**：`LocalForward` 将远程端口映射到本地（如数据库隧道），`DynamicForward` 创建 SOCKS5 代理用于科学上网
+- **Include 指令**：OpenSSH 7.3+ 支持 `Include` 指令，可将配置拆分为多个文件管理，如 `Include ~/.ssh/config.d/*`

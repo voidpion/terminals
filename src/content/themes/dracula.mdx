@@ -1,0 +1,85 @@
+---
+title: "Dracula"
+description: "经典紫粉暗色配色方案，覆盖 300+ 应用的庞大生态系统"
+website: "https://draculatheme.com/"
+github: "https://github.com/dracula/dracula-theme"
+tags: ["配色", "暗色", "紫色", "经典"]
+featured: true
+order: 5
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal", "Hyper", "Terminal.app"]
+---
+
+## 简介
+
+Dracula 是由巴西开发者 Zeno Rocha 于 2013 年创建的暗色配色方案，灵感来源于经典吸血鬼文化中的暗夜色调。它以深灰紫色（`#282a36`）为背景，搭配鲜明的紫色、粉色、绿色和青色作为前景色，营造出一种神秘而又充满活力的视觉效果。Dracula 的配色既足够鲜艳以保证代码可读性，又不会过于刺眼导致视觉疲劳，这种平衡使其成为全球最受欢迎的终端配色方案之一。
+
+Dracula 最引人注目的成就是其庞大的生态系统——官方维护了超过 300 个应用和平台的主题移植，从终端模拟器到代码编辑器、从浏览器到聊天应用、从操作系统到各类开发工具，几乎无所不包。此外，Dracula 还推出了付费的 **Dracula PRO** 版本，提供了经过专业设计师优化的变体配色，包括 Buffy、Blade、Lincoln、Morbius 和 Van Helsing 等子主题，为追求更精致体验的用户提供了更多选择。
+
+## 配色预览
+
+| 角色 | 颜色名 | 色值 |
+|------|--------|------|
+| 背景 | Background | `#282a36` |
+| 前景 | Foreground | `#f8f8f2` |
+| 黑色 | Black | `#21222c` |
+| 红色 | Red | `#ff5555` |
+| 绿色 | Green | `#50fa7b` |
+| 黄色 | Yellow | `#f1fa8c` |
+| 蓝色 | Blue | `#bd93f9` |
+| 紫色 | Magenta | `#ff79c6` |
+| 青色 | Cyan | `#8be9fd` |
+| 白色 | White | `#f8f8f2` |
+| 亮黑 | Bright Black | `#6272a4` |
+| 亮红 | Bright Red | `#ff6e6e` |
+| 亮绿 | Bright Green | `#69ff94` |
+| 亮黄 | Bright Yellow | `#ffffa5` |
+| 亮蓝 | Bright Blue | `#d6acff` |
+| 亮紫 | Bright Magenta | `#ff92df` |
+| 亮青 | Bright Cyan | `#a4ffff` |
+| 亮白 | Bright White | `#ffffff` |
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+git clone https://github.com/dracula/iterm.git ~/dracula-iterm
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+# 选择 ~/dracula-iterm/Dracula.itermcolors
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/dracula.toml"]
+```
+
+### Kitty
+
+```bash
+kitty +kitten themes Dracula
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua — WezTerm 内置 Dracula 配色
+config.color_scheme = 'Dracula'
+```
+
+### Windows Terminal
+
+```json
+{
+  "name": "Dracula",
+  "background": "#282A36",
+  "foreground": "#F8F8F2",
+  "cursorColor": "#F8F8F2"
+}
+```
+
+## 适用场景
+
+Dracula 是一款适用性极广的全能型配色方案。它明亮的前景色在代码演示和屏幕共享时具有出色的可读性，因此非常适合直播编程、技术演讲和教学场景。同时，其深色背景和适度的对比度也使其成为日常编码的可靠选择。如果你是一位需要在多个应用间保持一致视觉体验的开发者，Dracula 300+ 的生态覆盖将为你提供无与伦比的统一性。无论是终端、编辑器、浏览器还是 Slack，都能使用同一套 Dracula 配色。

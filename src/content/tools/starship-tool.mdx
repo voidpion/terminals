@@ -1,0 +1,80 @@
+---
+title: "starship"
+description: "跨 Shell 的极速提示符工具"
+website: "https://starship.rs/"
+github: "https://github.com/starship/starship"
+tags: ["提示符", "跨Shell", "Rust", "高性能"]
+featured: false
+order: 19
+category: "productivity"
+install_cmd: "brew install starship"
+written_in: "Rust"
+---
+
+## 简介
+
+Starship 是一款使用 Rust 编写的跨 Shell 提示符工具，以极快的速度和高度可定制性著称。它兼容 Bash、Zsh、Fish、PowerShell 等主流 Shell，无需复杂配置即可获得美观且信息丰富的命令行提示符。
+
+Starship 能自动检测当前目录的项目环境，智能显示 Git 分支状态、编程语言版本、包管理器信息、云服务上下文等。它采用异步渲染机制，即使在信息密集的场景下也能保持毫秒级的响应速度，不会拖慢你的命令行体验。
+
+## 安装
+
+```bash
+# macOS
+brew install starship
+
+# Linux (通用安装脚本)
+curl -sS https://starship.rs/install.sh | sh
+
+# Cargo
+cargo install starship --locked
+```
+
+安装后需要在 Shell 配置文件中添加初始化命令：
+
+```bash
+# Zsh (~/.zshrc)
+eval "$(starship init zsh)"
+
+# Bash (~/.bashrc)
+eval "$(starship init bash)"
+
+# Fish (~/.config/fish/config.fish)
+starship init fish | source
+```
+
+## 核心特性
+
+- **极速响应**: Rust 编写，异步渲染，提示符刷新速度极快
+- **跨 Shell 支持**: 兼容 Bash、Zsh、Fish、PowerShell、Nushell 等
+- **智能检测**: 自动识别 Git 状态、语言版本、虚拟环境等上下文
+- **高度可定制**: 通过 TOML 配置文件自定义每一个模块的显示样式
+- **预设主题**: 内置多种预设配置，一键切换不同风格
+
+## 使用示例
+
+```bash
+# 生成默认配置文件
+starship config
+
+# 使用预设主题
+starship preset nerd-font-symbols -o ~/.config/starship.toml
+starship preset tokyo-night -o ~/.config/starship.toml
+
+# 查看当前提示符渲染耗时
+starship timings
+
+# 查看所有可用模块
+starship module --list
+
+# 自定义配置示例 (~/.config/starship.toml)
+# [git_branch]
+# format = "[$symbol$branch]($style) "
+# symbol = " "
+#
+# [nodejs]
+# format = "[$symbol($version)]($style) "
+#
+# [python]
+# format = "[$symbol$pyenv_prefix($version)]($style) "
+```

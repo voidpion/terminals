@@ -1,0 +1,103 @@
+---
+title: "Powerlevel10k"
+description: "Zsh 最强提示符主题，兼顾美观与极致速度，支持即时提示渲染"
+website: "https://github.com/romkatv/powerlevel10k"
+github: "https://github.com/romkatv/powerlevel10k"
+tags: ["Zsh", "提示符", "美化"]
+featured: true
+order: 1
+theme_type: "prompt"
+compatible_with: ["Zsh"]
+---
+
+## 简介
+
+Powerlevel10k（简称 p10k）是 Zsh 平台上最受欢迎的提示符主题，也是 Powerlevel9k 的高性能继任者。它最大的亮点是 **Instant Prompt** 技术——终端打开后提示符几乎零延迟渲染，即使你的 `.zshrc` 中加载了大量插件也不受影响。
+
+p10k 提供了丰富的内置段（segment），可以在提示符中展示 Git 状态、当前目录、语言版本、云服务上下文、执行时间等信息，并且所有信息都是异步获取的，不会阻塞输入。
+
+## 安装
+
+```bash
+# 推荐：通过 Oh My Zsh 安装
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
+  ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+# 在 ~/.zshrc 中设置主题
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+# 通过 Homebrew 安装
+brew install powerlevel10k
+echo "source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme" >> ~/.zshrc
+
+# 通过 zinit 安装
+zinit ice depth=1
+zinit light romkatv/powerlevel10k
+```
+
+安装完成后重启终端，会自动启动配置向导。
+
+## 核心特性
+
+- **Instant Prompt**: 终端启动时立即显示提示符，无需等待 `.zshrc` 加载完成，体感延迟趋近于零
+- **配置向导**: 运行 `p10k configure` 即可通过交互式向导选择提示符风格，无需手写配置
+- **丰富的段支持**: 内置 Git 状态、Node/Python/Go/Rust 版本、AWS/GCP/Azure 上下文、Docker、时间戳等数十种段
+- **异步渲染**: Git 状态等耗时信息在后台异步获取，提示符不会卡顿
+- **向后兼容**: 完全兼容 Powerlevel9k 的配置语法，迁移零成本
+- **Transient Prompt**: 可将历史命令行的提示符简化为最小形式，保持终端整洁
+
+## 配置推荐
+
+```bash
+# 运行配置向导（推荐首次使用时执行）
+p10k configure
+
+# 配置文件位于 ~/.p10k.zsh，以下是常用自定义项
+
+# 启用 Instant Prompt（默认已启用，确认位于 .zshrc 顶部）
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# 自定义左侧提示符段
+typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+  os_icon
+  dir
+  vcs
+  prompt_char
+)
+
+# 自定义右侧提示符段
+typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
+  status
+  command_execution_time
+  background_jobs
+  node_version
+  python_env
+  time
+)
+
+# 启用 Transient Prompt
+typeset -g POWERLEVEL9K_TRANSIENT_PROMPT=always
+
+# 目录显示策略：截断到最后 3 级
+typeset -g POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
+typeset -g POWERLEVEL9K_SHORTEN_STRATEGY=truncate_to_last
+```
+
+## 字体要求
+
+p10k 的某些风格（如 Rainbow、Classic）需要 Nerd Font 才能正确显示图标。推荐使用：
+
+- **MesloLGS NF** — p10k 官方推荐字体，配置向导可自动安装
+- **JetBrains Mono Nerd Font** — 编程等宽字体，连字支持优秀
+- **Fira Code Nerd Font** — 连字丰富，适合代码阅读
+
+如果选择 Lean 或 Pure 风格，则不需要 Nerd Font。
+
+## 推荐搭配
+
+- **Oh My Zsh / zinit** — 作为插件管理器加载 p10k
+- **zsh-autosuggestions** — 命令自动建议，与 p10k 的异步渲染完美配合
+- **zsh-syntax-highlighting** — 命令语法高亮，提升终端视觉体验
+- **Catppuccin 配色** — 柔和配色方案，搭配 p10k 效果极佳

@@ -1,0 +1,247 @@
+---
+title: "wezterm.lua 配置指南"
+description: "WezTerm 终端的 Lua 配置方案，充分利用其可编程特性实现高度定制"
+tags: ["WezTerm", "终端配置", "Lua"]
+featured: false
+order: 9
+config_type: "other"
+target_tool: "WezTerm"
+filename: "wezterm.lua"
+---
+
+## 简介
+
+WezTerm 是一款基于 Rust 开发的跨平台 GPU 加速终端模拟器，由 Meta（Facebook）工程师 Wez Furlong 创建。它使用 Lua 作为配置语言，具备极高的可编程性——你可以用 Lua 脚本实现动态标题栏、条件配色、自定义状态栏等高级功能。
+
+配置文件位于 `~/.wezterm.lua`（也支持 `~/.config/wezterm/wezterm.lua`）。WezTerm 同样支持配置热重载，保存即生效。本文提供一份涵盖字体、配色、标签栏、快捷键和窗口外观的完整实用配置。
+
+## 完整配置
+
+```lua
+-- ============================================================
+-- ~/.wezterm.lua — WezTerm 配置文件
+-- 文档: https://wezfurlong.org/wezterm/config/files.html
+-- ============================================================
+
+local wezterm = require("wezterm")
+local config = wezterm.config_builder()
+local act = wezterm.action
+
+-- ---------- 1. 字体设置 ----------
+-- 主字体，推荐 Nerd Font 版本以获得图标支持
+config.font = wezterm.font_with_fallback({
+  {
+    family = "JetBrainsMono Nerd Font",
+    weight = "Regular",
+    harfbuzz_features = { "calt=1", "clig=1", "liga=1" }, -- 启用连字
+  },
+  { family = "Noto Sans SC" },          -- 中文回退字体
+  { family = "Symbols Nerd Font Mono" }, -- 图标回退
+})
+config.font_size = 14.0
+-- 行高倍率（1.0 为默认）
+config.line_height = 1.1
+-- 像素级字体抗锯齿
+config.freetype_load_flags = "NO_HINTING"
+
+-- ---------- 2. 配色方案 ----------
+-- WezTerm 内置大量配色方案，可直接按名称引用
+config.color_scheme = "Tokyo Night"
+
+-- 如需自定义配色，取消注释以下部分：
+-- config.colors = {
+--   foreground = "#c0caf5",
+--   background = "#1a1b26",
+--   cursor_bg  = "#c0caf5",
+--   cursor_fg  = "#1a1b26",
+--   selection_bg = "#283457",
+--   selection_fg = "#c0caf5",
+--   ansi    = { "#15161e", "#f7768e", "#9ece6a", "#e0af68",
+--               "#7aa2f7", "#bb9af7", "#7dcfff", "#a9b1d6" },
+--   brights = { "#414868", "#f7768e", "#9ece6a", "#e0af68",
+--               "#7aa2f7", "#bb9af7", "#7dcfff", "#c0caf5" },
+-- }
+
+-- ---------- 3. 窗口外观 ----------
+-- 窗口背景不透明度（需要系统支持合成器）
+config.window_background_opacity = 0.95
+-- macOS 毛玻璃效果
+config.macos_window_background_blur = 20
+-- 窗口内边距
+config.window_padding = {
+  left   = 12,
+  right  = 12,
+  top    = 10,
+  bottom = 10,
+}
+-- 窗口装饰: "FULL" | "RESIZE" | "NONE"
+config.window_decorations = "RESIZE"
+-- 初始窗口大小
+config.initial_cols = 120
+config.initial_rows = 36
+-- 关闭窗口时不弹出确认对话框
+config.window_close_confirmation = "NeverPrompt"
+
+-- ---------- 4. 标签栏 ----------
+-- 启用精美标签栏（fancy tab bar）
+config.use_fancy_tab_bar = true
+-- 标签栏位置: "Top" | "Bottom"
+config.tab_bar_at_bottom = false
+-- 隐藏标签栏上的新标签按钮
+config.show_new_tab_button_in_tab_bar = false
+-- 只有一个标签时隐藏标签栏
+config.hide_tab_bar_if_only_one_tab = true
+-- 标签最大宽度
+config.tab_max_width = 32
+
+-- 自定义标签标题格式
+wezterm.on("format-tab-title", function(tab, tabs, panes, cfg, hover, max_width)
+  local title = tab.active_pane.title
+  -- 截断过长的标题
+  if #title > max_width - 4 then
+    title = title:sub(1, max_width - 7) .. "..."
+  end
+  -- 当前活跃标签高亮显示
+  if tab.is_active then
+    return {
+      { Background = { Color = "#7aa2f7" } },
+      { Foreground = { Color = "#1a1b26" } },
+      { Text = " " .. (tab.tab_index + 1) .. ": " .. title .. " " },
+    }
+  end
+  return {
+    { Text = " " .. (tab.tab_index + 1) .. ": " .. title .. " " },
+  }
+end)
+
+-- ---------- 5. 光标设置 ----------
+-- 光标样式: "SteadyBlock" | "BlinkingBlock" | "SteadyUnderline" |
+--          "BlinkingUnderline" | "SteadyBar" | "BlinkingBar"
+config.default_cursor_style = "BlinkingBlock"
+config.cursor_blink_rate = 600           -- 闪烁间隔（毫秒）
+config.cursor_blink_ease_in = "Constant"
+config.cursor_blink_ease_out = "Constant"
+
+-- ---------- 6. 滚动设置 ----------
+config.scrollback_lines = 10000
+-- 启用滚动条
+config.enable_scroll_bar = false
+
+-- ---------- 7. 快捷键绑定 ----------
+config.keys = {
+  -- ===== 标签操作 =====
+  -- Cmd+T 新建标签
+  { key = "t", mods = "CMD", action = act.SpawnTab("CurrentPaneDomain") },
+  -- Cmd+W 关闭当前面板
+  { key = "w", mods = "CMD", action = act.CloseCurrentPane({ confirm = false }) },
+  -- Cmd+数字 快速切换标签
+  { key = "1", mods = "CMD", action = act.ActivateTab(0) },
+  { key = "2", mods = "CMD", action = act.ActivateTab(1) },
+  { key = "3", mods = "CMD", action = act.ActivateTab(2) },
+  { key = "4", mods = "CMD", action = act.ActivateTab(3) },
+  { key = "5", mods = "CMD", action = act.ActivateTab(4) },
+  { key = "6", mods = "CMD", action = act.ActivateTab(5) },
+  { key = "7", mods = "CMD", action = act.ActivateTab(6) },
+  { key = "8", mods = "CMD", action = act.ActivateTab(7) },
+  { key = "9", mods = "CMD", action = act.ActivateTab(-1) },  -- 最后一个标签
+  -- Cmd+Shift+左/右 移动标签位置
+  { key = "{", mods = "CMD|SHIFT", action = act.MoveTabRelative(-1) },
+  { key = "}", mods = "CMD|SHIFT", action = act.MoveTabRelative(1) },
+
+  -- ===== 面板分割 =====
+  -- Cmd+D 水平分割（左右）
+  { key = "d", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+  -- Cmd+Shift+D 垂直分割（上下）
+  { key = "d", mods = "CMD|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+
+  -- ===== 面板导航 =====
+  -- Cmd+方向键 切换面板
+  { key = "LeftArrow",  mods = "CMD|ALT", action = act.ActivatePaneDirection("Left") },
+  { key = "RightArrow", mods = "CMD|ALT", action = act.ActivatePaneDirection("Right") },
+  { key = "UpArrow",    mods = "CMD|ALT", action = act.ActivatePaneDirection("Up") },
+  { key = "DownArrow",  mods = "CMD|ALT", action = act.ActivatePaneDirection("Down") },
+
+  -- ===== 面板大小调整 =====
+  { key = "LeftArrow",  mods = "CMD|SHIFT", action = act.AdjustPaneSize({ "Left", 5 }) },
+  { key = "RightArrow", mods = "CMD|SHIFT", action = act.AdjustPaneSize({ "Right", 5 }) },
+  { key = "UpArrow",    mods = "CMD|SHIFT", action = act.AdjustPaneSize({ "Up", 3 }) },
+  { key = "DownArrow",  mods = "CMD|SHIFT", action = act.AdjustPaneSize({ "Down", 3 }) },
+
+  -- ===== 字体缩放 =====
+  { key = "=", mods = "CMD",       action = act.IncreaseFontSize },
+  { key = "-", mods = "CMD",       action = act.DecreaseFontSize },
+  { key = "0", mods = "CMD",       action = act.ResetFontSize },
+
+  -- ===== 其他 =====
+  -- Cmd+F 搜索
+  { key = "f", mods = "CMD", action = act.Search({ CaseInSensitiveString = "" }) },
+  -- Cmd+Shift+P 命令面板
+  { key = "p", mods = "CMD|SHIFT", action = act.ActivateCommandPalette },
+  -- Cmd+Shift+L 调试叠加层
+  { key = "l", mods = "CMD|SHIFT", action = act.ShowDebugOverlay },
+  -- Ctrl+Shift+Space 快速选择模式（选取 URL/路径/哈希等）
+  { key = "Space", mods = "CTRL|SHIFT", action = act.QuickSelect },
+  -- Cmd+Enter 切换全屏
+  { key = "Return", mods = "CMD", action = act.ToggleFullScreen },
+}
+
+-- ---------- 8. 鼠标绑定 ----------
+config.mouse_bindings = {
+  -- 右键粘贴剪贴板内容
+  {
+    event = { Down = { streak = 1, button = "Right" } },
+    mods = "NONE",
+    action = act.PasteFrom("Clipboard"),
+  },
+  -- Cmd+点击打开 URL
+  {
+    event = { Up = { streak = 1, button = "Left" } },
+    mods = "CMD",
+    action = act.OpenLinkAtMouseCursor,
+  },
+}
+
+-- ---------- 9. 其他设置 ----------
+-- 自动更新检查
+config.check_for_updates = true
+config.check_for_updates_interval_seconds = 86400  -- 每天检查一次
+-- 音频响铃
+config.audible_bell = "Disabled"
+-- 非活跃面板视觉区分
+config.inactive_pane_hsb = {
+  saturation = 0.8,  -- 降低饱和度
+  brightness = 0.7,  -- 降低亮度
+}
+-- 默认终端程序
+-- config.default_prog = { "/opt/homebrew/bin/zsh", "-l" }
+
+return config
+```
+
+## 配置说明
+
+### 字体与连字
+
+WezTerm 支持 `font_with_fallback` 定义字体回退链，确保拉丁字母、中文和图标符号都能正确显示。`harfbuzz_features` 启用了编程连字（如 `!=` 显示为 `≠`），如不喜欢可设为空表。
+
+### 配色方案
+
+WezTerm 内置了 700+ 种配色方案，通过 `config.color_scheme` 直接按名称引用即可。运行 `wezterm ls-colors` 可查看所有可用方案。也可以通过 `config.colors` 表完全自定义每一种颜色。
+
+### 标签栏定制
+
+配置使用了 `format-tab-title` 事件回调来自定义标签外观，活跃标签使用蓝色背景高亮。WezTerm 的事件系统非常强大，可以实现动态标题栏、状态指示器等高级功能。
+
+### 快捷键设计
+
+快捷键遵循 macOS 用户习惯，使用 Cmd 作为主修饰键。面板分割（`Cmd+D` / `Cmd+Shift+D`）、标签切换（`Cmd+数字`）、命令面板（`Cmd+Shift+P`）等都与主流终端一致，降低学习成本。
+
+## 常用技巧
+
+- **命令面板**：按 `Cmd+Shift+P` 打开命令面板，可搜索和执行所有可用操作，类似 VS Code
+- **快速选择**：按 `Ctrl+Shift+Space` 进入快速选择模式，自动识别并标记 URL、文件路径、Git 哈希等，按标签键快速复制
+- **调试模式**：按 `Cmd+Shift+L` 打开调试叠加层，可以查看日志输出，排查配置问题
+- **多路复用域**：WezTerm 内置 SSH 和多路复用支持，可以通过 `config.ssh_domains` 和 `config.unix_domains` 配置远程连接
+- **Lua 强大功能**：配置文件就是 Lua 脚本，可以使用条件判断、循环、函数等，例如根据主机名自动切换配色方案
+- **配色预览**：访问 https://wezfurlong.org/wezterm/colorschemes/ 可在线浏览所有内置配色方案的效果截图
+- **背景图片**：WezTerm 支持设置背景图片和动态 GIF，通过 `config.background` 表进行配置

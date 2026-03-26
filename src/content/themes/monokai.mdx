@@ -1,0 +1,74 @@
+---
+title: "Monokai"
+description: "源自 Sublime Text 的经典配色方案，以高饱和度的明亮色彩和深色背景著称"
+website: "https://monokai.pro/"
+github: "https://github.com/monokai/monokai-pro-vscode"
+tags: ["配色", "暗色", "经典", "高饱和度"]
+featured: false
+order: 10
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal"]
+---
+
+## 简介
+
+Monokai 是由荷兰设计师 Wimer Hazenberg 于 2006 年创建的配色方案，因被 Sublime Text 编辑器选为默认主题而声名大噪。它以近乎纯黑的深色背景搭配高饱和度的荧光色前景色为标志性视觉特征：鲜艳的粉红色、亮绿色、明黄色和天蓝色在黑色背景上跳跃闪烁，如同暗夜中的霓虹灯牌。这种大胆的色彩搭配使 Monokai 成为辨识度最高的编程配色方案之一——即便是远距离的屏幕截图，大多数开发者也能一眼认出。
+
+Monokai 的成功催生了 **Monokai Pro**——一个由原作者亲自打造的商业升级版本。Monokai Pro 在保留原版核心美学的基础上，对色彩的饱和度和对比度进行了更加精细的调校，并增加了多种滤镜变体（Spectrum、Ristretto、Octagon、Machine 等），每种都带有独特的色彩倾向。无论是免费的经典 Monokai 还是付费的 Monokai Pro，其在开发者社区中的地位都已经超越了单纯的配色方案，成为一种编程文化的象征。
+
+## 配色预览
+
+| 角色 | 颜色名 | 色值 |
+|------|--------|------|
+| 背景 | Background | `#272822` |
+| 前景 | Foreground | `#f8f8f2` |
+| 黑色 | Black | `#272822` |
+| 红色 | Red | `#f92672` |
+| 绿色 | Green | `#a6e22e` |
+| 黄色 | Yellow | `#f4bf75` |
+| 蓝色 | Blue | `#66d9ef` |
+| 紫色 | Magenta | `#ae81ff` |
+| 青色 | Cyan | `#a1efe4` |
+| 白色 | White | `#f8f8f2` |
+| 亮黑 | Bright Black | `#75715e` |
+| 亮红 | Bright Red | `#f92672` |
+| 亮绿 | Bright Green | `#a6e22e` |
+| 亮黄 | Bright Yellow | `#f4bf75` |
+| 亮蓝 | Bright Blue | `#66d9ef` |
+| 亮紫 | Bright Magenta | `#ae81ff` |
+| 亮青 | Bright Cyan | `#a1efe4` |
+| 亮白 | Bright White | `#f9f8f5` |
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+# 下载 Monokai iTerm2 配色文件
+curl -LO https://raw.githubusercontent.com/mbadolato/iTerm2-Color-Schemes/master/schemes/Monokai.itermcolors
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/monokai_pro.toml"]
+```
+
+### Kitty
+
+```bash
+kitty +kitten themes Monokai
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'Monokai (Gogh)'
+```
+
+## 适用场景
+
+Monokai 的高饱和度色彩使其在屏幕演示、直播编程和技术教学中表现尤为出色——鲜艳的语法高亮即使在投影仪或低分辨率屏幕上也清晰可辨。它也是快速代码阅读的好帮手，不同语法元素之间的色彩差异极为明显，便于快速扫描和定位。然而，正因为其高饱和度的特性，部分用户可能在长时间使用后感到视觉疲劳，因此建议在夜间编码时适当降低屏幕亮度，或考虑切换到 Monokai Pro 的柔和变体。

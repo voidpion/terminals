@@ -1,0 +1,72 @@
+---
+title: "Solarized"
+description: "Ethan Schoonover 基于色彩理论科学设计的经典配色方案，提供 Light 和 Dark 两种模式"
+website: "https://ethanschoonover.com/solarized/"
+github: "https://github.com/altercation/solarized"
+tags: ["配色", "科学配色", "经典", "双模式"]
+featured: false
+order: 8
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal", "Terminal.app"]
+---
+
+## 简介
+
+Solarized 是由设计师 Ethan Schoonover 于 2011 年发布的配色方案，它是终端配色史上最具影响力的作品之一。与大多数凭直觉设计的配色方案不同，Solarized 完全基于色彩理论和 CIELAB 色彩空间进行科学设计。Schoonover 花费了数月时间研究色彩感知、对比度关系和色相分布，最终产出了一套由 16 种颜色组成的精确调色板。这 16 种颜色在 CIELAB 色轮上呈均匀分布，确保了视觉上的和谐与平衡。
+
+Solarized 的一个革命性设计特点是其 Light 和 Dark 两种模式共享同一套 8 种强调色，仅通过交换背景色和前景色来实现模式切换。这意味着无论你使用 Light 还是 Dark 模式，语法高亮的色彩保持完全一致，切换时不会产生视觉上的割裂感。这种巧妙的设计使得 Solarized 成为最早真正实现"一套配色、两种模式"的方案。尽管发布已超过十年，Solarized 至今仍被广泛使用，并深刻影响了后来众多配色方案的设计理念。
+
+## 配色预览
+
+| 角色 | CIELAB | 色值 | 用途 |
+|------|--------|------|------|
+| base03 | 15/-12/-12 | `#002b36` | Dark 背景 |
+| base02 | 20/-12/-12 | `#073642` | Dark 高亮背景 |
+| base01 | 45/-07/-07 | `#586e75` | 注释 / Light 强调 |
+| base00 | 50/-07/-07 | `#657b83` | Light 正文 |
+| base0 | 60/-06/-03 | `#839496` | Dark 正文 |
+| base1 | 65/-05/-02 | `#93a1a1` | 注释 / Dark 强调 |
+| base2 | 92/-00/10 | `#eee8d5` | Light 高亮背景 |
+| base3 | 97/00/10 | `#fdf6e3` | Light 背景 |
+| yellow | — | `#b58900` | 警告 |
+| orange | — | `#cb4b16` | 常量 |
+| red | — | `#dc322f` | 错误 |
+| magenta | — | `#d33682` | 关键字 |
+| violet | — | `#6c71c4` | 次要关键字 |
+| blue | — | `#268bd2` | 函数 |
+| cyan | — | `#2aa198` | 字符串 |
+| green | — | `#859900` | 成功 |
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+# iTerm2 已内置 Solarized 配色
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets
+# 直接选择 Solarized Dark 或 Solarized Light
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/solarized_dark.toml"]
+```
+
+### Kitty
+
+```bash
+kitty +kitten themes Solarized Dark
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua — WezTerm 内置 Solarized 配色
+config.color_scheme = 'Solarized Dark (Gogh)'
+```
+
+## 适用场景
+
+Solarized 的科学设计使其在几乎所有场景下都表现稳定。它是少数在 Light 和 Dark 两种模式下都同样出色的配色方案，因此特别适合需要频繁在明暗模式间切换的用户。Solarized Light 在日光充足的办公环境中提供了出色的可读性，而 Solarized Dark 则在暗光环境下表现优异。对于注重无障碍性和色彩科学的团队项目，Solarized 经过验证的对比度比值使其成为最安全可靠的选择。需要注意的是，Solarized 的配色风格偏向克制和保守，如果你追求更鲜艳、更现代的视觉效果，可以考虑其他方案。

@@ -1,0 +1,348 @@
+---
+title: "config.nu 配置指南"
+description: "一份完整的 Nushell 配置方案，涵盖环境变量、别名、自定义命令、表格显示、补全、按键绑定与钩子函数"
+tags: ["Nushell", "Shell配置", "结构化数据"]
+featured: false
+order: 15
+config_type: "shell"
+target_tool: "Nushell"
+filename: "config.nu"
+---
+
+## 简介
+
+Nushell 是一款用 Rust 编写的现代 Shell，最大特色是将所有数据视为结构化表格而非纯文本字符串。管道传递的是有类型的数据（表格、记录、列表），而非需要 grep/awk 解析的文本流。配置文件位于 `~/.config/nushell/config.nu`（环境配置在 `env.nu`）。
+
+Nushell 的配置本身就是 Nu 脚本，语法简洁且类型安全。本文提供一份涵盖核心功能的完整配置，包括外观定制、自定义命令、补全设置、按键绑定和钩子函数等。
+
+## 完整配置
+
+```nu
+# ============================================================
+# ~/.config/nushell/config.nu — Nushell 配置文件
+# ============================================================
+
+# ---------- 1. 全局配置 ----------
+$env.config = {
+    # 显示横幅（启动时的欢迎信息）
+    show_banner: false
+
+    # ---------- 2. 表格与显示设置 ----------
+    table: {
+        # 表格渲染模式：rounded | compact | thin | none | heavy | light
+        mode: rounded
+        # 索引显示模式：always | never | auto
+        index_mode: auto
+        # 表格截断标记
+        show_empty: true
+        # 列宽填充
+        padding: { left: 1, right: 1 }
+        # 表格内容截断（避免超宽表格）
+        trim: {
+            methodology: wrapping
+            wrapping_try_keep_words: true
+        }
+        # 表头样式
+        header_on_separator: false
+    }
+
+    # ---------- 3. 历史记录 ----------
+    history: {
+        # 历史记录最大条目数
+        max_size: 50000
+        # 存储格式：sqlite | plaintext
+        file_format: sqlite
+        # 同步策略：多会话共享历史
+        sync_on_enter: true
+        # 去除重复前后空格的命令
+        isolation: false
+    }
+
+    # ---------- 4. 补全系统 ----------
+    completions: {
+        # 补全算法：prefix | fuzzy
+        algorithm: fuzzy
+        # 大小写敏感：true | false
+        case_sensitive: false
+        # 部分匹配（输入的字符不必从头开始）
+        partial: true
+        # 快速补全：仅有一个匹配时自动完成
+        quick: true
+        # 外部命令补全（使用 carapace 或系统补全）
+        external: {
+            enable: true
+            max_results: 50
+            completer: null
+        }
+    }
+
+    # ---------- 5. 文件大小格式 ----------
+    filesize: {
+        # 单位：metric（KB/MB）| binary（KiB/MiB）
+        metric: true
+        # 格式化模板
+        format: "auto"
+    }
+
+    # ---------- 6. 错误显示 ----------
+    error_style: "fancy"
+
+    # ---------- 7. 光标形状 ----------
+    cursor_shape: {
+        # 普通模式光标：block | underscore | line | blink_block | blink_underscore | blink_line
+        vi_insert: line
+        vi_normal: block
+        emacs: line
+    }
+
+    # ---------- 8. 编辑模式 ----------
+    # 行编辑器模式：emacs | vi
+    edit_mode: emacs
+
+    # ---------- 9. 按键绑定 ----------
+    keybindings: [
+        # Ctrl+F：接受自动建议
+        {
+            name: accept_suggestion
+            modifier: control
+            keycode: char_f
+            mode: [emacs, vi_insert]
+            event: { send: historyhintcomplete }
+        }
+        # Ctrl+R：模糊搜索历史
+        {
+            name: fuzzy_history
+            modifier: control
+            keycode: char_r
+            mode: [emacs, vi_insert]
+            event: [
+                {
+                    send: executehostcommand
+                    cmd: "commandline edit --replace (
+                        history
+                        | get command
+                        | reverse
+                        | uniq
+                        | str join (char -i 0)
+                        | fzf --read0 --layout=reverse --height=40% -q (commandline)
+                        | decode utf-8
+                        | str trim
+                    )"
+                }
+            ]
+        }
+        # Ctrl+T：用 fzf 选择文件
+        {
+            name: fuzzy_file
+            modifier: control
+            keycode: char_t
+            mode: [emacs, vi_insert]
+            event: {
+                send: executehostcommand
+                cmd: "commandline edit --insert (
+                    fd --type f --hidden --follow --exclude .git
+                    | fzf --layout=reverse --height=40%
+                    | str trim
+                )"
+            }
+        }
+        # Alt+C：用 fzf 选择目录并 cd
+        {
+            name: fuzzy_cd
+            modifier: alt
+            keycode: char_c
+            mode: [emacs, vi_insert]
+            event: {
+                send: executehostcommand
+                cmd: "cd (
+                    fd --type d --hidden --follow --exclude .git
+                    | fzf --layout=reverse --height=40%
+                    | str trim
+                )"
+            }
+        }
+    ]
+
+    # ---------- 10. 钩子函数 ----------
+    hooks: {
+        # 每次按回车前执行
+        pre_execution: [{ null }]
+        # 每次显示提示符前执行
+        pre_prompt: [{ null }]
+        # 环境变量变化时执行
+        env_change: {
+            # 目录变化时执行（类似 zsh 的 chpwd）
+            PWD: [{|before, after|
+                # 如果目录中有 .envrc，提示用户
+                if (".envrc" | path exists) {
+                    print $"(ansi yellow_bold)提示: 当前目录包含 .envrc 文件(ansi reset)"
+                }
+            }]
+        }
+    }
+
+    # ---------- 11. 颜色配置 ----------
+    color_config: {
+        separator: white
+        leading_trailing_space_bg: { attr: n }
+        header: green_bold
+        empty: blue
+        bool: cyan
+        int: white
+        float: white
+        filesize: cyan
+        duration: white
+        date: purple
+        range: white
+        string: white
+        nothing: white
+        binary: white
+        cell_path: white
+        row_index: green_bold
+        record: white
+        list: white
+        shape_and: purple_bold
+        shape_binary: purple_bold
+        shape_block: blue_bold
+        shape_bool: light_cyan
+        shape_custom: green
+        shape_datetime: cyan_bold
+        shape_directory: cyan
+        shape_external: cyan
+        shape_externalarg: green_bold
+        shape_filepath: cyan
+        shape_flag: blue_bold
+        shape_float: purple_bold
+        shape_garbage: { fg: white, bg: red, attr: b }
+        shape_glob_interpolation: cyan_bold
+        shape_globpattern: cyan_bold
+        shape_int: purple_bold
+        shape_internalcall: cyan_bold
+        shape_list: cyan_bold
+        shape_literal: blue
+        shape_match_pattern: green
+        shape_nothing: light_cyan
+        shape_operator: yellow
+        shape_or: purple_bold
+        shape_pipe: purple_bold
+        shape_range: yellow_bold
+        shape_record: cyan_bold
+        shape_redirection: purple_bold
+        shape_signature: green_bold
+        shape_string: green
+        shape_string_interpolation: cyan_bold
+        shape_table: blue_bold
+        shape_variable: purple
+        shape_vardecl: purple
+    }
+
+    # ---------- 12. 其他设置 ----------
+    # 浮点数显示精度
+    float_precision: 2
+    # 递归表格深度限制
+    recursion_limit: 50
+    # 使用 LS_COLORS
+    use_ls_colors: true
+    # 右侧提示符
+    render_right_prompt_on_last_line: false
+    # 命令执行完毕后是否显示底部提示
+    footer_mode: 25
+}
+
+# ---------- 13. 环境变量 ----------
+$env.EDITOR = "nvim"
+$env.VISUAL = "nvim"
+$env.LANG = "zh_CN.UTF-8"
+
+# PATH 配置
+$env.PATH = ($env.PATH | prepend [
+    $"($env.HOME)/.local/bin"
+    $"($env.HOME)/.cargo/bin"
+    "/opt/homebrew/bin"
+])
+
+# fzf 默认选项
+$env.FZF_DEFAULT_OPTS = "--height 40% --layout=reverse --border"
+
+# ---------- 14. 别名 ----------
+# 文件列表
+alias ll = ls -l
+alias la = ls -la
+alias lt = ls -l | sort-by modified | reverse
+
+# Git 快捷操作
+alias gs = git status
+alias ga = git add
+alias gc = git commit
+alias gp = git push
+alias gl = git log --oneline -20
+alias gd = git diff
+
+# 常用工具
+alias cat = open --raw
+alias vim = nvim
+alias cls = clear
+
+# ---------- 15. 自定义命令 ----------
+# 查看磁盘使用情况（格式化输出）
+def disk-usage [path: string = "."] {
+    du $path | sort-by size | reverse
+}
+
+# 快速查找文件
+def ff [pattern: string] {
+    glob $"**/*($pattern)*"
+    | each {|f| { name: ($f | path basename), path: $f, size: ($f | path expand | ls $in | get 0.size) } }
+}
+
+# 查看 JSON 文件（结构化表格形式）
+def jcat [file: path] {
+    open $file
+}
+
+# 获取外部 IP 地址
+def my-ip [] {
+    http get "https://api.ipify.org?format=json" | get ip
+}
+
+# 进程搜索
+def pf [name: string] {
+    ps | where name =~ $name
+}
+
+# 快速创建并进入目录
+def --env mkcd [dir: path] {
+    mkdir $dir
+    cd $dir
+}
+
+# 统计代码行数
+def loc [ext: string = "rs"] {
+    glob $"**/*.($ext)"
+    | each {|f| open $f --raw | lines | length }
+    | math sum
+}
+```
+
+## 配置说明
+
+### 结构化配置
+Nushell 的 `$env.config` 是一个强类型的 Record，所有选项都有明确的类型和默认值。相比传统 Shell 的 `setopt` 或 `shopt` 命令，这种方式更易理解和维护，IDE 也能提供更好的补全支持。
+
+### 补全系统
+内置 `fuzzy` 补全算法支持乱序模糊匹配，输入 `gts` 可匹配 `git status`。外部命令的补全可通过 `carapace` 等工具增强，设置 `completer` 字段指向补全命令即可。
+
+### 按键绑定
+按键绑定支持 `emacs` 和 `vi_insert`/`vi_normal` 模式分别配置。事件类型包括 `send`（发送内置动作）和 `executehostcommand`（执行 Nu 命令），可实现复杂的交互流程如模糊搜索历史。
+
+### 钩子函数
+`hooks` 支持在命令执行前后、提示符显示前、目录切换时等时机执行自定义逻辑。`env_change.PWD` 钩子类似 Zsh 的 `chpwd`，可用于自动加载项目环境。
+
+## 常用技巧
+
+- **管道即表格**：`ls | where size > 1mb | sort-by modified` 直接按条件过滤文件，无需 `find`/`awk` 组合。
+- **数据格式转换**：`open data.csv | to json` 在 CSV、JSON、YAML、TOML 等格式间自由转换。
+- **内置 HTTP 客户端**：`http get "https://api.example.com/data"` 返回结构化数据，可直接用管道处理。
+- **并行执行**：`ls *.log | par-each {|f| wc -l $f.name }` 利用多核并行处理文件。
+- **类型安全**：自定义命令支持参数类型声明（`string`、`int`、`path` 等），传入错误类型会在执行前报错。
+- **探索配置**：执行 `$env.config | describe` 查看当前配置的完整结构，`$env.config.table` 查看特定模块配置。

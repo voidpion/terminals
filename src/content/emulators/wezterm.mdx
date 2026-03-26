@@ -1,0 +1,166 @@
+---
+title: "WezTerm"
+description: "基于 Rust 开发的跨平台 GPU 加速终端模拟器，使用 Lua 脚本进行配置，内置多路复用器"
+website: "https://wezfurlong.org/wezterm/"
+github: "https://github.com/wez/wezterm"
+tags: ["跨平台", "免费", "GPU加速", "Rust"]
+featured: true
+order: 4
+platforms: ["macOS", "Windows", "Linux"]
+license: "MIT"
+gpu_accelerated: true
+multiplexer_builtin: true
+pricing: "free"
+screenshot: "/screenshots/wezterm.png"
+---
+
+## 简介
+
+WezTerm 是由 Wez Furlong 开发的跨平台终端模拟器，使用 Rust 语言编写，通过 OpenGL/WebGPU 实现 GPU 加速渲染。它的最大特色在于使用 Lua 脚本作为配置语言，使得配置文件本身就是一个可编程的环境，用户可以在配置中使用条件判断、循环、函数等编程结构，灵活度远超传统的静态配置格式。
+
+WezTerm 内置了功能完整的多路复用器（Multiplexer），支持标签页、分屏、多窗口和会话管理，无需依赖 tmux 等外部工具。它还支持 SSH 直连功能，可以像本地终端一样在远程服务器上使用分屏和标签页，并且会话在断开后可以自动恢复。
+
+WezTerm 的渲染引擎支持连字（ligatures）、真彩色、图像协议（包括 iTerm2 和 Kitty 协议）以及 Sixel 图形协议，在功能丰富性方面属于第一梯队。它同时支持 macOS、Windows 和 Linux 三大平台，表现一致。
+
+## 安装
+
+### macOS
+
+```bash
+# 通过 Homebrew 安装（推荐）
+brew install --cask wezterm
+
+# 或安装 Nightly 版本以体验最新功能
+brew install --cask wezterm@nightly
+```
+
+### Linux
+
+```bash
+# Ubuntu / Debian（使用官方 APT 仓库）
+curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg
+echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list
+sudo apt update
+sudo apt install wezterm
+
+# Arch Linux
+sudo pacman -S wezterm
+
+# Fedora（通过 COPR）
+sudo dnf copr enable wezfurlong/wezterm-nightly
+sudo dnf install wezterm
+
+# Flatpak（通用方法）
+flatpak install flathub org.wezfurlong.wezterm
+```
+
+### Windows
+
+```powershell
+# 通过 Scoop 安装
+scoop bucket add extras
+scoop install wezterm
+
+# 通过 Winget 安装
+winget install wez.wezterm
+
+# 通过 Chocolatey 安装
+choco install wezterm
+```
+
+## 核心特性
+
+- **GPU 加速渲染** - 基于 OpenGL/WebGPU 的渲染管线，支持连字和丰富的字体渲染选项
+- **Lua 脚本配置** - 配置文件即 Lua 程序，可使用变量、条件、函数等编程结构动态生成配置
+- **内置多路复用器** - 完整的标签页、分屏和会话管理，支持断线重连和会话恢复
+- **SSH 域（Domains）** - 可直接 SSH 连接远程服务器并在远程使用完整的分屏和标签页功能
+- **图像协议支持** - 同时支持 iTerm2、Kitty 和 Sixel 三种图像显示协议
+- **多种字体回退** - 强大的字体回退（fallback）机制，自动选择合适的字体渲染各种字符
+- **命令面板** - 内置命令面板（类似 VS Code），可快速搜索和执行命令
+- **工作区（Workspace）** - 支持多个独立工作区，每个工作区有独立的标签页和分屏布局
+- **快速选择模式** - 类似 Vimium 的快速选择功能，可快速复制终端中的文本片段
+- **跨平台一致性** - 在 macOS、Linux 和 Windows 上使用相同的配置文件和快捷键
+- **滚动回放** - 支持搜索滚动缓冲区内容，可使用正则表达式
+- **自动更新** - 内置更新检查机制，可自动通知新版本
+
+## 配置推荐
+
+WezTerm 的配置文件位于 `~/.wezterm.lua` 或 `~/.config/wezterm/wezterm.lua`，使用 Lua 语言编写。
+
+```lua
+-- ~/.wezterm.lua
+local wezterm = require 'wezterm'
+local config = wezterm.config_builder()
+
+-- ========== 外观设置 ==========
+-- 配色方案（内置 700+ 主题可选）
+config.color_scheme = 'Catppuccin Mocha'
+
+-- 窗口透明度与背景
+config.window_background_opacity = 0.95
+config.macos_window_background_blur = 20
+
+-- 窗口边距
+config.window_padding = {
+  left = 10,
+  right = 10,
+  top = 10,
+  bottom = 10,
+}
+
+-- 隐藏标题栏按钮（macOS）
+config.window_decorations = "RESIZE"
+
+-- 标签栏位置
+config.tab_bar_at_bottom = true
+config.use_fancy_tab_bar = false
+
+-- ========== 字体设置 ==========
+config.font = wezterm.font('JetBrains Mono', { weight = 'Regular' })
+config.font_size = 14.0
+-- 启用连字
+config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
+
+-- ========== 快捷键设置 ==========
+config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 }
+
+config.keys = {
+  -- 分屏操作（使用 Leader 键）
+  { key = '-', mods = 'LEADER', action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' } },
+  { key = '\\', mods = 'LEADER', action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' } },
+
+  -- 窗格导航
+  { key = 'h', mods = 'LEADER', action = wezterm.action.ActivatePaneDirection 'Left' },
+  { key = 'l', mods = 'LEADER', action = wezterm.action.ActivatePaneDirection 'Right' },
+  { key = 'k', mods = 'LEADER', action = wezterm.action.ActivatePaneDirection 'Up' },
+  { key = 'j', mods = 'LEADER', action = wezterm.action.ActivatePaneDirection 'Down' },
+
+  -- 最大化当前窗格
+  { key = 'z', mods = 'LEADER', action = wezterm.action.TogglePaneZoomState },
+
+  -- 显示命令面板
+  { key = 'p', mods = 'CMD|SHIFT', action = wezterm.action.ActivateCommandPalette },
+}
+
+-- 快速切换标签页
+for i = 1, 8 do
+  table.insert(config.keys, {
+    key = tostring(i),
+    mods = 'CMD',
+    action = wezterm.action.ActivateTab(i - 1),
+  })
+end
+
+-- ========== 多路复用器设置 ==========
+config.scrollback_lines = 10000
+
+-- ========== 其他设置 ==========
+-- 关闭窗口时不确认
+config.window_close_confirmation = 'NeverPrompt'
+-- 默认终端类型
+config.term = 'xterm-256color'
+
+return config
+```
+
+> **提示**：WezTerm 的 Lua 配置是其最大亮点。你可以根据主机名、操作系统、时间等条件动态切换配置，例如在不同机器上自动使用不同的配色方案，或根据时间自动切换日/夜间模式。内置多路复用器的 Leader 键机制与 tmux 类似，降低了迁移成本。推荐使用 `wezterm.config_builder()` 创建配置对象，它会在配置有误时给出友好的错误提示。

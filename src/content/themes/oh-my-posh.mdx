@@ -1,0 +1,78 @@
+---
+title: "Oh My Posh"
+description: "跨平台、跨 Shell 的提示符引擎，一份配置文件适配所有终端环境"
+website: "https://ohmyposh.dev/"
+github: "https://github.com/JanDeDobbeleer/oh-my-posh"
+tags: ["跨平台", "跨Shell", "提示符", "Go"]
+featured: true
+order: 27
+theme_type: "prompt"
+compatible_with: ["Zsh", "Bash", "Fish", "PowerShell", "Nushell"]
+---
+
+## 简介
+
+Oh My Posh 是一个跨平台、跨 Shell 的提示符引擎，使用 Go 语言编写。它最初诞生于 Windows PowerShell 生态，如今已发展为支持 macOS、Linux 和 Windows 上几乎所有主流 Shell 的通用方案。无论你在哪个操作系统上使用哪种 Shell，都能通过同一份 JSON 或 TOML 配置文件获得完全一致的提示符体验。
+
+Oh My Posh 内置了超过 100 个精心设计的主题，涵盖从极简风格到华丽 Powerline 的各种审美偏好。它的 Segment 系统非常强大，支持 Git、语言运行时、云服务、系统状态等丰富的信息源。对于需要在多个操作系统和多种 Shell 之间切换的开发者来说，Oh My Posh 是实现统一提示符体验的最佳选择。
+
+## 安装
+
+```bash
+# macOS
+brew install oh-my-posh
+
+# Linux
+curl -s https://ohmyposh.dev/install.sh | bash -s
+
+# Windows (winget)
+winget install JanDeDobbeleer.OhMyPosh
+```
+
+在各 Shell 中初始化：
+
+```bash
+# Zsh — ~/.zshrc
+eval "$(oh-my-posh init zsh --config ~/.config/ohmyposh/config.toml)"
+
+# Bash — ~/.bashrc
+eval "$(oh-my-posh init bash --config ~/.config/ohmyposh/config.toml)"
+
+# Fish — ~/.config/fish/config.fish
+oh-my-posh init fish --config ~/.config/ohmyposh/config.toml | source
+
+# PowerShell — $PROFILE
+oh-my-posh init pwsh --config ~/.config/ohmyposh/config.toml | Invoke-Expression
+```
+
+## 核心特性
+
+- **真正跨平台**: 支持 macOS、Linux、Windows，体验完全一致
+- **跨 Shell 通用**: 一份配置适用于 Zsh、Bash、Fish、PowerShell、Nushell 等
+- **100+ 内置主题**: 即装即用，覆盖各种风格偏好
+- **丰富的 Segment**: Git、语言版本、云服务、时间、电池等数十种信息模块
+- **Tooltip 功能**: 输入特定命令时动态显示相关信息
+- **可迁移配置**: JSON、YAML、TOML 多种格式，方便版本控制和分享
+
+## 配置推荐
+
+配置文件 `~/.config/ohmyposh/config.toml`：
+
+```toml
+"$schema" = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json"
+final_space = true
+
+[[blocks]]
+  type = "prompt"
+  alignment = "left"
+  [[blocks.segments]]
+    type = "path"
+    style = "plain"
+    foreground = "cyan"
+    template = "{{ .Path }} "
+  [[blocks.segments]]
+    type = "git"
+    style = "plain"
+    foreground = "green"
+    template = "{{ .HEAD }}{{ if .Working.Changed }} *{{ end }} "
+```

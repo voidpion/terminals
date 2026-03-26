@@ -1,0 +1,124 @@
+---
+title: "fastfetch"
+description: "用 C 语言编写的极速系统信息展示工具，neofetch 的现代替代品"
+github: "https://github.com/fastfetch-cli/fastfetch"
+tags: ["系统信息", "美化", "C"]
+featured: true
+order: 8
+category: "system"
+replaces: "neofetch"
+install_cmd: "brew install fastfetch"
+written_in: "C"
+---
+
+## 简介
+
+fastfetch 是一个用 C 语言编写的系统信息展示工具，功能类似于 neofetch，但速度快得多。它能在终端中以美观的方式展示操作系统、内核、CPU、GPU、内存、Shell、终端等系统信息，并附带 ASCII 或图片格式的发行版 Logo。
+
+自 neofetch 于 2024 年停止维护后，fastfetch 已成为社区最受欢迎的替代方案。
+
+## 安装
+
+```bash
+# macOS
+brew install fastfetch
+
+# Ubuntu/Debian
+sudo add-apt-repository ppa:zhangsongcui3371/fastfetch
+sudo apt update && sudo apt install fastfetch
+
+# Arch Linux
+sudo pacman -S fastfetch
+
+# Windows
+scoop install fastfetch
+# 或
+winget install fastfetch
+```
+
+## 核心特性
+
+- **极速**: 比 neofetch 快 10-100 倍，毫秒级输出
+- **跨平台**: 支持 Linux、macOS、Windows、FreeBSD、Android
+- **高度可定制**: 支持自定义显示模块、颜色、Logo
+- **丰富的检测模块**: 50+ 个模块，包括 CPU、GPU、内存、磁盘、网络、蓝牙、显示器等
+- **多种 Logo 格式**: 支持 ASCII art、Sixel、Kitty 图像协议、iTerm2 图像协议
+- **neofetch 兼容**: 可直接迁移 neofetch 配置
+
+## 常用命令
+
+```bash
+# 默认输出
+fastfetch
+
+# 使用预设配置
+fastfetch --config examples/10.jsonc
+
+# 指定 Logo
+fastfetch --logo arch
+
+# 使用图片作为 Logo（需终端支持）
+fastfetch --logo ~/my-logo.png --logo-type kitty
+
+# 仅显示特定模块
+fastfetch -s os:kernel:cpu:gpu:memory
+
+# 生成 JSON 输出
+fastfetch --format json
+```
+
+## 配置推荐
+
+配置文件位于 `~/.config/fastfetch/config.jsonc`：
+
+```jsonc
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "auto",
+    "padding": { "top": 1, "right": 2 }
+  },
+  "display": {
+    "separator": " → "
+  },
+  "modules": [
+    "title",
+    "separator",
+    "os",
+    "host",
+    "kernel",
+    "uptime",
+    "packages",
+    "shell",
+    "terminal",
+    "terminalfont",
+    "cpu",
+    "gpu",
+    "memory",
+    "disk",
+    "break",
+    "colors"
+  ]
+}
+```
+
+```bash
+# 在 .zshrc 中开启终端启动时自动展示
+fastfetch
+```
+
+## 从 neofetch 迁移
+
+```bash
+# 自动转换 neofetch 配置
+fastfetch --migrate-config neofetch
+
+# 生成默认配置文件
+fastfetch --gen-config
+```
+
+## 推荐搭配
+
+- **Catppuccin / Tokyo Night 配色** — 统一终端配色让 fastfetch 输出更和谐
+- **Nerd Font** — 使用 Nerd Font 可显示更丰富的图标
+- **Kitty / iTerm2** — 支持图像协议的终端可展示高清 Logo

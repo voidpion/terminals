@@ -1,0 +1,18 @@
+---
+interface Props {
+  title: string;
+  href: string;
+}
+
+const { title, href } = Astro.props;
+---
+
+<section class="mb-12">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-xl font-bold dark:text-terminal-heading text-light-heading">{title}</h2>
+    <a href={href} class="text-sm font-medium dark:text-terminal-blue text-terminal-blue hover:underline">
+      查看全部 &rarr;
+    </a>
+  </div>
+  <slot />
+</section>

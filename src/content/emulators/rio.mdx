@@ -1,0 +1,79 @@
+---
+title: "Rio Terminal"
+description: "基于 Rust 开发的 GPU 加速终端模拟器，采用 WebGPU/WGPU 渲染引擎，注重性能与现代图形技术"
+screenshot: "/screenshots/rio.png"
+website: "https://raphamorim.io/rio/"
+github: "https://github.com/raphamorim/rio"
+tags: ["跨平台", "免费", "GPU加速", "Rust"]
+featured: false
+order: 10
+platforms: ["macOS", "Windows", "Linux"]
+license: "MIT"
+gpu_accelerated: true
+multiplexer_builtin: false
+pricing: "free"
+---
+
+## 简介
+
+Rio 是一款使用 Rust 语言开发的现代终端模拟器，由 Raphael Amorim 创建。Rio 最大的技术亮点在于它采用了 WebGPU/WGPU 作为渲染后端，而非传统的 OpenGL。WGPU 是 Rust 生态中对 WebGPU 标准的实现，可以在不同平台上自动选择最优的底层图形 API（macOS 使用 Metal、Windows 使用 DirectX 12、Linux 使用 Vulkan），从而在各平台上都能获得出色的渲染性能。
+
+Rio 的设计目标是在保持高性能的同时提供良好的开发者体验。它支持丰富的字体渲染选项、多窗口管理，以及灵活的配置系统。Rio 还引入了一些独特的功能，如内置的导航模式（Navigation Mode），可以在不依赖外部工具的情况下实现基本的窗口切换和管理。
+
+作为一个相对年轻的项目，Rio 正在快速发展，社区活跃度不断提升。它为那些希望尝试下一代图形渲染技术的终端用户提供了一个有吸引力的选择。
+
+## 安装
+
+### macOS
+
+```bash
+# 通过 Homebrew 安装（推荐）
+brew install --cask rio
+```
+
+### Windows
+
+```powershell
+# 通过 Winget 安装
+winget install raphamorim.rio
+
+# 通过 Scoop 安装
+scoop install rio
+```
+
+### Linux
+
+```bash
+# Arch Linux（AUR）
+yay -S rio
+
+# 通过 Cargo 从源码编译（通用方法）
+cargo install rioterm
+
+# Nix
+nix-env -iA nixpkgs.rio
+```
+
+也可以前往 [Rio 官网](https://raphamorim.io/rio/) 下载各平台的预编译安装包。
+
+### 验证安装
+
+```bash
+# 检查版本
+rio --version
+```
+
+## 核心特性
+
+- **WebGPU/WGPU 渲染** - 采用下一代图形 API，自动适配 Metal、DirectX 12、Vulkan 等后端
+- **Rust 编写** - 内存安全、高性能、低资源占用，稳定性优秀
+- **跨平台支持** - 原生支持 macOS、Windows 和 Linux，各平台体验一致
+- **导航模式** - 内置多种导航模式（CollapsedTab、Breadcrumb、TopTab、BottomTab），便于窗口管理
+- **丰富的字体支持** - 支持连字（ligatures）、可变字体和自定义字体渲染参数
+- **TOML 配置** - 使用 TOML 格式的配置文件，语法清晰易读
+- **配置热加载** - 修改配置文件后自动生效，无需重启终端
+- **真彩色支持** - 完整的 24-bit 真彩色和透明度支持
+- **图像显示** - 支持 Sixel 和 iTerm2 图像协议，可在终端中显示图片
+- **自适应 DPI** - 在高分辨率显示器上自动缩放，支持多显示器不同 DPI 设置
+- **自定义快捷键** - 灵活的键绑定配置，支持自定义修饰键组合
+- **极速启动** - 轻量级设计，启动时间极短

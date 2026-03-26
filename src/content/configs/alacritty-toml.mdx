@@ -1,0 +1,220 @@
+---
+title: "alacritty.toml 配置指南"
+description: "Alacritty 终端模拟器 TOML 配置方案，涵盖字体、配色、按键绑定与性能优化"
+tags: ["Alacritty", "终端配置", "TOML"]
+featured: false
+order: 8
+config_type: "other"
+target_tool: "Alacritty"
+filename: "alacritty.toml"
+---
+
+## 简介
+
+Alacritty 是一款跨平台、GPU 加速的终端模拟器，以极致性能和简洁配置著称。它不内置标签页或分屏功能，而是专注于做好「终端渲染」这一件事，搭配 tmux 或 Zellij 等多路复用器使用效果最佳。
+
+配置文件位于 `~/.config/alacritty/alacritty.toml`（v0.13+ 使用 TOML 格式，旧版使用 YAML）。Alacritty 支持配置热重载——保存文件后立即生效，无需重启终端。本文提供一份覆盖窗口、字体、配色、滚动、快捷键和 URL 提示的完整配置。
+
+## 完整配置
+
+```toml
+# ============================================================
+# ~/.config/alacritty/alacritty.toml — Alacritty 配置文件
+# 文档: https://alacritty.org/config-alacritty.html
+# ============================================================
+
+# ---------- 1. 通用设置 ----------
+# 启用配置热重载（保存后立即生效）
+live_config_reload = true
+
+# 导入其他配置片段（可选，用于拆分主题）
+# import = ["~/.config/alacritty/themes/tokyo-night.toml"]
+
+# ---------- 2. 终端环境 ----------
+[env]
+# 声明终端类型，确保 TrueColor 支持
+TERM = "xterm-256color"
+
+# ---------- 3. 窗口设置 ----------
+[window]
+# 内边距（像素），让内容不贴边
+padding = { x = 12, y = 10 }
+# 窗口启动时是否自适应内边距
+dynamic_padding = true
+# 窗口装饰: "Full" | "None" | "Transparent" | "Buttonless"
+decorations = "Buttonless"
+# 启动模式: "Windowed" | "Maximized" | "Fullscreen"
+startup_mode = "Windowed"
+# 窗口初始尺寸（列 x 行）
+dimensions = { columns = 120, lines = 36 }
+# 窗口不透明度 (0.0 ~ 1.0)
+opacity = 0.95
+# macOS: 使用原生全屏而非简单全屏
+option_as_alt = "Both"
+
+# ---------- 4. 字体设置 ----------
+[font]
+# 字体大小
+size = 14.0
+
+# 主字体 — 推荐使用 Nerd Font 以获得图标支持
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "JetBrainsMono Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "JetBrainsMono Nerd Font"
+style = "Italic"
+
+[font.bold_italic]
+family = "JetBrainsMono Nerd Font"
+style = "Bold Italic"
+
+# 字体渲染微调
+[font.offset]
+x = 0
+y = 1    # 适当增加行高，提升可读性
+
+# ---------- 5. 配色方案 — Tokyo Night ----------
+[colors.primary]
+background = "#1a1b26"
+foreground = "#c0caf5"
+
+[colors.cursor]
+text    = "#1a1b26"
+cursor  = "#c0caf5"
+
+[colors.vi_mode_cursor]
+text    = "#1a1b26"
+cursor  = "#73daca"
+
+[colors.selection]
+text       = "CellForeground"
+background = "#283457"
+
+[colors.search.matches]
+foreground = "#1a1b26"
+background = "#e0af68"
+
+[colors.search.focused_match]
+foreground = "#1a1b26"
+background = "#ff9e64"
+
+# 标准 8 色
+[colors.normal]
+black   = "#15161e"
+red     = "#f7768e"
+green   = "#9ece6a"
+yellow  = "#e0af68"
+blue    = "#7aa2f7"
+magenta = "#bb9af7"
+cyan    = "#7dcfff"
+white   = "#a9b1d6"
+
+# 亮色变体
+[colors.bright]
+black   = "#414868"
+red     = "#f7768e"
+green   = "#9ece6a"
+yellow  = "#e0af68"
+blue    = "#7aa2f7"
+magenta = "#bb9af7"
+cyan    = "#7dcfff"
+white   = "#c0caf5"
+
+# ---------- 6. 光标设置 ----------
+[cursor]
+# 光标闪烁: "Off" | "On" | "Always"
+unfocused_hollow = true
+
+[cursor.style]
+# 光标样式: "Block" | "Underline" | "Beam"
+shape    = "Block"
+blinking = "On"
+
+[cursor.vi_mode_style]
+shape    = "Block"
+blinking = "Off"
+
+# ---------- 7. 滚动设置 ----------
+[scrolling]
+# 滚动缓冲区行数（0 表示禁用回滚）
+history = 10000
+# 每次滚动的行数
+multiplier = 3
+
+# ---------- 8. 鼠标设置 ----------
+[mouse]
+# 隐藏鼠标光标在输入时
+hide_when_typing = true
+
+# ---------- 9. URL 提示（Hints）----------
+# 按下修饰键时，终端中的 URL 可点击跳转
+[[hints.enabled]]
+command = "open"                # macOS 用 open，Linux 用 xdg-open
+hyperlinks = true
+post_processing = true
+persist = false
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh://|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+
+[hints.enabled.binding]
+key = "U"
+mods = "Control|Shift"
+
+[hints.enabled.mouse]
+enabled = true
+mods = "Command"               # macOS 用 Command，Linux/Windows 用 Control
+
+# ---------- 10. 快捷键绑定 ----------
+[keyboard]
+# macOS 下的自定义快捷键
+bindings = [
+  # Cmd+N 新建窗口实例
+  { key = "N",      mods = "Command",       action = "CreateNewWindow" },
+  # Cmd+Enter 切换全屏
+  { key = "Return", mods = "Command",       action = "ToggleFullscreen" },
+  # Cmd+K 清屏（保留滚动缓冲区）
+  { key = "K",      mods = "Command",       action = "ClearHistory" },
+  # Cmd++ / Cmd+- / Cmd+0 字体缩放
+  { key = "Equals", mods = "Command",       action = "IncreaseFontSize" },
+  { key = "Minus",  mods = "Command",       action = "DecreaseFontSize" },
+  { key = "Key0",   mods = "Command",       action = "ResetFontSize" },
+  # Vi 模式快捷键
+  { key = "Space",  mods = "Control|Shift", action = "ToggleViMode" },
+  # 快速搜索
+  { key = "F",      mods = "Command",       action = "SearchForward" },
+  { key = "B",      mods = "Command|Shift", action = "SearchBackward" },
+]
+```
+
+## 配置说明
+
+### 窗口与外观
+
+窗口部分通过 `padding` 增加内边距避免文字紧贴窗口边缘，`decorations = "Buttonless"` 在 macOS 上移除标题栏按钮让外观更简洁。`opacity = 0.95` 提供轻微的背景透视效果，如不需要设为 `1.0` 即可。
+
+### 字体配置
+
+推荐使用带有 Nerd Font 补丁的等宽字体（如 JetBrainsMono Nerd Font），这样可以正确显示文件图标、Git 状态符号等特殊字符。`font.offset.y = 1` 适当增大行间距，长时间阅读更舒适。
+
+### Tokyo Night 配色
+
+Tokyo Night 是一套柔和的深色配色方案，对比度适中，长时间使用不易疲劳。配置中完整定义了前景/背景、光标、选区、搜索高亮以及 16 色调色板，确保各类终端应用显示一致。
+
+### URL 提示
+
+Hints 功能允许在终端中快速打开 URL。配置中按住 Command 键点击即可打开链接，也可以通过 `Ctrl+Shift+U` 触发提示模式，用键盘标签快速选择屏幕上的链接。
+
+## 常用技巧
+
+- **配置热重载**：修改 `alacritty.toml` 并保存后会立即生效，无需关闭重开终端窗口
+- **主题切换**：将配色方案拆分到独立文件（如 `themes/catppuccin.toml`），通过 `import` 字段快速切换主题
+- **字体回退**：Alacritty 会自动使用系统字体回退链，中文字符无需额外配置即可正常显示
+- **Vi 模式**：按 `Ctrl+Shift+Space` 进入 Vi 模式，可用 Vim 按键在终端输出中导航和复制文本
+- **配置验证**：运行 `alacritty migrate` 可将旧版 YAML 配置自动转换为新版 TOML 格式
+- **多配置方案**：使用 `alacritty --config-file ~/path/to/alt.toml` 启动时加载不同配置
+- **搭配使用**：Alacritty 不自带分屏和标签页，推荐搭配 tmux 或 Zellij 实现多窗口管理

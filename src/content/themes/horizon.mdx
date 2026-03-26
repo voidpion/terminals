@@ -1,0 +1,51 @@
+---
+title: "Horizon"
+description: "以日落为灵感的温暖暗色配色方案，橘红与玫瑰色亮点营造浪漫氛围"
+website: "https://horizontheme.com/"
+github: "https://github.com/jolaleye/horizon-theme-vscode"
+tags: ["配色", "日落", "暖色", "暗色", "浪漫"]
+featured: false
+order: 23
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal"]
+---
+
+## 简介
+
+Horizon 是一款以日落地平线为灵感的暖色暗色配色方案，由 jolaleye 为 VS Code 创建。它最大的特色是在深色背景上大量使用了橘红色、玫瑰色和珊瑚色等暖色调作为语法高亮色彩，营造出一种如同在夕阳余晖下编码的独特视觉体验。背景色采用带有微妙暖色调的深灰色，与前景的暖色高亮形成了和谐统一的氛围感。
+
+Horizon 提供了 **Dark** 和 **Bright** 两个暗色变体。Dark 版本更加沉稳内敛，整体色彩较为柔和；Bright 版本则提高了亮色的饱和度和明度，让日落色彩更加鲜明。两个版本都保持了相同的色彩哲学——温暖、浪漫而不失专业。值得注意的是，Horizon 的色彩搭配在深色主题中独树一帜，大多数暗色主题倾向于使用冷色调（蓝色、紫色），而 Horizon 大胆地选择了暖色路线，这让它在视觉上有着极强的辨识度。
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+# 从社区移植项目获取 Horizon 的 .itermcolors 文件
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/horizon-dark.toml"]
+```
+
+### Kitty
+
+```conf
+# 将 Horizon 配色加入 kitty 配置
+include themes/horizon.conf
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'Horizon Dark (Gogh)'
+```
+
+## 适用场景
+
+Horizon 非常适合追求温暖、个性化工作环境的开发者。如果你厌倦了千篇一律的蓝色系和灰色系暗色主题，Horizon 的日落暖色调会带来全新的视觉感受。它特别适合前端开发者和设计师——处理 CSS、HTML 等与视觉相关的代码时，Horizon 的浪漫色调能激发创意灵感。在秋冬季节的傍晚使用 Horizon 配色编码，搭配一杯热饮，会获得极佳的氛围感。对于直播和内容创作者，Horizon 独特的暖色风格也能让你的终端界面在观众中留下深刻印象。

@@ -1,0 +1,69 @@
+---
+title: "gping"
+description: "带图形化输出的 ping 工具"
+github: "https://github.com/orf/gping"
+tags: ["网络", "Rust", "图形化"]
+featured: false
+order: 24
+category: "network"
+replaces: "ping"
+install_cmd: "brew install gping"
+written_in: "Rust"
+---
+
+## 简介
+
+gping 是一款使用 Rust 编写的现代化 ping 工具，它在传统 ping 的基础上增加了实时折线图展示功能。通过终端中的图形化界面，你可以直观地观察网络延迟的变化趋势，快速发现网络抖动和丢包等问题。
+
+gping 支持同时 ping 多个目标并在同一图表中对比显示，这在排查网络问题时特别有用。它还支持执行任意命令并将输出数值绘制为图表，使其不仅仅是一个 ping 工具，更是一个通用的终端实时图表工具。
+
+## 安装
+
+```bash
+# macOS
+brew install gping
+
+# Ubuntu/Debian (通过 cargo 安装)
+cargo install gping
+
+# Windows
+choco install gping
+```
+
+## 核心特性
+
+- **实时图表**: 在终端中以折线图实时展示延迟变化趋势
+- **多目标对比**: 支持同时 ping 多个主机并在同一图表中对比
+- **命令模式**: 可执行任意命令并将数值结果绘制为图表
+- **自适应缩放**: 图表 Y 轴自动调整以适应当前延迟范围
+- **颜色区分**: 不同目标使用不同颜色，清晰区分
+- **跨平台**: 支持 Linux、macOS 和 Windows
+
+## 使用示例
+
+```bash
+# ping 单个主机
+gping google.com
+
+# 同时 ping 多个主机进行对比
+gping google.com cloudflare.com amazon.com
+
+# 使用 IP 地址
+gping 8.8.8.8 1.1.1.1
+
+# 指定缓冲区大小（保留最近 N 个数据点）
+gping --buffer 120 google.com
+
+# 使用命令模式，将命令输出绘制为图表
+gping --cmd "curl -so /dev/null -w '%{time_total}' https://example.com"
+
+# 指定 ping 间隔时间（秒）
+gping -i 0.5 google.com
+
+# 使用 IPv4 或 IPv6
+gping -4 google.com
+gping -6 google.com
+
+# 同时监控内外网延迟
+gping 192.168.1.1 google.com
+```

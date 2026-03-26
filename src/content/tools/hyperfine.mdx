@@ -1,0 +1,64 @@
+---
+title: "hyperfine"
+description: "命令行基准测试工具"
+github: "https://github.com/sharkdp/hyperfine"
+tags: ["基准测试", "Rust", "性能"]
+featured: false
+order: 21
+category: "productivity"
+install_cmd: "brew install hyperfine"
+written_in: "Rust"
+---
+
+## 简介
+
+hyperfine 是一款由 Rust 编写的命令行基准测试工具，由 bat 和 fd 的作者 sharkdp 开发。它能够精确测量命令的执行时间，自动进行多次运行以获得统计学上可靠的结果，并支持多个命令之间的对比测试。
+
+与简单的 `time` 命令不同，hyperfine 提供了预热运行、参数化基准测试、统计分析、结果导出等专业功能。无论是比较不同工具的性能差异，还是优化脚本的执行效率，hyperfine 都是不可或缺的测量工具。
+
+## 安装
+
+```bash
+# macOS
+brew install hyperfine
+
+# Ubuntu/Debian
+sudo apt install hyperfine
+
+# Cargo
+cargo install hyperfine
+```
+
+## 核心特性
+
+- **统计分析**: 自动计算平均值、标准差、最小/最大值等统计指标
+- **预热运行**: 支持预热运行次数配置，排除冷启动影响
+- **对比测试**: 同时测试多个命令并显示相对性能差异
+- **参数化测试**: 支持参数范围遍历，批量测试不同输入
+- **结果导出**: 支持导出为 JSON、CSV、Markdown 等格式
+- **Shell 选择**: 可指定使用的 Shell 或直接执行命令
+
+## 使用示例
+
+```bash
+# 基本用法：测量单个命令
+hyperfine 'sleep 0.3'
+
+# 对比两个命令的性能
+hyperfine 'fd -e py' 'find . -name "*.py"'
+
+# 设置预热次数和最少运行次数
+hyperfine --warmup 3 --min-runs 20 'rg "pattern" .'
+
+# 参数化基准测试
+hyperfine --parameter-scan threads 1 8 'make -j {threads}'
+
+# 在每次运行前执行准备命令（如清空缓存）
+hyperfine --prepare 'sync; echo 3 | sudo tee /proc/sys/vm/drop_caches' 'cat largefile'
+
+# 导出结果为 Markdown 表格
+hyperfine 'ripgrep pattern' 'grep -r pattern' --export-markdown results.md
+
+# 导出为 JSON 用于进一步分析
+hyperfine 'command1' 'command2' --export-json results.json
+```

@@ -1,0 +1,80 @@
+---
+title: "Cool Retro Term"
+description: "模拟老式 CRT 显示器效果的复古终端模拟器，完美再现经典计算机的视觉体验"
+screenshot: "/screenshots/cool-retro-term.gif"
+github: "https://github.com/Swordfish90/cool-retro-term"
+tags: ["复古", "免费", "视觉效果"]
+featured: false
+order: 12
+platforms: ["macOS", "Linux"]
+license: "GPL"
+gpu_accelerated: true
+multiplexer_builtin: false
+pricing: "free"
+---
+
+## 简介
+
+Cool Retro Term 是一款独特的终端模拟器，它的核心功能并非追求性能或生产力，而是精心模拟上世纪 70 至 90 年代 CRT 显示器的视觉效果。它由 Filippo Scognamiglio 开发，基于 Qt/QML 框架构建，利用 GPU 加速来实现各种复古视觉效果。
+
+Cool Retro Term 可以逼真地再现老式阴极射线管显示器的特征，包括扫描线、屏幕曲率、荧光余辉、闪烁、色差和屏幕噪点等。用户可以从多种预设主题中选择，如 Apple II、IBM DOS、Commodore 64、Monochrome Green 等经典风格，也可以自行调节每一个视觉参数来创建独特的显示效果。
+
+虽然这款终端主要面向复古爱好者和追求视觉趣味的用户，但它本质上是一个完全功能正常的终端模拟器。你可以用它来完成日常的命令行操作，只是整个过程会充满怀旧的美感。它也常被用于制作技术视频、截图和演示，为内容增添独特的视觉风格。
+
+## 安装
+
+### macOS
+
+```bash
+# 通过 Homebrew 安装
+brew install --cask cool-retro-term
+```
+
+### Linux
+
+```bash
+# Ubuntu / Debian
+sudo apt install cool-retro-term
+
+# Arch Linux
+sudo pacman -S cool-retro-term
+
+# Fedora
+sudo dnf install cool-retro-term
+
+# 通过 Flatpak（通用方法）
+flatpak install flathub app.cool_retro_term.cool-retro-term
+```
+
+### 从源码编译
+
+```bash
+# 安装依赖（Ubuntu / Debian）
+sudo apt install build-essential qml-module-qtquick-controls \
+  qml-module-qtgraphicaleffects qml-module-qtquick-dialogs \
+  qml-module-qtquick-layouts qml-module-qtquick-window2 \
+  qmlscene qt5-qmake qtdeclarative5-dev
+
+# 克隆源码（包含子模块）
+git clone --recursive https://github.com/Swordfish90/cool-retro-term.git
+cd cool-retro-term
+
+# 编译安装
+qmake && make
+sudo make install
+```
+
+## 核心特性
+
+- **CRT 效果模拟** - 逼真模拟扫描线、荧光余辉、屏幕弯曲、色差等 CRT 显示器特征
+- **多种预设主题** - 内置 Apple II、IBM DOS、Commodore 64、绿色荧光屏等经典预设
+- **GPU 加速效果** - 所有视觉特效通过 GPU 着色器实现，确保流畅的动画渲染
+- **高度可定制** - 可独立调节每个视觉参数：亮度、对比度、闪烁频率、噪点强度、曲率等
+- **荧光余辉效果** - 模拟老式显示器字符消退后的残影效果，可调节持续时间
+- **屏幕抖动与噪点** - 模拟老旧显示器的画面抖动和信号噪点
+- **字体还原** - 内置多款像素字体，还原不同年代终端设备的文字显示风格
+- **透明度支持** - 支持窗口透明效果，可与桌面背景融合
+- **完整终端功能** - 尽管外观复古，但底层是一个功能完备的终端模拟器
+- **帧率可调** - 可根据系统性能调整特效渲染帧率
+- **配置导入导出** - 支持保存和分享自定义的视觉效果配置
+- **截图利器** - 非常适合制作技术博客、视频教程的终端截图，增添独特视觉风格

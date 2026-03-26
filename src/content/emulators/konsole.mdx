@@ -1,0 +1,72 @@
+---
+title: "Konsole"
+description: "KDE Plasma 桌面环境的默认终端模拟器，功能丰富，深度集成 KDE 生态系统"
+screenshot: "/screenshots/konsole.png"
+website: "https://konsole.kde.org/"
+github: "https://github.com/KDE/konsole"
+tags: ["Linux", "KDE", "免费", "功能丰富"]
+featured: false
+order: 14
+platforms: ["Linux"]
+license: "GPL"
+gpu_accelerated: false
+multiplexer_builtin: true
+pricing: "free"
+---
+
+## 简介
+
+Konsole 是 KDE 项目开发的终端模拟器，也是 KDE Plasma 桌面环境的默认终端应用。作为 KDE 生态系统的核心组件之一，Konsole 从 KDE 1.x 时代就已存在，经过二十多年的迭代，已发展成为 Linux 平台上功能最全面的终端模拟器之一。
+
+Konsole 内置了标签页和分屏功能，用户无需借助 tmux 或 screen 等外部工具即可在单个窗口中管理多个终端会话。它与 KDE 桌面环境深度集成，支持 KDE 的全局主题、颜色方案和快捷键体系，并且可以作为组件嵌入到 Dolphin 文件管理器、KDevelop 等其他 KDE 应用中。
+
+Konsole 的设计注重实用性和可定制性，支持配置文件（Profile）系统，用户可以为不同的工作场景创建独立的终端配置，包括字体、颜色、命令和环境变量等。书签功能允许用户保存常用的 SSH 连接和目录路径，进一步提升日常使用效率。
+
+## 安装
+
+### 在 KDE Plasma 桌面上
+
+Konsole 通常随 KDE Plasma 桌面环境预装，无需单独安装。
+
+### 单独安装
+
+```bash
+# Ubuntu / Debian
+sudo apt install konsole
+
+# Arch Linux
+sudo pacman -S konsole
+
+# Fedora
+sudo dnf install konsole
+
+# openSUSE
+sudo zypper install konsole
+```
+
+### 验证安装
+
+```bash
+# 检查版本
+konsole --version
+
+# 从命令行启动
+konsole &
+```
+
+## 核心特性
+
+- **标签页与分屏** - 内置标签页管理和水平/垂直分屏功能，支持拖拽标签页在窗口间移动
+- **配置文件系统** - 支持创建多套 Profile，每套可独立设置字体、颜色、初始命令和工作目录
+- **书签管理** - 可将常用目录和 SSH 连接保存为书签，支持书签文件夹分组管理
+- **KDE 生态集成** - 与 Dolphin、KDevelop、Kate 等 KDE 应用无缝集成，可嵌入式运行
+- **通知支持** - 监控终端活动或静默状态，在任务完成或输出变化时发送桌面通知
+- **搜索与高亮** - 支持在终端输出中搜索文本，可使用正则表达式进行匹配
+- **透明背景** - 支持窗口背景透明和模糊效果，与 KDE 桌面特效协同工作
+- **目录跟踪** - 可以跟踪当前工作目录变化，新建标签页时可选择在同一目录打开
+- **编辑快捷操作** - 支持从终端输出中直接复制文本，提供多种粘贴模式
+- **SSH 管理** - 内置 SSH 管理功能，可通过书签快速连接远程服务器
+- **历史记录搜索** - 支持滚动缓冲区搜索，可快速定位之前的输出内容
+- **自定义配色方案** - 预置多种颜色主题，支持导入和导出自定义配色
+
+> **提示**：Konsole 在 Dolphin 文件管理器中按 `F4` 即可在底部呼出嵌入式终端面板，这是 KDE 用户非常高效的工作方式。建议为不同的工作场景（如开发、运维、远程连接）分别创建 Profile，并利用书签功能管理常用 SSH 连接。

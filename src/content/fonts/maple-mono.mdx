@@ -1,0 +1,90 @@
+---
+title: "Maple Mono"
+description: "圆润可爱的编程字体，完美支持中文显示，兼具连字与美观"
+github: "https://github.com/subframe7536/maple-font"
+tags: ["编程字体", "中文优化", "圆润", "连字"]
+featured: false
+order: 10
+ligatures: true
+nerd_font_variant: true
+styles: ["Regular", "Bold", "Italic", "Bold Italic", "Light", "Medium", "SemiBold"]
+preview_text: "Terminal > ls -la ~/.config"
+---
+
+## 简介
+
+Maple Mono（枫叶等宽）是由中国开发者 subframe7536 设计的一款开源编程字体，其最大亮点是圆润可爱的字形风格与完善的中文显示支持。不同于大多数西文编程字体，Maple Mono 从设计之初就将中英文混排体验作为核心目标，精心调校了中文字符的宽度比例、基线对齐和字重匹配，使得终端和编辑器中的中英文混排效果和谐统一、赏心悦目。
+
+Maple Mono 的英文字形采用圆润柔和的设计风格，笔画末端带有自然的圆角处理，整体视觉温暖亲和。它内置了丰富的编程连字支持，并提供了带 Nerd Font 图标的变体版本。对于使用中文注释、编写中文文档、或日常在终端中处理中文内容的开发者来说，Maple Mono 是目前最值得推荐的编程字体之一。
+
+## 安装
+
+```bash
+# macOS — Homebrew
+brew install --cask font-maple
+
+# Nerd Font 变体
+brew install --cask font-maple-mono-nf-cn  # 含中文的 Nerd Font 变体
+
+# Linux — 手动安装
+mkdir -p ~/.local/share/fonts && cd ~/.local/share/fonts
+curl -fLO https://github.com/subframe7536/maple-font/releases/latest/download/MapleMono-NF-CN.zip
+unzip MapleMono-NF-CN.zip -d MapleMono && fc-cache -fv
+
+# Windows — Scoop
+scoop bucket add nerd-fonts
+scoop install nerd-fonts/Maple-Mono-NF
+```
+
+## 特性亮点
+
+- **中文优化**: 精心调校中英文混排效果，字符宽度比例、基线对齐和字重匹配均经过专门优化
+- **圆润风格**: 字形圆润可爱，笔画末端自然圆角，视觉上温暖亲和
+- **编程连字**: 内置 `=>` `!==` `->` 等常见编程连字，渲染效果精致
+- **多种变体**: 提供 Maple Mono（纯英文）、Maple Mono CN（含中文）、NF（Nerd Font）等多种组合
+- **智能斜体**: 斜体设计兼顾手写感与可读性，在语义高亮中表现出色
+- **活跃开发**: 项目更新频繁，持续优化字形质量和字符覆盖范围
+- **开源免费**: SIL OFL 许可证，完全免费使用
+
+## 推荐配置
+
+### 终端模拟器
+
+```toml
+# Alacritty — ~/.config/alacritty/alacritty.toml
+[font]
+size = 14.0
+[font.normal]
+family = "Maple Mono NF CN"
+style = "Regular"
+[font.bold]
+family = "Maple Mono NF CN"
+style = "Bold"
+```
+
+```conf
+# Kitty — ~/.config/kitty/kitty.conf
+font_family      Maple Mono NF CN
+bold_font        auto
+italic_font      auto
+font_size        14.0
+```
+
+```lua
+-- WezTerm — ~/.wezterm.lua
+config.font = wezterm.font('Maple Mono NF CN')
+config.font_size = 14.0
+config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
+```
+
+### VS Code
+
+```json
+{
+  "editor.fontFamily": "'Maple Mono', 'Maple Mono NF CN', monospace",
+  "editor.fontSize": 14,
+  "editor.fontLigatures": true,
+  "terminal.integrated.fontFamily": "'Maple Mono NF CN'"
+}
+```
+

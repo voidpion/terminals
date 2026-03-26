@@ -1,0 +1,83 @@
+---
+title: "htop"
+description: "交互式进程查看器"
+website: "https://htop.dev/"
+github: "https://github.com/htop-dev/htop"
+tags: ["系统监控", "进程管理", "交互式"]
+featured: false
+order: 13
+category: "system"
+replaces: "top"
+install_cmd: "brew install htop"
+written_in: "C"
+---
+
+## 简介
+
+htop 是一个跨平台的交互式进程查看器，是传统 `top` 命令的增强替代品。它提供了彩色的终端界面，能够直观地展示 CPU、内存使用情况和运行中的进程列表，支持鼠标操作和丰富的键盘快捷键。
+
+与 `top` 相比，htop 启动更快，默认显示所有进程，支持水平和垂直滚动查看完整的进程命令行。它允许你直接在界面中进行进程操作，如发送信号、调整优先级、过滤和搜索进程，无需记忆进程 PID。htop 还支持树形视图，清晰展示进程之间的父子关系。
+
+## 安装
+
+```bash
+# macOS
+brew install htop
+
+# Ubuntu/Debian
+sudo apt install htop
+
+# Fedora
+sudo dnf install htop
+```
+
+## 核心特性
+
+- **彩色界面**: CPU、内存用量以彩色进度条直观展示
+- **交互操作**: 支持鼠标点击和丰富的快捷键
+- **进程树**: 树形视图展示进程父子层级关系
+- **搜索过滤**: 实时搜索和过滤进程列表
+- **进程管理**: 直接发送信号（kill）、调整优先级（renice）
+- **自定义显示**: 可配置显示的列和排序方式
+
+## 使用示例
+
+```bash
+# 启动 htop
+htop
+
+# 仅显示指定用户的进程
+htop -u username
+
+# 以树形模式启动
+htop -t
+
+# 按内存使用排序启动
+htop --sort-key=PERCENT_MEM
+
+# 仅监控特定 PID
+htop -p 1234,5678
+```
+
+### 常用快捷键
+
+```text
+F1        帮助
+F2        设置（自定义显示列、配色等）
+F3 / /    搜索进程
+F4 / \    过滤进程
+F5        树形视图切换
+F6        选择排序列
+F9 / k    发送信号（kill）
+F10 / q   退出
+Space     标记进程
+U         取消所有标记
+M         按内存排序
+P         按 CPU 排序
+T         按运行时间排序
+```
+
+## 推荐搭配
+
+- **btop** — 想要更炫酷的界面可以试试 btop
+- **procs** — 用 Rust 写的现代 ps 替代品

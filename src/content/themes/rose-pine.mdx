@@ -1,0 +1,71 @@
+---
+title: "Rose Pine"
+description: "柔和自然灵感的配色方案，提供 Main、Moon 和 Dawn 三种精致变体"
+website: "https://rosepinetheme.com/"
+github: "https://github.com/rose-pine/rose-pine-theme"
+tags: ["配色", "柔和", "自然", "三变体"]
+featured: false
+order: 13
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal", "Hyper"]
+---
+
+## 简介
+
+Rose Pine 是一款以自然界的柔和色调为灵感的配色方案，由社区驱动开发和维护。它的核心设计哲学是"所有自然的色调都有其用处"——从玫瑰的粉红到松林的翠绿，从黎明的金黄到月夜的银蓝，每种颜色都经过精心挑选和调配，力求呈现自然界中那种和谐、宁静的色彩关系。Rose Pine 的整体风格柔和且略带浪漫气息，在众多冷峻或高饱和度的暗色方案中独树一帜。
+
+Rose Pine 提供三种精心设计的变体：**Main**（默认暗色，温暖的玫瑰调深色背景）、**Moon**（更冷的暗色变体，带有月光般的银蓝色调）和 **Dawn**（亮色变体，模拟清晨第一缕阳光的温暖色调）。三种变体共享统一的设计语言和色彩语义，切换时视觉体验流畅自然。Rose Pine 的生态系统正在快速成长，目前已覆盖大量终端模拟器、编辑器、浏览器和开发工具。官方网站 rosepinetheme.com 提供了完整的调色板文档和各平台安装指南。
+
+## 配色预览
+
+| 角色 | 颜色名 | Main | Moon | Dawn |
+|------|--------|------|------|------|
+| 背景 | Base | `#191724` | `#232136` | `#faf4ed` |
+| 深背景 | Surface | `#1f1d2e` | `#2a273f` | `#fffaf3` |
+| 覆盖层 | Overlay | `#26233a` | `#393552` | `#f2e9e1` |
+| 静默色 | Muted | `#6e6a86` | `#6e6a86` | `#9893a5` |
+| 弱文本 | Subtle | `#908caa` | `#908caa` | `#797593` |
+| 正文 | Text | `#e0def4` | `#e0def4` | `#575279` |
+| 爱意 | Love | `#eb6f92` | `#eb6f92` | `#b4637a` |
+| 金色 | Gold | `#f6c177` | `#f6c177` | `#ea9d34` |
+| 玫瑰 | Rose | `#ebbcba` | `#ea9a97` | `#d7827e` |
+| 松绿 | Pine | `#31748f` | `#3e8fb0` | `#286983` |
+| 泡沫 | Foam | `#9ccfd8` | `#9ccfd8` | `#56949f` |
+| 鸢尾 | Iris | `#c4a7e7` | `#c4a7e7` | `#907aa9` |
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+git clone https://github.com/rose-pine/iterm.git ~/rose-pine-iterm
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+# 选择对应变体的 .itermcolors 文件
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/rose-pine.toml"]
+# 其他变体: rose-pine-moon.toml, rose-pine-dawn.toml
+```
+
+### Kitty
+
+```bash
+kitty +kitten themes Rose Pine
+# 也可选择 "Rose Pine Moon" 或 "Rose Pine Dawn"
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'rose-pine'
+-- 其他变体: 'rose-pine-moon', 'rose-pine-dawn'
+```
+
+## 适用场景
+
+Rose Pine 特别适合追求柔和、温暖视觉风格的开发者。如果你觉得大多数暗色方案过于冷峻或高对比度，Rose Pine 的低饱和度暖色调将为你提供一种更加"亲切"的编码体验。其 Dawn 亮色变体是目前最精致的亮色配色方案之一，适合在日光充足的环境中使用。三种变体的存在使你能够根据时间和心情灵活切换——清晨用 Dawn 迎接日出、白天用 Moon 保持冷静专注、夜晚用 Main 享受温暖的玫瑰色调。Rose Pine 也是文档写作和 Markdown 编辑的绝佳配色选择，其柔和的色彩在长文本阅读时比高对比度方案更加舒适。

@@ -1,0 +1,210 @@
+---
+title: "tmux.conf 配置指南"
+description: "一份实用的 tmux 配置方案，包含快捷键优化、外观定制与插件管理"
+tags: ["tmux", "多路复用", "效率"]
+featured: true
+order: 2
+config_type: "multiplexer"
+target_tool: "tmux"
+filename: "tmux.conf"
+---
+
+## 简介
+
+tmux 是终端多路复用器，允许在单个终端窗口中创建多个会话、窗口和面板，并在断开连接后保持进程运行。配置文件位于 `~/.tmux.conf`（tmux 3.1+ 也支持 `~/.config/tmux/tmux.conf`）。本文提供一份经过优化的完整配置，覆盖键位、外观和插件管理。
+
+## 完整配置
+
+```bash
+# ============================================================
+# ~/.tmux.conf — tmux 配置文件
+# ============================================================
+
+# ---------- 1. 基础设置 ----------
+# 将前缀键从 Ctrl+B 改为 Ctrl+A（更顺手）
+unbind C-b
+set -g prefix C-a
+bind C-a send-prefix
+
+# 启用真彩色支持
+set -g default-terminal "tmux-256color"
+set -ag terminal-overrides ",xterm-256color:RGB"
+
+# 启用鼠标支持（滚动、选择面板、调整大小）
+set -g mouse on
+
+# 窗口和面板编号从 1 开始（0 离左手太远）
+set -g base-index 1
+set -g pane-base-index 1
+set -g renumber-windows on
+
+# 减少 Escape 延迟（对 Vim 用户很重要）
+set -sg escape-time 0
+
+# 增大历史记录缓冲区
+set -g history-limit 50000
+
+# 焦点事件传递（Vim autoread 依赖此项）
+set -g focus-events on
+
+# ---------- 2. 快捷键绑定 ----------
+# 重新加载配置
+bind r source-file ~/.tmux.conf \; display-message "配置已重新加载"
+
+# 分割面板 — 用 | 和 - 更直观
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+unbind '"'
+unbind %
+
+# 新窗口继承当前路径
+bind c new-window -c "#{pane_current_path}"
+
+# Vim 风格面板切换
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# Alt+方向键快速切换面板（无需前缀键）
+bind -n M-Left select-pane -L
+bind -n M-Right select-pane -R
+bind -n M-Up select-pane -U
+bind -n M-Down select-pane -D
+
+# Shift+方向键快速切换窗口（无需前缀键）
+bind -n S-Left previous-window
+bind -n S-Right next-window
+
+# 面板大小调整（前缀 + H/J/K/L）
+bind -r H resize-pane -L 5
+bind -r J resize-pane -D 5
+bind -r K resize-pane -U 5
+bind -r L resize-pane -R 5
+
+# 复制模式使用 Vi 按键
+setw -g mode-keys vi
+bind -T copy-mode-vi v send-keys -X begin-selection
+bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"
+bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
+
+# 快速切换同步输入（同时操作所有面板）
+bind S setw synchronize-panes \; display-message "同步模式：#{?pane_synchronized,开,关}"
+
+# ---------- 3. 外观定制 ----------
+# 状态栏位置
+set -g status-position top
+set -g status-interval 5
+
+# 配色方案 — 简洁深色主题
+set -g status-style "bg=#1e1e2e,fg=#cdd6f4"
+
+# 左侧：会话名称
+set -g status-left-length 30
+set -g status-left "#[bg=#89b4fa,fg=#1e1e2e,bold] #S #[default] "
+
+# 右侧：主机名 + 时间
+set -g status-right-length 50
+set -g status-right "#[fg=#a6adc8] %Y-%m-%d %H:%M #[bg=#a6e3a1,fg=#1e1e2e,bold] #H "
+
+# 窗口标签样式
+setw -g window-status-format " #I:#W "
+setw -g window-status-current-format "#[bg=#cba6f7,fg=#1e1e2e,bold] #I:#W "
+
+# 面板边框
+set -g pane-border-style "fg=#45475a"
+set -g pane-active-border-style "fg=#89b4fa"
+
+# 消息样式
+set -g message-style "bg=#89b4fa,fg=#1e1e2e,bold"
+
+# ---------- 4. 插件管理 (TPM) ----------
+# 安装 TPM: git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+set -g @plugin 'tmux-plugins/tpm'
+
+# tmux-sensible — 社区公认的合理默认值
+set -g @plugin 'tmux-plugins/tmux-sensible'
+
+# tmux-resurrect — 保存/恢复会话（重启后不丢失）
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-strategy-nvim 'session'    # 配合 nvim Session.vim
+
+# tmux-continuum — 自动保存与恢复
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '15'         # 每 15 分钟自动保存
+
+# tmux-yank — 跨平台剪贴板支持
+set -g @plugin 'tmux-plugins/tmux-yank'
+
+# tmux-fzf — 用 fzf 快速选择会话/窗口/面板
+set -g @plugin 'sainnhe/tmux-fzf'
+
+# 初始化 TPM（必须放在配置文件最后一行）
+run '~/.tmux/plugins/tpm/tpm'
+```
+
+## 快捷键速查
+
+### 面板操作
+
+| 快捷键 | 功能 |
+|--------|------|
+| `前缀 + \|` | 水平分割面板 |
+| `前缀 + -` | 垂直分割面板 |
+| `前缀 + h/j/k/l` | Vim 风格切换面板 |
+| `Alt + 方向键` | 无前缀切换面板 |
+| `前缀 + H/J/K/L` | 调整面板大小 |
+| `前缀 + S` | 切换同步输入模式 |
+
+### 窗口操作
+
+| 快捷键 | 功能 |
+|--------|------|
+| `前缀 + c` | 新建窗口（继承路径） |
+| `Shift + 左/右` | 无前缀切换窗口 |
+| `前缀 + ,` | 重命名当前窗口 |
+| `前缀 + &` | 关闭当前窗口 |
+
+### 会话与其他
+
+| 快捷键 | 功能 |
+|--------|------|
+| `前缀 + r` | 重新加载配置 |
+| `前缀 + d` | 分离会话 |
+| `前缀 + s` | 列出所有会话 |
+| `前缀 + [` | 进入复制模式 |
+
+## 推荐插件
+
+| 插件 | 说明 |
+|------|------|
+| **tpm** | tmux 插件管理器，`前缀 + I` 安装插件 |
+| **tmux-resurrect** | 保存/恢复完整会话布局，重启后一键恢复 |
+| **tmux-continuum** | 配合 resurrect 实现自动定时保存与启动恢复 |
+| **tmux-yank** | 统一剪贴板操作，支持 macOS/Linux/WSL |
+| **tmux-fzf** | 用 fzf 模糊搜索会话、窗口、面板、命令 |
+| **tmux-thumbs** | 快速复制屏幕上的 URL、路径、哈希等文本 |
+| **catppuccin/tmux** | 高质量主题插件，提供多种配色预设 |
+
+## 安装与启用
+
+```bash
+# 1. 将配置写入文件
+cp tmux.conf ~/.tmux.conf
+
+# 2. 安装 TPM 插件管理器
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+# 3. 启动 tmux 后安装插件
+tmux
+# 按 前缀键(Ctrl+A) + I (大写) 安装所有插件
+```
+
+## 维护建议
+
+- 使用 `前缀 + I` 安装新插件，`前缀 + U` 更新已有插件
+- 会话恢复文件存储在 `~/.tmux/resurrect/`，可定期清理旧文件
+- 如果状态栏显示异常，确认终端模拟器已启用真彩色（TrueColor）支持
+- 将 `tmux.conf` 纳入 dotfiles 仓库统一管理

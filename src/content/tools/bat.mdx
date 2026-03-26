@@ -1,0 +1,75 @@
+---
+title: "bat"
+description: "带语法高亮和 Git 集成的 cat 命令替代品"
+github: "https://github.com/sharkdp/bat"
+tags: ["查看", "语法高亮", "Rust"]
+featured: true
+order: 3
+category: "viewer"
+replaces: "cat"
+install_cmd: "brew install bat"
+written_in: "Rust"
+---
+
+## 简介
+
+bat 是 `cat` 命令的现代替代品，支持语法高亮、Git 差异标注、自动分页等功能。它让终端中查看文件内容变得更加美观和高效。
+
+## 安装
+
+```bash
+# macOS
+brew install bat
+
+# Ubuntu/Debian
+sudo apt install bat
+# 注意：Ubuntu 中命令名可能是 batcat
+
+# Cargo
+cargo install bat
+```
+
+## 核心功能
+
+- **语法高亮**: 支持 200+ 种编程语言和文件格式
+- **Git 集成**: 在左侧边栏显示文件修改状态（+/-/~）
+- **自动分页**: 内容超出一屏时自动使用分页器
+- **行号显示**: 默认显示行号，方便定位
+- **不可打印字符**: 可显示不可打印字符和空白字符
+
+## 常用命令
+
+```bash
+# 查看文件（带语法高亮）
+bat file.py
+
+# 仅显示内容，不带行号和边框
+bat -p file.py
+
+# 显示不可打印字符
+bat -A file.txt
+
+# 指定语言高亮
+bat --language=json data.txt
+
+# 查看 diff
+diff file1 file2 | bat -l diff
+
+# 作为 man 的高亮后端
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+```
+
+## 配置推荐
+
+```bash
+# 在 .zshrc 中设置别名和环境变量
+alias cat="bat"
+export BAT_THEME="Tokyo Night"
+export BAT_STYLE="numbers,changes,header"
+```
+
+## 推荐搭配
+
+- **fzf** — 作为 fzf 预览窗口的高亮后端
+- **ripgrep** — 搜索结果的高亮查看
+- **delta** — Git diff 的语法高亮查看器

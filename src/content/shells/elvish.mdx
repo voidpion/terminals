@@ -1,0 +1,124 @@
+---
+title: "Elvish"
+description: "编程语言与交互式 Shell 合一，通过值管道和命名空间提供结构化的 Shell 体验"
+website: "https://elv.sh/"
+github: "https://github.com/elves/elvish"
+tags: ["现代化", "值管道", "函数式", "跨平台"]
+featured: false
+order: 5
+language: "Go"
+posix_compatible: false
+default_on: []
+config_file: "rc.elv"
+---
+
+## 简介
+
+Elvish 是一款用 Go 编写的现代 Shell，它将完整的编程语言与交互式 Shell 体验融为一体。不同于大多数 Shell 仅在文本字符串上操作，Elvish 拥有真正的值管道（value pipeline），可以在管道中传递列表、映射等结构化数据，同时又保持了 Shell 的交互便利性。Elvish 的设计哲学是让 Shell 脚本不再是一种"勉强能用"的编程语言，而是一门真正优雅且功能完整的语言。
+
+Elvish 还提供了开箱即用的交互式体验，包括语法高亮、命令补全、以及独创的导航模式（Navigation Mode）和命令历史浏览模式。它的补全系统完全可编程，用户可以用 Elvish 自身的语言为任意命令定义精确的补全逻辑。对于既需要优秀交互体验又重视脚本编程能力的用户，Elvish 是一个独特的选择。
+
+## 安装
+
+```bash
+# macOS
+brew install elvish
+
+# Arch Linux
+sudo pacman -S elvish
+
+# Fedora
+sudo dnf install elvish
+
+# Nix
+nix-env -i elvish
+
+# 从源码编译（需要 Go 1.21+）
+go install src.elv.sh/cmd/elvish@latest
+
+# 设为默认 Shell
+echo $(which elvish) | sudo tee -a /etc/shells
+chsh -s $(which elvish)
+```
+
+## 核心特性
+
+- **值管道**: 管道中传递的不仅是文本字符串，还可以是列表、映射、函数等结构化值，例如 `put foo bar | each {|x| echo $x}` 直接操作值而非文本行
+- **完整的编程语言**: 支持一等函数、闭包、异常处理、命名空间和模块系统，不再需要 `sed`/`awk` 来弥补语言能力不足
+- **命名空间与模块**: 内置模块系统，可以用 `use` 导入模块，支持自定义模块和包管理，代码组织清晰
+- **交互式导航模式**: 按 Ctrl-N 进入文件系统导航模式，可在当前目录中浏览和选择文件，无需输入路径
+- **命令历史浏览**: 按 Ctrl-R 进入可交互的历史搜索界面，支持按目录过滤历史记录
+- **内置语法高亮**: 无需安装插件即可实时高亮命令、参数和字符串
+- **可编程补全**: 用 Elvish 语言本身编写补全函数，可以为复杂的 CLI 工具定制精确的参数补全
+- **持久化变量**: 支持 `store:` 命名空间中的持久化变量，跨会话保存数据
+
+## 配置推荐
+
+```elvish
+# ~/.config/elvish/rc.elv
+
+# ---------- 环境变量 ----------
+set E:EDITOR = nvim
+set paths = [~/.local/bin ~/go/bin $@paths]
+
+# ---------- 实用别名 ----------
+fn ll {|@args| e:ls -lah $@args }
+fn gs { git status }
+fn gp { git pull --rebase }
+fn gco {|@args| git checkout $@args }
+fn dc {|@args| docker compose $@args }
+
+# ---------- 交互式配置 ----------
+# 自定义提示符
+set edit:prompt = {
+    styled (tilde-abbr $pwd) blue
+    styled ' > ' bright-green
+}
+set edit:rprompt = {
+    styled (date +%H:%M) dim
+}
+
+# ---------- 补全配置 ----------
+# 为自定义命令添加补全
+set edit:completion:arg-completer[kubectl] = {|@args|
+    kubectl __complete $@args 2>/dev/null | each {|line|
+        var parts = (str:split "\t" $line)
+        edit:complex-candidate (str:trim-space $parts[0]) &display=$line
+    }
+}
+
+# ---------- 自定义函数 ----------
+# 创建目录并进入
+fn mkcd {|dir|
+    mkdir -p $dir
+    cd $dir
+}
+
+# 快速查找文件
+fn ff {|pattern|
+    find . -name '*'$pattern'*' -type f 2>/dev/null
+}
+
+# 使用模块
+use str
+use path
+use math
+
+# ---------- 键绑定 ----------
+set edit:insert:binding[Alt-l] = { edit:location:start &pinned=[] }
+set edit:insert:binding[Alt-h] = { edit:histlist:start }
+```
+
+## 与其他 Shell 的对比
+
+| 特性 | Elvish | Fish | Nushell | Bash |
+|------|--------|------|---------|------|
+| POSIX 兼容 | 否 | 否 | 否 | 是 |
+| 数据管道 | 值管道 | 文本 | 结构化表格 | 文本 |
+| 编程语言完整性 | 高（含模块系统） | 中等 | 高 | 基础 |
+| 交互式导航 | 内置 | 需插件 | 无 | 需插件 |
+| 语法高亮 | 内置 | 内置 | 内置 | 需插件 |
+| 补全系统 | 完全可编程 | 内置丰富 | 内置 | 基础 |
+| 实现语言 | Go | C | Rust | C |
+
+Elvish 的独特之处在于它真正将"编程语言"与"Shell"两个身份融为一体。如果你觉得 Bash 脚本写起来太痛苦，又不想完全切换到 Python 来完成自动化任务，Elvish 提供了一个优雅的中间地带——既有 Shell 的交互便利性，又有现代编程语言的表达能力。

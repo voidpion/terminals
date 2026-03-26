@@ -1,0 +1,119 @@
+---
+title: "Starship"
+description: "用 Rust 编写的极速、高度可定制的跨 Shell 提示符，支持几乎所有主流 Shell"
+website: "https://starship.rs/"
+github: "https://github.com/starship/starship"
+tags: ["跨Shell", "提示符", "Rust"]
+featured: true
+order: 3
+theme_type: "prompt"
+compatible_with: ["Zsh", "Bash", "Fish", "Nushell", "PowerShell"]
+---
+
+## 简介
+
+Starship 是一个用 Rust 编写的跨 Shell 提示符工具。与传统的 Shell 主题不同，Starship 不绑定任何特定的 Shell——无论你使用 Zsh、Bash、Fish、Nushell 还是 PowerShell，都可以获得完全一致的提示符体验。
+
+Starship 的设计哲学是 **智能且快速**：它只在相关上下文存在时才显示对应信息。例如，只有当你进入一个 Node.js 项目目录时，才会显示 Node 版本号；只有当命令执行超过设定阈值时，才会显示耗时。这种按需显示的策略让提示符始终保持简洁。
+
+## 安装
+
+```bash
+# macOS / Linux
+brew install starship
+
+# 通过安装脚本
+curl -sS https://starship.rs/install.sh | sh
+
+# Cargo 安装
+cargo install starship --locked
+```
+
+安装后需要在 Shell 配置文件中初始化：
+
+```bash
+# Zsh — ~/.zshrc
+eval "$(starship init zsh)"
+
+# Bash — ~/.bashrc
+eval "$(starship init bash)"
+
+# Fish — ~/.config/fish/config.fish
+starship init fish | source
+
+# PowerShell — $PROFILE
+Invoke-Expression (&starship init powershell)
+```
+
+## 核心特性
+
+- **跨 Shell 一致体验**: 一份配置文件，所有 Shell 共享相同的提示符外观和行为
+- **智能上下文检测**: 只在当前目录包含相关项目文件时才显示语言版本、包管理器等信息
+- **极速渲染**: Rust 编写，渲染延迟通常在 5ms 以内
+- **TOML 配置**: 使用直观的 TOML 格式配置，学习成本低
+- **丰富的模块**: 内置 Git、语言版本、云平台、容器、电池等模块
+- **预设主题**: 提供 Nerd Font Symbols、Plain Text、Bracketed Segments 等预设
+
+## 配置推荐
+
+配置文件位于 `~/.config/starship.toml`：
+
+```toml
+format = """
+$directory\
+$git_branch\
+$git_status\
+$python\
+$nodejs\
+$rust\
+$cmd_duration\
+$line_break\
+$character"""
+
+add_newline = true
+
+[cmd_duration]
+min_time = 2_000
+format = "⏱ [$duration]($style) "
+
+[directory]
+truncation_length = 5
+style = "bold cyan"
+
+[git_branch]
+symbol = " "
+format = "[$symbol$branch(:$remote_branch)]($style) "
+
+[git_status]
+format = '([\[$all_status$ahead_behind\]]($style) )'
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+
+[nodejs]
+format = "[$symbol($version)]($style) "
+
+[python]
+format = "[$symbol$pyenv_prefix($version)(\\($virtualenv\\))]($style) "
+```
+
+### 使用预设快速上手
+
+```bash
+# 查看所有可用预设
+starship preset --list
+
+# 应用 Nerd Font 符号预设
+starship preset nerd-font-symbols -o ~/.config/starship.toml
+
+# 应用纯文本预设（无需特殊字体）
+starship preset plain-text-symbols -o ~/.config/starship.toml
+```
+
+## 推荐搭配
+
+- **Catppuccin 配色** — 使用 Catppuccin 色彩定制 Starship 各模块的颜色
+- **Nerd Font** — 安装 JetBrains Mono 或 Fira Code 的 Nerd Font 变体以显示图标
+- **zoxide** — 智能目录跳转，与 Starship 的目录模块配合使用
+- **Git** — Starship 的 Git 模块可展示分支、状态、提交差异等丰富信息

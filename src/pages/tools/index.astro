@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import CardGrid from '../../components/CardGrid.astro';
+
+const tools = (await getCollection('tools')).sort((a, b) => a.data.order - b.data.order);
+const allTags = [...new Set(tools.flatMap((t) => t.data.tags))];
+---
+
+<PageLayout title="CLI 工具 — Terminal 百科" description="精选命令行工具推荐，涵盖搜索、查看、Git、系统管理等分类">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold dark:text-terminal-heading text-light-heading mb-2">CLI 工具</h1>
+    <p class="dark:text-terminal-fg/70 text-light-fg/70">精选现代命令行工具，让你的终端体验更上一层楼</p>
+  </div>
+
+  <!-- Tag Filter -->
+  {allTags.length > 0 && (
+    <div class="flex flex-wrap gap-2 mb-8" id="tag-filter">
+      <button
+        class="tag-btn active text-xs px-2.5 py-1 rounded-full font-mono cursor-pointer transition-colors
+          dark:bg-terminal-green/20 dark:text-terminal-green
+          bg-terminal-green/10 text-terminal-green"
+        data-tag="all"
+      >
+        全部
+      </button>
+      {allTags.map((tag) => (
+        <button
+          class="tag-btn text-xs px-2.5 py-1 rounded-full font-mono cursor-pointer transition-colors
+            dark:bg-terminal-border dark:text-terminal-fg/70 dark:hover:bg-terminal-blue/20
+            bg-light-border text-light-fg/70 hover:bg-terminal-blue/10"
+          data-tag={tag}
+        >
+          {tag}
+        </button>
+      ))}
+    </div>
+  )}
+
+  <CardGrid>
+    {tools.map((entry) => (
+      <ToolCard entry={entry} collection="tools" />
+    ))}
+  </CardGrid>
+</PageLayout>
+
+<script is:inline>
+  document.querySelectorAll('.tag-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tag-btn').forEach((b) => {
+        b.classList.remove('active', 'dark:bg-terminal-green/20', 'dark:text-terminal-green', 'bg-terminal-green/10', 'text-terminal-green');
+        b.classList.add('dark:bg-terminal-border', 'dark:text-terminal-fg/70', 'bg-light-border', 'text-light-fg/70');
+      });
+      btn.classList.add('active', 'dark:bg-terminal-green/20', 'dark:text-terminal-green', 'bg-terminal-green/10', 'text-terminal-green');
+      btn.classList.remove('dark:bg-terminal-border', 'dark:text-terminal-fg/70', 'bg-light-border', 'text-light-fg/70');
+
+      const tag = btn.dataset.tag;
+      document.querySelectorAll('[data-tags]').forEach((card) => {
+        if (tag === 'all' || card.dataset.tags.split(',').includes(tag)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

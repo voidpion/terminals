@@ -1,0 +1,71 @@
+---
+title: "Liquid Prompt"
+description: "自适应智能提示符，根据上下文动态调整显示内容的老牌项目"
+github: "https://github.com/liquidprompt/liquidprompt"
+tags: ["自适应", "提示符", "智能"]
+featured: false
+order: 28
+theme_type: "prompt"
+compatible_with: ["Bash", "Zsh"]
+---
+
+## 简介
+
+Liquid Prompt 是一个自适应的智能 Shell 提示符，支持 Bash 和 Zsh。它的核心设计理念是"只在需要时显示需要的信息"——当你不在 Git 仓库中时不会显示 Git 信息，当系统负载正常时不会显示负载指标，当电池电量充足时不会显示电池状态。这种智能自适应让提示符在简洁与信息丰富之间取得了完美平衡。
+
+作为一个历史悠久的开源项目，Liquid Prompt 经过了十余年的打磨和优化。它不依赖任何特殊字体或终端功能，在最基础的终端环境中也能正常工作。对于那些需要在各种服务器环境中工作、希望获得智能提示又不想折腾配置的用户来说，Liquid Prompt 是非常务实的选择。
+
+## 安装
+
+```bash
+# 克隆仓库
+git clone --branch stable https://github.com/liquidprompt/liquidprompt.git ~/liquidprompt
+
+# Bash — 在 ~/.bashrc 中添加
+source ~/liquidprompt/liquidprompt
+
+# Zsh — 在 ~/.zshrc 中添加
+source ~/liquidprompt/liquidprompt
+
+# Homebrew 安装
+brew install liquidprompt
+# 然后 source $(brew --prefix)/share/liquidprompt
+```
+
+## 核心特性
+
+- **自适应显示**: 仅在相关上下文存在时才显示对应信息
+- **零依赖**: 不需要特殊字体、不需要 Python、不需要额外工具
+- **系统监控**: 可显示 CPU 负载、温度、电池状态等系统信息
+- **VCS 全面支持**: 支持 Git、Mercurial、Subversion、Fossil 等版本控制系统
+- **远程感知**: SSH 连接时自动高亮显示，提醒你正在远程操作
+- **权限警告**: 以 root 身份登录时提示符颜色变化以示警告
+
+## 配置推荐
+
+创建配置文件 `~/.config/liquidpromptrc`：
+
+```bash
+# 启用/禁用各类信息显示
+LP_ENABLE_GIT=1
+LP_ENABLE_SVN=0
+LP_ENABLE_FOSSIL=0
+LP_ENABLE_TIME=1
+LP_ENABLE_BATT=1
+LP_ENABLE_LOAD=1
+LP_ENABLE_TEMP=0
+LP_ENABLE_RUNTIME=1
+
+# 运行时间显示阈值（秒）
+LP_RUNTIME_THRESHOLD=3
+
+# 路径显示长度限制
+LP_PATH_LENGTH=35
+LP_PATH_KEEP=2
+
+# 电池阈值
+LP_BATTERY_THRESHOLD=75
+
+# 颜色主题（可选 powerline 主题）
+# source ~/liquidprompt/themes/powerline/powerline.theme
+```

@@ -1,0 +1,145 @@
+---
+title: "Ion"
+description: "Rust 编写的现代 Shell，Redox OS 的默认 Shell，注重性能、安全和简洁的语法设计"
+github: "https://gitlab.redox-os.org/redox-os/ion"
+tags: ["Rust", "系统Shell", "安全", "RedoxOS"]
+featured: false
+order: 15
+language: "Rust"
+posix_compatible: false
+default_on: ["Redox OS"]
+config_file: "initrc"
+---
+
+## 简介
+
+Ion 是一款用 Rust 编写的现代 Shell，是 Redox OS（一个用 Rust 编写的微内核操作系统）的默认系统 Shell。Ion 的设计目标是提供比 Bash 更简洁、更安全、更高性能的 Shell 体验，同时保持足够的实用性作为系统级 Shell 使用。它不追求 POSIX 兼容性，而是从头设计了一套更一致、更不容易出错的语法。
+
+Ion 继承了 Rust 语言对安全性和性能的执着追求。它的变量系统支持类型注解，字符串处理内置了丰富的方法（类似 Python 的字符串方法），数组和映射是一等公民。Ion 还特别注重脚本编写的安全性——变量未定义时会报错而非静默展开为空字符串，这消除了 Bash 中许多常见的 bug 来源。虽然 Ion 主要在 Redox OS 和 Linux 上使用，但它也可以在其他类 Unix 系统上编译运行。
+
+## 安装
+
+```bash
+# 从源码编译（需要 Rust 工具链）
+git clone https://gitlab.redox-os.org/redox-os/ion.git
+cd ion
+cargo build --release
+sudo install -m 755 target/release/ion /usr/local/bin/
+
+# 使用 Cargo 直接安装
+cargo install ion-shell
+
+# Redox OS 上已预装
+# Ion 是 Redox OS 的默认 Shell，无需额外安装
+
+# 设为默认 Shell（Linux）
+echo $(which ion) | sudo tee -a /etc/shells
+chsh -s $(which ion)
+```
+
+## 核心特性
+
+- **类型化变量**: 支持 `str`、`int`、`float`、`bool`、`array`、`hmap` 等类型注解，变量赋值时可指定类型，提前捕获类型错误
+- **内置字符串方法**: 变量支持丰富的方法调用，如 `$variable.to_uppercase()`、`$variable.replace(old, new)`、`$variable.len()`，无需借助外部工具
+- **数组与映射**: 数组和哈希映射是语言内置的数据结构，不是 Bash 中的"附加功能"
+- **安全的变量展开**: 引用未定义变量会产生错误而非静默展开为空值，避免了大量 Bash 脚本中的常见 bug
+- **简洁的控制流**: `for`、`while`、`if`/`else`、`match` 语句语法简洁一致，没有 Bash 中 `fi`、`esac`、`done` 等不一致的结束标记
+- **函数定义**: 函数使用 `fn` 关键字定义，支持类型化参数和返回值
+- **管道与重定向**: 保持了传统 Shell 的管道 `|` 和重定向 `>`/`<`/`>>` 语法，对熟悉 Shell 的用户友好
+- **高性能**: Rust 实现带来的零成本抽象，启动速度和命令执行速度都非常快
+
+## 配置推荐
+
+```ion
+# ~/.config/ion/initrc
+
+# ---------- 环境变量 ----------
+export EDITOR = nvim
+export PATH = $HOME/.local/bin:$HOME/.cargo/bin:$PATH
+
+# ---------- 实用别名 ----------
+alias ll = ls -lah
+alias gs = git status
+alias gp = git pull --rebase
+alias dc = docker compose
+
+# ---------- 提示符配置 ----------
+fn PROMPT
+    # 使用内置字符串方法构建提示符
+    let cwd = $PWD
+    if starts_with $cwd $HOME
+        let cwd = "~" ++ $cwd.replace($HOME, "")
+    end
+    echo -n "\e[34m${cwd}\e[0m > "
+end
+
+# ---------- 自定义函数 ----------
+# 创建目录并进入
+fn mkcd dir:str
+    mkdir -p $dir
+    cd $dir
+end
+
+# 查找大文件
+fn bigfiles n:int
+    find . -type f -exec ls -la {} + | sort -k5 -rn | head -n $n
+end
+
+# ---------- 类型化变量示例 ----------
+# 字符串类型
+let name:str = "ion shell"
+echo $name.to_uppercase()    # ION SHELL
+
+# 数组操作
+let langs:[str] = ["rust" "go" "python" "lua"]
+echo $langs[0]               # rust
+echo $len(langs)             # 4
+
+# 哈希映射
+let config:hmap[str] = [ editor=nvim shell=ion theme=dark ]
+echo $config[editor]         # nvim
+
+# ---------- 控制流示例 ----------
+fn greet name:str
+    match $name
+        case "root"
+            echo "Welcome, administrator!"
+        case _
+            echo "Hello, ${name}!"
+    end
+end
+
+# 安全的错误处理
+fn safe_cat file:str
+    if test -f $file
+        cat $file
+    else
+        echo "Error: $file does not exist" >&2
+        return 1
+    end
+end
+
+# ---------- 内置字符串方法活用 ----------
+fn file_ext file:str
+    echo $file.split('.').last()
+end
+
+fn to_slug text:str
+    echo $text.to_lowercase().replace(' ', '-')
+end
+```
+
+## 与其他 Shell 的对比
+
+| 特性 | Ion | Bash | Fish | Nushell |
+|------|-----|------|------|---------|
+| POSIX 兼容 | 否 | 是 | 否 | 否 |
+| 类型系统 | 基础类型注解 | 无 | 无 | 完整 |
+| 字符串方法 | 内置丰富 | 需 sed/awk | 内置 string | 内置丰富 |
+| 安全变量展开 | 是 | 需 set -u | 是 | 是 |
+| 系统 Shell 定位 | 是（Redox OS） | 是（多数 Linux） | 否 | 否 |
+| 实现语言 | Rust | C | C | Rust |
+| 启动速度 | 极快 | 快 | 中等 | 中等 |
+| 生态成熟度 | 早期 | 最成熟 | 成熟 | 成长中 |
+
+Ion 的独特定位是作为一个系统级 Shell 存在，它不是要成为最功能丰富的交互式 Shell，而是要成为一个比 Bash 更安全、更一致的脚本执行环境。如果你对 Redox OS 感兴趣，或者想要一个语法简洁、类型安全的 Shell 来编写系统脚本，Ion 值得关注。需要注意的是，Ion 仍处于活跃开发阶段，部分特性可能尚未完全稳定。

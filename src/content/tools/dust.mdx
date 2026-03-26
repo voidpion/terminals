@@ -1,0 +1,83 @@
+---
+title: "dust"
+description: "更直观的磁盘使用分析工具"
+github: "https://github.com/bootandy/dust"
+tags: ["磁盘分析", "文件管理", "Rust"]
+featured: false
+order: 16
+category: "file_manager"
+replaces: "du"
+install_cmd: "brew install dust"
+written_in: "Rust"
+---
+
+## 简介
+
+dust（du + Rust = dust）是经典 `du` 命令的现代替代品，用 Rust 编写，能以直观的树形图和柱状图展示磁盘使用情况。相比 `du` 输出的纯文本数字列表，dust 让你一眼就能看出哪些目录和文件占用了最多空间。
+
+dust 自动按大小排序输出，使用终端宽度绘制比例柱状图，并以人类可读的单位显示文件大小。它默认显示目录树结构，清晰呈现空间占用的层级关系。无需复杂的参数组合和管道命令，一条 `dust` 命令即可完成过去需要 `du | sort | head` 才能实现的效果。
+
+## 安装
+
+```bash
+# macOS
+brew install dust
+
+# Ubuntu/Debian
+sudo apt install du-dust
+
+# Cargo
+cargo install du-dust
+```
+
+## 核心特性
+
+- **可视化输出**: 用柱状图直观展示各目录的空间占比
+- **树形结构**: 以目录树形式展示空间占用层级
+- **自动排序**: 默认按大小降序排列，最大的目录一目了然
+- **智能单位**: 自动使用合适的单位（KB/MB/GB/TB）
+- **快速扫描**: Rust 实现，大目录扫描速度优异
+- **权限友好**: 遇到无权限目录会优雅跳过而非报错
+
+## 使用示例
+
+```bash
+# 分析当前目录的磁盘使用
+dust
+
+# 分析指定目录
+dust /usr/local
+
+# 限制显示的目录层级深度
+dust -d 2
+
+# 限制显示条目数量
+dust -n 10
+
+# 显示表观大小（而非磁盘占用）
+dust -s
+
+# 反转排序（从小到大）
+dust -r
+
+# 忽略隐藏文件
+dust -i
+
+# 仅显示文件（不显示目录）
+dust -f
+
+# 仅显示目录
+dust -D
+
+# 分析多个路径
+dust /home /var /tmp
+
+# 以字节为单位显示
+dust -b
+```
+
+## 推荐搭配
+
+- **eza** — 查看目录内容和大小
+- **fd** — 查找大文件后用 dust 分析空间占用
+- **btop** — 监控整体磁盘使用情况

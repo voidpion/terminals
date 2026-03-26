@@ -1,0 +1,73 @@
+---
+title: "Zinit"
+description: "高性能 Zsh 插件管理器，独创 Turbo 模式实现极速 Shell 启动"
+github: "https://github.com/zdharma-continuum/zinit"
+tags: ["插件管理", "Zsh", "高性能", "Turbo"]
+featured: false
+order: 34
+theme_type: "framework"
+compatible_with: ["Zsh"]
+---
+
+## 简介
+
+Zinit（原名 Zplugin）是一个功能强大的 Zsh 插件管理器，以其独创的 Turbo 模式闻名。Turbo 模式可以将插件加载延迟到 Shell 启动之后异步完成，让你的 Zsh 在毫秒级时间内完成启动，同时在背景中逐步加载所有插件。这项技术让用户可以安装数十个插件而几乎不影响启动速度。
+
+Zinit 提供了极其丰富的插件管理能力：支持从 GitHub、Oh My Zsh、Prezto 等多种来源加载插件；可以精确控制插件的加载顺序、条件和方式；支持编译插件以进一步加速；还能管理二进制程序的下载和更新。虽然学习曲线相对陡峭，但一旦掌握，Zinit 能让你打造出既功能丰富又极速启动的 Zsh 环境。
+
+## 安装
+
+```bash
+# 自动安装
+bash -c "$(curl --fail --show-error --silent --location \
+  https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
+
+# 手动安装
+mkdir -p "$HOME/.local/share/zinit" && chmod g-rwX "$HOME/.local/share/zinit"
+git clone https://github.com/zdharma-continuum/zinit.git \
+  "$HOME/.local/share/zinit/zinit.git"
+# 在 ~/.zshrc 中添加
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+```
+
+## 核心特性
+
+- **Turbo 模式**: 延迟异步加载插件，Shell 启动时间降至毫秒级
+- **多来源支持**: 从 GitHub、Oh My Zsh、Prezto 等多种来源加载插件
+- **Ice 修饰符**: 精细控制每个插件的加载行为和配置
+- **二进制管理**: 下载和管理 GitHub Release 中的二进制程序
+- **插件编译**: 自动编译插件为字节码以加速加载
+- **报告系统**: 追踪每个插件对环境的修改，支持卸载回滚
+- **并行加载**: 支持多个插件同时并行加载
+
+## 使用方式
+
+```bash
+# 在 ~/.zshrc 中使用 Zinit 管理插件
+
+# 基础加载
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-syntax-highlighting
+
+# Turbo 模式延迟加载
+zinit ice wait lucid
+zinit light zsh-users/zsh-completions
+
+# 从 Oh My Zsh 加载插件
+zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit snippet OMZ::plugins/docker/docker.plugin.zsh
+
+# 从 Prezto 加载模块
+zinit snippet PZT::modules/helper/init.zsh
+
+# 使用 Ice 修饰符精细控制
+zinit ice wait"2" lucid atload"_zsh_autosuggest_start"
+zinit light zsh-users/zsh-autosuggestions
+
+# 管理二进制程序
+zinit ice from"gh-r" as"program"
+zinit light junegunn/fzf
+
+# 查看加载时间报告
+zinit times
+```

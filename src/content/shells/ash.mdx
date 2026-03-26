@@ -1,0 +1,168 @@
+---
+title: "Ash"
+description: "超轻量 POSIX Shell，嵌入式系统和容器环境的首选"
+tags: ["POSIX", "轻量", "嵌入式", "容器"]
+featured: false
+order: 14
+language: "C"
+posix_compatible: true
+default_on: ["Alpine Linux", "BusyBox"]
+config_file: ".profile"
+---
+
+## 简介
+
+Ash（Almquist Shell）由 Kenneth Almquist 于 1989 年编写，最初是为 BSD 系统提供一个轻量级的 Bourne Shell 替代品。Ash 的设计哲学是极致精简——代码量小、内存占用低、启动速度快，同时保持良好的 POSIX 兼容性。当今最广泛使用的 Ash 变体是 BusyBox 中集成的 ash（BusyBox ash），它是 Alpine Linux 的默认 Shell，也是绝大多数 Docker 容器基础镜像中的 Shell。
+
+在容器化浪潮中，Ash 扮演着至关重要的角色。Alpine Linux 因其极小的镜像体积（约 5MB）而成为最流行的容器基础镜像之一，其默认 Shell 正是 BusyBox ash。数百万个运行在生产环境中的 Docker 容器都在使用 Ash 执行启动脚本和健康检查命令。此外，Ash 也广泛应用于嵌入式 Linux 系统（路由器、IoT 设备、机顶盒等），OpenWrt 路由器固件中的默认 Shell 也是 Ash。
+
+Ash 有多个衍生版本：NetBSD 和 FreeBSD 中的 sh 实际上是 Ash 的后代，Debian 的 Dash 也是从 Ash 移植而来。可以说 Ash 家族是现代轻量级 Shell 的源头。虽然 Ash 不适合日常交互式使用，但在其目标场景中——嵌入式设备和容器——它几乎是不可替代的。
+
+## 安装
+
+```bash
+# Alpine Linux（已预装为 /bin/sh）
+apk add busybox
+
+# 通过 BusyBox 获取（大多数嵌入式/容器环境）
+# BusyBox ash 通常是 /bin/sh 的实现
+busybox ash
+
+# Ubuntu/Debian（安装 BusyBox 获取 ash）
+sudo apt install busybox
+busybox ash
+
+# macOS（通过 Homebrew 安装 BusyBox）
+brew install busybox
+
+# Docker 中使用（Alpine 基础镜像）
+docker run -it alpine:latest /bin/sh
+
+# 从源码编译 BusyBox（自定义 ash 功能）
+wget https://busybox.net/downloads/busybox-1.36.1.tar.bz2
+tar xjf busybox-1.36.1.tar.bz2 && cd busybox-1.36.1
+make menuconfig   # 在 Shells 中启用 ash 及所需特性
+make && sudo make install
+```
+
+## 核心特性
+
+- **超小体积**: BusyBox ash 二进制约 1MB（包含所有 BusyBox 工具），单独的 ash 仅约 60-100KB
+- **极快启动**: 启动速度比 Bash 快一个数量级，适合需要频繁创建 Shell 进程的场景
+- **POSIX 兼容**: 实现了 POSIX Shell 规范的核心功能，可运行标准的 POSIX Shell 脚本
+- **内存占用极低**: 运行时内存仅需几百 KB，非常适合 RAM 受限的嵌入式设备
+- **BusyBox 集成**: 作为 BusyBox 的一部分，与数百个精简版 Unix 工具无缝协作
+- **容器友好**: 是 Alpine Linux Docker 镜像的默认 Shell，几乎所有轻量容器都在使用
+- **基本命令行编辑**: BusyBox ash 可编译时启用行编辑功能，支持基本的方向键导航和历史回溯
+- **Here Document 支持**: 支持 `<< EOF` here document 语法，便于在脚本中嵌入多行文本
+- **Shell 算术**: 支持 `$(( ))` 算术扩展
+- **管道与重定向**: 完整支持管道、输入/输出重定向和文件描述符操作
+
+## 配置推荐
+
+```sh
+# ~/.profile（Ash 在登录时读取 ~/.profile）
+
+# ---------- 环境变量 ----------
+export EDITOR=vi
+export PAGER=less
+export PATH="$HOME/.local/bin:$PATH"
+export LANG=C.UTF-8
+
+# ---------- 提示符 ----------
+# BusyBox ash 支持基本的 PS1 转义
+export PS1='\u@\h:\w\$ '
+
+# ---------- 别名 ----------
+alias ll='ls -lah'
+alias la='ls -A'
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# ---------- 实用函数 ----------
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+# 简单的 PATH 查看
+showpath() {
+    echo "$PATH" | tr ':' '\n'
+}
+
+# ---------- Docker/容器环境常用配置 ----------
+# 判断是否在容器中运行
+in_container() {
+    [ -f /.dockerenv ] || [ -f /run/.containerenv ] || \
+        grep -q 'docker\|lxc\|containerd' /proc/1/cgroup 2>/dev/null
+}
+
+# 容器环境专用提示符
+if in_container; then
+    export PS1='[container] \w\$ '
+fi
+```
+
+## Dockerfile 中使用 Ash 的最佳实践
+
+```dockerfile
+# 典型的 Alpine 基础镜像 Dockerfile
+FROM alpine:3.19
+
+# 使用 /bin/sh（即 ash）执行 RUN 指令
+RUN apk add --no-cache \
+    curl \
+    jq \
+    ca-certificates
+
+# 多行脚本使用 set -e 确保出错即停
+RUN set -e; \
+    mkdir -p /app/data; \
+    adduser -D -h /app appuser; \
+    chown -R appuser:appuser /app
+
+# 入口脚本使用 #!/bin/sh（不要写 #!/bin/bash）
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+USER appuser
+ENTRYPOINT ["/entrypoint.sh"]
+```
+
+```sh
+#!/bin/sh
+# entrypoint.sh — 适用于 Alpine/Ash 的入口脚本
+set -eu
+
+log() { printf '[%s] %s\n' "$(date '+%H:%M:%S')" "$1"; }
+
+log "应用启动中..."
+log "环境: ${APP_ENV:-production}"
+
+# 等待依赖服务就绪
+wait_for_service() {
+    host="$1"; port="$2"; timeout="${3:-30}"
+    elapsed=0
+    while ! nc -z "$host" "$port" 2>/dev/null; do
+        elapsed=$((elapsed + 1))
+        [ "$elapsed" -ge "$timeout" ] && { log "超时: $host:$port"; exit 1; }
+        sleep 1
+    done
+    log "服务就绪: $host:$port"
+}
+
+wait_for_service "${DB_HOST:-db}" "${DB_PORT:-5432}"
+
+exec "$@"
+```
+
+## Ash 家族关系
+
+| 变体 | 来源 | 应用场景 |
+|------|------|---------|
+| 原始 Ash | Kenneth Almquist | 历史参考 |
+| BusyBox ash | BusyBox 项目 | Alpine Linux、嵌入式设备、容器 |
+| NetBSD sh | NetBSD | NetBSD 默认 /bin/sh |
+| FreeBSD sh | FreeBSD | FreeBSD 默认 /bin/sh |
+| Dash | Debian | Debian/Ubuntu 默认 /bin/sh |
+
+Ash 的价值在于极致的精简与高效。在容器和嵌入式的世界里，每一个 KB 的体积和每一毫秒的启动时间都至关重要，Ash 正是为此而生。编写容器入口脚本时，请始终使用 `#!/bin/sh` 而非 `#!/bin/bash`，以确保在 Alpine 等环境中正常运行。

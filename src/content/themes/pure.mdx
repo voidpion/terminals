@@ -1,0 +1,74 @@
+---
+title: "Pure"
+description: "Sindre Sorhus 打造的极简 Zsh 提示符，优雅、快速、无干扰"
+github: "https://github.com/sindresorhus/pure"
+tags: ["极简", "提示符", "Zsh"]
+featured: false
+order: 24
+theme_type: "prompt"
+compatible_with: ["Zsh"]
+---
+
+## 简介
+
+Pure 是由知名开源开发者 Sindre Sorhus 创建的极简 Zsh 提示符。它的设计理念是"少即是多"——只展示你真正需要的信息：当前目录、Git 分支和状态、以及命令执行耗时。没有花哨的图标，没有冗余的装饰，只有干净利落的文字输出。
+
+Pure 最令人印象深刻的特性是它的异步 Git 状态检测。在大型 Git 仓库中，获取状态信息可能需要数秒时间，而 Pure 会在后台异步完成这一操作，不会阻塞你的命令行输入。这种对性能的极致追求让 Pure 成为许多资深开发者的首选提示符。
+
+## 安装
+
+```bash
+# 使用 npm 安装
+npm install --global pure-prompt
+
+# 使用 Homebrew 安装
+brew install pure
+
+# 手动安装
+mkdir -p "$HOME/.zsh"
+git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
+```
+
+在 `~/.zshrc` 中添加初始化配置：
+
+```bash
+# npm 或 Homebrew 安装后
+autoload -U promptinit; promptinit
+prompt pure
+
+# 手动安装需要先添加路径
+fpath+=($HOME/.zsh/pure)
+autoload -U promptinit; promptinit
+prompt pure
+```
+
+## 核心特性
+
+- **异步 Git 信息**: 后台获取 Git 状态，不阻塞命令行输入
+- **命令耗时显示**: 超过阈值的命令自动显示执行时间
+- **Git 拉取检测**: 自动提示本地分支是否落后于远程
+- **极致简洁**: 仅显示目录路径、Git 分支和箭头提示符
+- **SSH 标识**: 远程登录时自动显示用户名和主机名
+- **Vim 模式支持**: 支持 Zsh 的 vi 模式状态指示
+
+## 配置推荐
+
+```bash
+# 在 ~/.zshrc 中自定义 Pure 的颜色和行为
+# 修改提示符颜色
+zstyle ':prompt:pure:path' color cyan
+zstyle ':prompt:pure:git:branch' color green
+zstyle ':prompt:pure:git:dirty' color red
+zstyle ':prompt:pure:prompt:success' color magenta
+
+# 设置命令耗时显示阈值（秒）
+PURE_CMD_MAX_EXEC_TIME=3
+
+# 禁用 Git 拉取检测（大型仓库可提升性能）
+PURE_GIT_PULL=0
+
+# 启用单行模式
+prompt pure
+prompt_newline='%666v'
+PROMPT=" $PROMPT"
+```

@@ -1,0 +1,97 @@
+---
+title: "GNOME Terminal"
+description: "GNOME 桌面环境的默认终端模拟器，简洁稳定，基于 VTE 终端库构建"
+screenshot: "/screenshots/gnome-terminal.png"
+website: "https://wiki.gnome.org/Apps/Terminal"
+tags: ["Linux", "GNOME", "免费"]
+featured: false
+order: 15
+platforms: ["Linux"]
+license: "GPL"
+gpu_accelerated: false
+multiplexer_builtin: false
+pricing: "free"
+---
+
+## 简介
+
+GNOME Terminal 是 GNOME 桌面环境的默认终端模拟器，基于 VTE（Virtual Terminal Emulator）库构建。作为 Linux 桌面生态中使用最广泛的终端模拟器之一，它随 Ubuntu、Fedora、Debian 等主流发行版默认安装，是数百万 Linux 用户每天使用的工具。
+
+GNOME Terminal 遵循 GNOME 的设计理念——简洁、直观、开箱即用。它不追求极致的自定义能力，而是提供一套经过精心设计的默认体验，让用户无需复杂配置即可高效工作。界面采用 GNOME 的 GTK 工具包和 Adwaita 设计语言，与整个 GNOME 桌面环境风格统一。
+
+尽管设计上偏向简约，GNOME Terminal 仍然具备终端模拟器的核心功能：多标签页、配置文件系统、透明背景、自定义快捷键以及对现代终端标准的完整支持。它基于的 VTE 库也被许多其他终端模拟器（如 Tilix、Terminator）所采用。
+
+## 安装
+
+### 在 GNOME 桌面上
+
+GNOME Terminal 通常随 GNOME 桌面环境预装。在 Ubuntu、Fedora 等默认使用 GNOME 的发行版上，打开"终端"应用即可。
+
+### 单独安装
+
+```bash
+# Ubuntu / Debian
+sudo apt install gnome-terminal
+
+# Arch Linux
+sudo pacman -S gnome-terminal
+
+# Fedora
+sudo dnf install gnome-terminal
+
+# openSUSE
+sudo zypper install gnome-terminal
+```
+
+### 验证安装
+
+```bash
+# 检查版本
+gnome-terminal --version
+
+# 从命令行启动新窗口
+gnome-terminal &
+```
+
+## 核心特性
+
+- **多标签页支持** - 在单个窗口中打开多个标签页，通过快捷键或鼠标快速切换
+- **配置文件系统** - 支持创建多个 Profile，每个配置文件可独立设置字体、颜色和行为
+- **透明背景** - 支持窗口背景半透明效果，可调节透明度百分比
+- **自定义配色** - 预置多种颜色方案（Tango、Solarized 等），支持自定义前景和背景色
+- **GNOME 集成** - 完美适配 GNOME 桌面主题和配色，支持暗色模式自动切换
+- **标题栏搜索** - 按 `Ctrl+Shift+F` 可在终端输出中搜索文本
+- **快捷键自定义** - 支持自定义常用操作的键盘快捷键
+- **超链接检测** - 自动识别终端中的 URL，`Ctrl+单击` 即可在浏览器中打开
+- **文本缩放** - 通过 `Ctrl++` 和 `Ctrl+-` 快速调整终端字体大小
+- **通知集成** - 与 GNOME 通知系统集成，长时间运行的命令完成时可弹出提示
+- **dconf 配置** - 所有设置存储在 dconf 数据库中，可通过命令行批量导入导出配置
+- **VTE 标准兼容** - 基于 VTE 库，完整支持 xterm 兼容的终端转义序列
+
+### 通过命令行配置
+
+GNOME Terminal 的配置存储在 dconf 中，可以通过 `gsettings` 或 `dconf` 命令进行管理：
+
+```bash
+# 获取默认配置文件的 ID
+PROFILE=$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d "'")
+
+# 设置字体
+dconf write /org/gnome/terminal/legacy/profiles:/:$PROFILE/font "'JetBrains Mono 14'"
+dconf write /org/gnome/terminal/legacy/profiles:/:$PROFILE/use-system-font false
+
+# 设置滚动缓冲区行数
+dconf write /org/gnome/terminal/legacy/profiles:/:$PROFILE/scrollback-lines 10000
+
+# 启用透明背景
+dconf write /org/gnome/terminal/legacy/profiles:/:$PROFILE/use-transparent-background true
+dconf write /org/gnome/terminal/legacy/profiles:/:$PROFILE/background-transparency-percent 10
+
+# 导出全部配置（便于备份）
+dconf dump /org/gnome/terminal/ > gnome-terminal-backup.dconf
+
+# 导入配置
+dconf load /org/gnome/terminal/ < gnome-terminal-backup.dconf
+```
+
+> **提示**：GNOME Terminal 不内置分屏功能，如果需要分屏操作，可以搭配 tmux 使用，或者考虑基于相同 VTE 库的 Tilix 终端。使用 `dconf dump` 导出配置非常适合在多台机器之间同步终端设置。

@@ -1,0 +1,68 @@
+---
+title: "Spaceship"
+description: "功能丰富的 Zsh 提示符，为开发者量身定制的强大信息展示工具"
+website: "https://spaceship-prompt.sh/"
+github: "https://github.com/spaceship-prompt/spaceship-prompt"
+tags: ["功能丰富", "提示符", "Zsh", "开发者"]
+featured: false
+order: 25
+theme_type: "prompt"
+compatible_with: ["Zsh"]
+---
+
+## 简介
+
+Spaceship 是一个功能极其丰富的 Zsh 提示符，为现代开发者量身打造。它能够智能地检测你的工作环境，并在提示符中展示 Git 状态、语言运行时版本、Docker 容器信息、AWS 配置文件等几十种上下文信息。每一个 Section 都经过精心设计，只在相关上下文存在时才会显示。
+
+Spaceship 采用模块化架构设计，内置了超过 40 个 Section，覆盖了从 Node.js、Python、Rust 到 Kubernetes、Terraform、Google Cloud 等广泛的技术栈。你可以根据自己的工作流自由选择需要的模块，隐藏不需要的信息，让提示符既信息丰富又不至于臃肿。
+
+## 安装
+
+```bash
+# 使用 Homebrew 安装
+brew install spaceship
+
+# 通过 oh-my-zsh
+git clone https://github.com/spaceship-prompt/spaceship-prompt.git \
+  "$ZSH_CUSTOM/themes/spaceship-prompt" --depth=1
+ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" \
+  "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
+# 然后在 ~/.zshrc 中设置 ZSH_THEME="spaceship"
+
+# 通过 npm
+npm install -g spaceship-prompt
+```
+
+## 核心特性
+
+- **40+ 内置 Section**: Git、Docker、Node、Python、Rust、K8s、AWS 等全面覆盖
+- **异步渲染**: 耗时检测在后台运行，不影响输入体验
+- **高度可定制**: 每个 Section 的图标、颜色、显示顺序均可配置
+- **自定义 Section**: 支持编写自己的 Section 扩展提示符功能
+- **Vi 模式支持**: 提示符随 Vi 模式状态实时变化
+- **执行时间追踪**: 自动记录并显示命令的执行耗时
+
+## 配置推荐
+
+在 `~/.spaceshiprc.zsh` 中配置：
+
+```bash
+# 自定义显示的 Section 及顺序
+SPACESHIP_PROMPT_ORDER=(
+  dir
+  git
+  node
+  python
+  rust
+  docker
+  venv
+  exec_time
+  line_sep
+  char
+)
+
+# 提示符样式
+SPACESHIP_PROMPT_ADD_NEWLINE=true
+SPACESHIP_CHAR_SYMBOL="❯"
+SPACESHIP_EXEC_TIME_ELAPSED=3
+```

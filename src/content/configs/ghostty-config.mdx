@@ -1,0 +1,231 @@
+---
+title: "config 配置指南"
+description: "Ghostty 终端配置方案，以极简的 key=value 格式实现优雅定制"
+tags: ["Ghostty", "终端配置", "极简"]
+featured: false
+order: 10
+config_type: "other"
+target_tool: "Ghostty"
+filename: "config"
+---
+
+## 简介
+
+Ghostty 是由 HashiCorp 联合创始人 Mitchell Hashimoto 开发的终端模拟器，追求原生体验与极致性能的平衡。它在 macOS 上使用原生 AppKit 和 Metal 渲染，在 Linux 上使用 GTK4，提供与操作系统深度集成的用户体验。
+
+配置文件位于 `~/.config/ghostty/config`，采用简洁的 `key = value` 格式，无需任何引号或括号。Ghostty 的设计哲学是「合理默认值 + 最少配置」——大部分用户只需调整少量选项即可获得极佳体验。本文提供一份覆盖常用需求的完整配置。
+
+## 完整配置
+
+```ini
+# ============================================================
+# ~/.config/ghostty/config — Ghostty 配置文件
+# 文档: https://ghostty.org/docs/config/reference
+# ============================================================
+
+# ---------- 1. 字体设置 ----------
+# 主字体族名（推荐使用 Nerd Font 以获得图标支持）
+font-family = JetBrainsMono Nerd Font
+
+# 字体大小（单位: 点）
+font-size = 14
+
+# 字体粗细微调: 负值更细，正值更粗
+# font-thicken = true
+
+# 字体特性（启用编程连字）
+font-feature = calt
+font-feature = liga
+
+# ---------- 2. 主题与配色 ----------
+# 使用内置主题（运行 ghostty +list-themes 查看所有可用主题）
+theme = tokyonight
+
+# 如需自定义配色，取消注释以下部分（会覆盖主题）:
+# background = 1a1b26
+# foreground = c0caf5
+# palette = 0=#15161e
+# palette = 1=#f7768e
+# palette = 2=#9ece6a
+# palette = 3=#e0af68
+# palette = 4=#7aa2f7
+# palette = 5=#bb9af7
+# palette = 6=#7dcfff
+# palette = 7=#a9b1d6
+# palette = 8=#414868
+# palette = 9=#f7768e
+# palette = 10=#9ece6a
+# palette = 11=#e0af68
+# palette = 12=#7aa2f7
+# palette = 13=#bb9af7
+# palette = 14=#7dcfff
+# palette = 15=#c0caf5
+
+# ---------- 3. 窗口设置 ----------
+# 窗口内边距（单位: 像素，上下左右统一或分别指定）
+window-padding-x = 12
+window-padding-y = 10
+
+# 窗口背景不透明度 (0.0 ~ 1.0)
+background-opacity = 0.95
+
+# macOS 毛玻璃背景模糊程度 (0 ~ 100)
+background-blur-radius = 20
+
+# 窗口装饰: true | false (macOS 上 false 去除标题栏)
+window-decoration = true
+
+# macOS 标题栏样式: native | transparent | tabs
+macos-titlebar-style = tabs
+
+# 窗口初始大小（列 x 行）
+window-width = 120
+window-height = 36
+
+# 启动时是否继承上次窗口位置
+window-save-state = default
+
+# 窗口关闭确认: always | never
+confirm-close-surface = never
+
+# ---------- 4. 光标设置 ----------
+# 光标样式: block | bar | underline
+cursor-style = block
+
+# 光标闪烁: true | false
+cursor-style-blink = true
+
+# 非聚焦窗口的光标样式: hollow | bar | underline | unchanged
+unfocused-split-fill = hollow
+
+# 光标颜色（留空则跟随主题）
+# cursor-color = c0caf5
+
+# ---------- 5. 滚动与缓冲区 ----------
+# 滚动缓冲区行数
+scrollback-limit = 10000
+
+# 鼠标滚轮滚动倍率
+mouse-scroll-multiplier = 3
+
+# ---------- 6. 剪贴板 ----------
+# 选中即复制（鼠标选中文本自动复制到剪贴板）
+copy-on-select = clipboard
+
+# 粘贴时是否对括号内容进行安全处理
+clipboard-paste-bracketed-safe = true
+
+# ---------- 7. Shell 集成 ----------
+# 启用 Shell 集成功能（自动检测命令提示符位置、标记命令输出等）
+shell-integration = detect
+
+# Shell 集成特性
+shell-integration-features = cursor,sudo,title
+
+# ---------- 8. 快捷键绑定 ----------
+# 格式: keybind = 修饰键+按键=动作
+
+# --- 标签操作 ---
+# Cmd+T 新建标签
+keybind = cmd+t=new_tab
+# Cmd+W 关闭当前标签/面板
+keybind = cmd+w=close_surface
+# Cmd+数字 切换标签
+keybind = cmd+1=goto_tab:1
+keybind = cmd+2=goto_tab:2
+keybind = cmd+3=goto_tab:3
+keybind = cmd+4=goto_tab:4
+keybind = cmd+5=goto_tab:5
+keybind = cmd+6=goto_tab:6
+keybind = cmd+7=goto_tab:7
+keybind = cmd+8=goto_tab:8
+keybind = cmd+9=last_tab
+
+# --- 面板分割 ---
+# Cmd+D 水平分割
+keybind = cmd+d=new_split:right
+# Cmd+Shift+D 垂直分割
+keybind = cmd+shift+d=new_split:down
+
+# --- 面板导航 ---
+# Cmd+Alt+方向键 在面板间切换
+keybind = cmd+alt+left=goto_split:left
+keybind = cmd+alt+right=goto_split:right
+keybind = cmd+alt+up=goto_split:top
+keybind = cmd+alt+down=goto_split:bottom
+
+# --- 面板大小调整 ---
+# Cmd+Ctrl+方向键 调整面板大小
+keybind = cmd+ctrl+left=resize_split:left,20
+keybind = cmd+ctrl+right=resize_split:right,20
+keybind = cmd+ctrl+up=resize_split:up,20
+keybind = cmd+ctrl+down=resize_split:down,20
+
+# --- 面板缩放 ---
+# Cmd+Enter 切换当前面板全屏（zoom）
+keybind = cmd+enter=toggle_split_zoom
+
+# --- 字体缩放 ---
+keybind = cmd+equal=increase_font_size:1
+keybind = cmd+minus=decrease_font_size:1
+keybind = cmd+0=reset_font_size
+
+# --- 搜索 ---
+# Cmd+F 终端内搜索
+keybind = cmd+f=open_search
+
+# --- 其他 ---
+# Cmd+Shift+, 打开配置文件
+keybind = cmd+shift+comma=open_config
+# Cmd+K 清屏
+keybind = cmd+k=clear_screen
+# Cmd+Shift+F 切换全屏
+keybind = cmd+shift+f=toggle_fullscreen
+
+# ---------- 9. 其他设置 ----------
+# 响铃行为: none | visual | audible
+bell = visual
+
+# 链接点击（Cmd+点击打开 URL）
+link-url = true
+
+# 自动更新检查: off | check | download
+auto-update = check
+
+# macOS: 允许 Option 键作为 Alt 使用
+macos-option-as-alt = true
+
+# 焦点跟随鼠标（适合多面板使用）
+focus-follows-mouse = false
+
+# 自定义 Shell（留空则使用系统默认）
+# command = /opt/homebrew/bin/zsh --login
+```
+
+## 配置说明
+
+### 字体与渲染
+
+Ghostty 使用平台原生的文本渲染引擎（macOS 上为 Core Text），因此字体渲染效果通常比其他终端更好。`font-feature` 选项控制 OpenType 字体特性，`calt` 和 `liga` 分别启用上下文替换和标准连字。
+
+### 主题系统
+
+Ghostty 内置了大量社区主题。运行 `ghostty +list-themes` 可列出所有可用主题名称。设置 `theme = tokyonight` 后，前景色、背景色和 16 色调色板都会自动应用，无需手动定义每一种颜色。
+
+### Shell 集成
+
+Shell 集成是 Ghostty 的特色功能之一。启用后，终端能够感知命令的开始和结束位置，从而支持：点击命令提示符快速跳转、按命令输出单位滚动、自动设置窗口标题等功能。
+
+### macOS 原生集成
+
+`macos-titlebar-style = tabs` 将标签栏整合进标题栏区域，节省垂直空间。`macos-option-as-alt = true` 让 Option 键作为 Alt 使用，这对于在终端中使用 Emacs 键位或某些 CLI 工具非常重要。
+
+## 常用技巧
+
+- **配置格式简单**：Ghostty 采用纯文本 `key = value` 格式，没有嵌套结构，极易阅读和编辑
+- **主题浏览**：运行 `ghostty +list-themes` 查看所有可用主题，或访问 Ghostty 官方文档的主题画廊
+- **快速重载**：修改配置文件后 Ghostty 会自动重载，也可通过 `Cmd+Shift+,` 快速打开配置文件进行编辑
+- **Shell 集成优势**：启用 Shell 集成后，可以按命令块（而非行）导航滚动历史，还能感知 sudo 提权状态
+- **URL 检测**：Ghostty 自动检测终端输出中的 URL，按住 Cmd 键点击即可在浏览器中打开
+- **性能优势**：Ghostty 使用 Metal（macOS）或 Vulkan（Linux）原生图形 API 渲染，帧率和延迟表现优秀
+- **配置验证**：运行 `ghostty +validate-config` 可检查配置文件是否存在语法错误

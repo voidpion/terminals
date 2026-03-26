@@ -1,0 +1,251 @@
+---
+title: ".bashrc 配置指南"
+description: "一份实用的 .bashrc 配置方案，包含提示符美化、历史优化、常用别名与实用函数"
+tags: ["Bash", "Shell配置", "效率"]
+featured: false
+order: 3
+config_type: "shell"
+target_tool: "Bash"
+filename: ".bashrc"
+---
+
+## 简介
+
+`.bashrc` 是 Bash Shell 每次启动交互式非登录 Shell 时自动加载的配置文件，位于 `~/.bashrc`。虽然 Zsh 和 Fish 日益流行，Bash 仍然是绝大多数 Linux 发行版的默认 Shell，也是远程服务器上最常遇到的环境。一份精心组织的 `.bashrc` 能让你在任何机器上都拥有一致、高效的操作体验。
+
+本配置涵盖提示符美化、历史记录优化、Shell 选项、常用别名、实用函数、PATH 管理、补全增强与快捷键绑定，适合作为通用起点进行个性化调整。
+
+## 完整配置
+
+```bash
+# ============================================================
+# ~/.bashrc — Bash 用户交互式 Shell 配置文件
+# ============================================================
+
+# ---------- 0. 非交互式 Shell 直接退出 ----------
+# 脚本执行等非交互场景不需要加载以下配置
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# ---------- 1. 环境变量 ----------
+export EDITOR="vim"
+export VISUAL="vim"
+export LANG="zh_CN.UTF-8"
+export LC_ALL="zh_CN.UTF-8"
+
+# PATH — 按优先级从高到低排列，避免重复追加
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="/usr/local/go/bin:$PATH"
+
+# 工具专属变量
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+export BAT_THEME="TwoDark"
+export LESS="-R -F -X"               # less 默认支持颜色、短内容不分页
+
+# ---------- 2. 提示符 (PS1) ----------
+# 颜色定义（使用 \[\] 包裹避免换行计算错误）
+C_RESET='\[\e[0m\]'
+C_RED='\[\e[0;31m\]'
+C_GREEN='\[\e[0;32m\]'
+C_YELLOW='\[\e[0;33m\]'
+C_BLUE='\[\e[0;34m\]'
+C_CYAN='\[\e[0;36m\]'
+
+# Git 分支显示函数
+__git_branch() {
+    local branch
+    branch=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+    [[ -n "$branch" ]] && echo " ($branch)"
+}
+
+# 提示符格式: [时间] 用户@主机:目录 (git分支)
+# 普通用户绿色，root 用户红色
+if [[ $EUID -eq 0 ]]; then
+    PS1="${C_RED}\u${C_RESET}@${C_YELLOW}\h${C_RESET}:${C_BLUE}\w${C_CYAN}\$(__git_branch)${C_RESET}\n# "
+else
+    PS1="${C_GREEN}\u${C_RESET}@${C_YELLOW}\h${C_RESET}:${C_BLUE}\w${C_CYAN}\$(__git_branch)${C_RESET}\n\$ "
+fi
+
+# ---------- 3. 历史记录配置 ----------
+HISTSIZE=50000                       # 内存中保留的历史条数
+HISTFILESIZE=50000                   # 历史文件最大条数
+HISTFILE=~/.bash_history
+HISTCONTROL=ignoreboth:erasedups     # 忽略空格开头 + 忽略连续重复 + 擦除旧重复
+HISTIGNORE="ls:ll:cd:pwd:exit:clear:history"  # 不记录高频简单命令
+HISTTIMEFORMAT="%F %T  "            # 记录时间戳
+
+# ---------- 4. Shell 选项 (shopt) ----------
+shopt -s histappend                  # 追加历史，而非覆盖
+shopt -s cmdhist                     # 多行命令保存为一条
+shopt -s cdspell                     # 自动修正 cd 拼写错误
+shopt -s dirspell                    # 自动修正目录名拼写
+shopt -s autocd                      # 输入目录名直接 cd（Bash 4+）
+shopt -s globstar                    # 支持 ** 递归匹配（Bash 4+）
+shopt -s checkwinsize                # 窗口大小变化后刷新 LINES/COLUMNS
+shopt -s nocaseglob                  # 文件名通配符大小写不敏感
+shopt -s expand_aliases              # 在非交互脚本中也展开别名
+
+# 每条命令执行后立即写入历史文件（多终端共享）
+PROMPT_COMMAND="history -a; history -c; history -r; ${PROMPT_COMMAND}"
+
+# ---------- 5. 常用别名 ----------
+# 文件与目录
+alias ls='ls --color=auto'
+alias ll='ls -lAhF --color=auto'
+alias la='ls -A --color=auto'
+alias l='ls -CF'
+alias tree='tree -C --dirsfirst'
+
+# 安全操作 — 覆盖/删除前确认
+alias rm='rm -i'
+alias mv='mv -i'
+alias cp='cp -i'
+
+# 导航快捷
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias -- -='cd -'
+
+# Git 快捷操作
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+alias gl='git log --oneline --graph --decorate -20'
+alias gd='git diff'
+alias gco='git checkout'
+
+# Docker 快捷操作
+alias dc='docker compose'
+alias dps='docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"'
+alias dimg='docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"'
+
+# 实用工具
+alias reload='source ~/.bashrc && echo ".bashrc reloaded"'
+alias myip='curl -s ifconfig.me && echo'
+alias ports='ss -tlnp'
+alias path='echo $PATH | tr ":" "\n"'
+alias now='date "+%Y-%m-%d %H:%M:%S"'
+alias grep='grep --color=auto'
+alias diff='diff --color=auto'
+
+# ---------- 6. 实用函数 ----------
+# mkcd — 创建目录并进入
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+# extract — 万能解压函数
+extract() {
+    if [[ ! -f "$1" ]]; then
+        echo "错误: '$1' 不是有效文件" >&2
+        return 1
+    fi
+    case "$1" in
+        *.tar.bz2)   tar xjf "$1"   ;;
+        *.tar.gz)    tar xzf "$1"   ;;
+        *.tar.xz)    tar xJf "$1"   ;;
+        *.bz2)       bunzip2 "$1"   ;;
+        *.rar)       unrar x "$1"   ;;
+        *.gz)        gunzip "$1"    ;;
+        *.tar)       tar xf "$1"    ;;
+        *.tbz2)      tar xjf "$1"   ;;
+        *.tgz)       tar xzf "$1"   ;;
+        *.zip)       unzip "$1"     ;;
+        *.Z)         uncompress "$1";;
+        *.7z)        7z x "$1"      ;;
+        *.xz)        xz -d "$1"     ;;
+        *.zst)       zstd -d "$1"   ;;
+        *)           echo "无法识别的压缩格式: '$1'" >&2; return 1 ;;
+    esac
+}
+
+# fcd — 使用 fzf 模糊搜索目录并 cd
+fcd() {
+    local dir
+    dir=$(find "${1:-.}" -type d 2>/dev/null | fzf --preview 'ls -la {}')
+    [[ -n "$dir" ]] && cd "$dir"
+}
+
+# backup — 快速备份文件（添加 .bak 后缀和时间戳）
+backup() {
+    cp "$1" "$1.bak.$(date +%Y%m%d_%H%M%S)"
+}
+
+# serve — 快速启动 HTTP 文件服务器
+serve() {
+    local port="${1:-8000}"
+    echo "在 http://localhost:$port 启动文件服务器..."
+    python3 -m http.server "$port"
+}
+
+# ---------- 7. 补全系统 ----------
+# 启用 bash-completion（系统级）
+if [[ -f /usr/share/bash-completion/bash_completion ]]; then
+    source /usr/share/bash-completion/bash_completion
+elif [[ -f /etc/bash_completion ]]; then
+    source /etc/bash_completion
+fi
+
+# macOS Homebrew 补全
+if [[ -f /opt/homebrew/etc/profile.d/bash_completion.sh ]]; then
+    source /opt/homebrew/etc/profile.d/bash_completion.sh
+fi
+
+# fzf 快捷键绑定
+if command -v fzf &>/dev/null; then
+    eval "$(fzf --bash)" 2>/dev/null
+fi
+
+# ---------- 8. 快捷键绑定 ----------
+# 使用 Readline 配置增强交互体验
+bind '"\e[A": history-search-backward'    # 上箭头：前缀搜索历史
+bind '"\e[B": history-search-forward'     # 下箭头：前缀搜索历史
+bind 'set show-all-if-ambiguous on'       # Tab 一次即显示所有补全
+bind 'set completion-ignore-case on'      # 补全忽略大小写
+bind 'set colored-stats on'               # 补全结果着色
+bind 'set mark-symlinked-directories on'  # 符号链接目录加 / 后缀
+
+# ---------- 9. 外部工具集成 ----------
+# Starship 提示符（如果安装则覆盖上面的 PS1）
+if command -v starship &>/dev/null; then
+    eval "$(starship init bash)"
+fi
+
+# zoxide 智能目录跳转
+if command -v zoxide &>/dev/null; then
+    eval "$(zoxide init bash)"
+fi
+```
+
+## 配置说明
+
+### 提示符 (PS1)
+
+提示符分为两行显示：第一行包含用户名、主机名、当前目录和 Git 分支信息，第二行是输入光标。这种布局在深层目录下依然保持足够的输入空间。如果安装了 Starship，配置末尾会自动覆盖此 PS1。
+
+### 历史记录
+
+`HISTCONTROL=ignoreboth:erasedups` 组合确保：以空格开头的命令不记录（适合输入临时密码），连续重复和历史重复均被去除。`PROMPT_COMMAND` 中的三步操作（写入、清空、重读）实现了多终端间的实时历史共享。
+
+### Shell 选项
+
+`autocd` 让你直接输入目录路径即可跳转，无需输入 `cd`。`globstar` 启用 `**` 递归通配符，例如 `ls **/*.py` 可列出所有子目录中的 Python 文件。`cdspell` 和 `dirspell` 自动修正小的拼写错误。
+
+### 函数
+
+`extract` 是万能解压函数，自动识别压缩格式并调用正确的解压工具。`mkcd` 将创建目录和进入目录合为一步。`fcd` 结合 fzf 实现模糊目录跳转。
+
+## 常用技巧
+
+- 使用 `Ctrl+R` 进行反向历史搜索，结合 fzf 后体验更佳
+- 在命令前加空格可以阻止该命令被记录到历史（需要 `ignorespace`）
+- `!!` 代表上一条命令，`sudo !!` 是常用模式
+- `$_` 代表上一条命令的最后一个参数，避免重复输入长路径
+- 将复杂的别名拆分到 `~/.bash_aliases`，在 `.bashrc` 中 `source` 引入
+- 使用 `type 命令名` 查看别名/函数的实际定义，排查冲突
+- 定期用 `time bash -i -c exit` 检测启动耗时，目标控制在 200ms 以内

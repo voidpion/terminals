@@ -1,0 +1,118 @@
+---
+title: "Dash"
+description: "极致轻量的 POSIX Shell，Debian/Ubuntu 默认 /bin/sh 实现"
+website: "http://gondor.apana.org.au/~herbert/dash/"
+tags: ["POSIX", "轻量", "脚本", "系统Shell"]
+featured: false
+order: 10
+language: "C"
+posix_compatible: true
+default_on: ["Debian", "Ubuntu"]
+config_file: ".profile"
+---
+
+## 简介
+
+Dash（Debian Almquist Shell）是一个极简的 POSIX 兼容 Shell，源自 NetBSD 的 Almquist Shell（ash）移植版本。2006 年起，Debian 和 Ubuntu 将 `/bin/sh` 从 Bash 切换为 Dash，因为 Dash 的启动速度和脚本执行速度远快于 Bash。Dash 的二进制体积仅约 120KB，内存占用极低，非常适合作为系统级脚本解释器。
+
+Dash 严格遵循 POSIX 标准，不支持 Bash 特有的扩展语法（如数组、`[[ ]]`、`{a..z}` 花括号扩展等）。这意味着能在 Dash 中正确运行的脚本，在几乎所有 POSIX 兼容 Shell 中都能运行。正因如此，Dash 非常适合用来验证脚本的可移植性。在 Debian/Ubuntu 系统中，所有以 `#!/bin/sh` 为 shebang 的系统脚本都由 Dash 执行，这显著提升了系统启动速度——据测试，使用 Dash 执行系统初始化脚本比使用 Bash 快约 4 倍。
+
+Dash 并不适合作为日常交互式 Shell 使用，因为它缺少命令行编辑、历史记录、Tab 补全等交互功能。它的定位是高效的非交互式脚本执行器，在这个领域表现极为出色。
+
+## 安装
+
+```bash
+# Ubuntu/Debian（通常已预装为 /bin/sh）
+sudo apt install dash
+
+# Fedora
+sudo dnf install dash
+
+# Arch Linux
+sudo pacman -S dash
+
+# macOS
+brew install dash
+
+# 验证 /bin/sh 指向
+ls -la /bin/sh
+# Debian/Ubuntu 上通常显示: /bin/sh -> dash
+
+# 将 /bin/sh 切换为 dash（Debian/Ubuntu）
+sudo dpkg-reconfigure dash
+```
+
+## 核心特性
+
+- **极速执行**: 启动速度约为 Bash 的 4 倍，脚本执行效率显著更高，是系统启动脚本的理想选择
+- **极小体积**: 二进制文件仅约 120KB，内存占用极低，适合资源受限的环境
+- **严格 POSIX 兼容**: 严格遵循 POSIX.1 Shell 标准，是检验脚本可移植性的最佳工具
+- **无 Bash 扩展**: 不支持数组、关联数组、`[[ ]]`、进程替换、花括号扩展等 Bash 特有语法
+- **内置命令精简**: 仅实现 POSIX 要求的内置命令，如 `cd`、`echo`、`test`、`read`、`export` 等
+- **可靠的错误检测**: 严格模式（`set -euo pipefail` 中的 `set -eu`）行为更可预测
+- **适合 CI/CD**: 在容器化环境和 CI 流水线中作为轻量脚本解释器使用
+
+## 配置推荐
+
+```sh
+# ~/.profile（Dash 读取 ~/.profile 而非 ~/.bashrc）
+
+# ---------- 环境变量 ----------
+export EDITOR=vim
+export PAGER=less
+export PATH="$HOME/.local/bin:$HOME/go/bin:$PATH"
+
+# ---------- 终端提示符 ----------
+# Dash 不支持 Bash 的 \u \h 等转义，使用变量替代
+PS1='$(whoami)@$(hostname -s):$(pwd)$ '
+
+# ---------- 实用别名 ----------
+alias ll='ls -lah'
+alias la='ls -A'
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# ---------- 实用函数 ----------
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+# 安全删除
+trash() {
+    mv "$@" ~/.local/share/Trash/files/ 2>/dev/null || \
+        echo "垃圾箱目录不存在，请先创建"
+}
+
+# ---------- POSIX 可移植脚本模板 ----------
+# 以下是适合 Dash 的脚本编写范式：
+#
+# #!/bin/sh
+# set -eu                    # 遇错退出 + 未定义变量报错
+# readonly SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+#
+# log() { printf '[%s] %s\n' "$(date '+%H:%M:%S')" "$1"; }
+#
+# main() {
+#     log "开始执行"
+#     # 业务逻辑
+#     log "执行完毕"
+# }
+#
+# main "$@"
+```
+
+## Dash vs Bash 语法差异
+
+| 特性 | Dash (POSIX sh) | Bash |
+|------|-----------------|------|
+| 测试语法 | `[ condition ]` | `[[ condition ]]` |
+| 字符串替换 | 不支持 `${var/old/new}` | 支持 |
+| 数组 | 不支持 | 支持索引和关联数组 |
+| 花括号扩展 | 不支持 `{1..10}` | 支持 |
+| 进程替换 | 不支持 `<(cmd)` | 支持 |
+| `echo -e` | 行为不一致，应用 `printf` | 支持 |
+| 函数定义 | `func() { ... }` | `func() { ... }` 或 `function func { ... }` |
+| 算术运算 | `$(( ))` 或 `expr` | `$(( ))`、`let`、`(( ))` |
+| 局部变量 | `local`（扩展，广泛支持） | `local`、`declare` |
+
+Dash 是系统管理员和脚本开发者的重要工具。当你需要编写真正可移植的 Shell 脚本时，建议先用 Dash 测试——如果脚本在 Dash 中能正确运行，它基本上可以在任何 POSIX 系统上运行。使用 `checkbashisms` 工具可以自动检测脚本中的 Bash 特有语法。

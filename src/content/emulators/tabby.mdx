@@ -1,0 +1,75 @@
+---
+title: "Tabby"
+description: "基于 Electron 的跨平台终端模拟器（原名 Terminus），内置 SSH/串口支持和高度可定制的图形界面"
+screenshot: "/screenshots/tabby.png"
+website: "https://tabby.sh/"
+github: "https://github.com/Eugeny/tabby"
+tags: ["跨平台", "免费", "SSH", "Electron"]
+featured: false
+order: 9
+platforms: ["macOS", "Windows", "Linux"]
+license: "MIT"
+gpu_accelerated: false
+multiplexer_builtin: true
+pricing: "free"
+---
+
+## 简介
+
+Tabby（原名 Terminus）是一款基于 Electron 构建的现代化跨平台终端模拟器，由 Eugene Pankov 开发。它的设计理念是为用户提供一个开箱即用、高度可定制的终端环境，尤其适合需要频繁进行 SSH 远程连接和串口通信的开发者与运维人员。
+
+与传统的轻量级终端模拟器不同，Tabby 更像是一个功能完备的终端管理平台。它内置了 SSH 客户端、SFTP 文件传输、串口终端等功能，并提供了直观的图形化配置界面，用户无需编辑任何配置文件即可完成所有设置。对于不习惯命令行配置方式的用户来说，Tabby 的 GUI 配置面板是一大亮点。
+
+Tabby 支持丰富的插件生态系统，用户可以通过内置的插件管理器安装社区开发的各类扩展，从而进一步增强终端的功能。它同时支持 Windows、macOS 和 Linux 三大平台，在各平台上的体验保持一致。
+
+## 安装
+
+### macOS
+
+```bash
+# 通过 Homebrew 安装（推荐）
+brew install --cask tabby
+```
+
+### Windows
+
+```powershell
+# 通过 Winget 安装
+winget install Eugeny.Tabby
+
+# 通过 Scoop 安装
+scoop install extras/tabby
+
+# 通过 Chocolatey 安装
+choco install tabby
+```
+
+### Linux
+
+```bash
+# Ubuntu / Debian - 从 GitHub Releases 下载 .deb 包
+sudo dpkg -i tabby-*-linux-x64.deb
+
+# Arch Linux（AUR）
+yay -S tabby-bin
+
+# 或使用 Snap
+sudo snap install tabby
+```
+
+也可以前往 [Tabby 官网](https://tabby.sh/) 或 [GitHub Releases](https://github.com/Eugeny/tabby/releases) 页面下载对应平台的安装包。
+
+## 核心特性
+
+- **图形化配置界面** - 所有设置均可通过直观的 GUI 面板完成，无需手动编辑配置文件
+- **内置 SSH 管理** - 完整的 SSH 客户端，支持密钥管理、跳板机、端口转发和连接保存
+- **SFTP 文件传输** - SSH 连接时可直接打开 SFTP 面板进行文件上传和下载
+- **串口终端** - 内置串口通信支持，可连接 Arduino、嵌入式设备等硬件
+- **多标签与分屏** - 支持标签页管理和灵活的窗口分屏布局
+- **插件生态系统** - 内置插件管理器，可安装社区插件扩展功能（如 Docker、Sync Config 等）
+- **配置同步** - 支持通过 Tabby Web 或 Gist 在多台设备间同步终端配置和连接信息
+- **命令面板** - 类似 VS Code 的命令面板，可通过快捷键快速搜索和执行命令
+- **丰富的主题** - 内置多款配色方案，支持自定义主题和背景图片
+- **多 Shell 支持** - 自动检测系统中安装的 Shell（Bash、Zsh、Fish、PowerShell、WSL 等）
+- **跨平台一致性** - 在 Windows、macOS 和 Linux 上提供统一的使用体验
+- **自动更新** - 内置自动更新机制，始终保持最新版本

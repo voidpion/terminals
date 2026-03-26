@@ -1,0 +1,84 @@
+---
+title: "btop"
+description: "颜值与功能兼备的资源监控器"
+github: "https://github.com/aristocratos/btop"
+tags: ["系统监控", "资源管理", "C++"]
+featured: false
+order: 14
+category: "system"
+replaces: "top"
+install_cmd: "brew install btop"
+written_in: "C++"
+---
+
+## 简介
+
+btop 是一款颜值极高的终端资源监控工具，是 bpytop 和 bashtop 的 C++ 重写版本。它以精美的 TUI 界面同时展示 CPU、内存、磁盘、网络和进程信息，堪称终端中的系统监控仪表盘。
+
+btop 不仅外观出众，功能也非常全面。它支持多种配色主题、可自定义的界面布局、鼠标交互操作，以及游戏风格的菜单系统。得益于 C++ 的高性能实现，btop 在展示丰富信息的同时保持了极低的资源占用。无论是日常监控还是问题排查，btop 都能提供愉悦的使用体验。
+
+## 安装
+
+```bash
+# macOS
+brew install btop
+
+# Ubuntu/Debian (22.04+)
+sudo apt install btop
+
+# Snap
+sudo snap install btop
+
+# 从源码编译
+git clone https://github.com/aristocratos/btop.git
+cd btop && make && sudo make install
+```
+
+## 核心特性
+
+- **精美界面**: 高颜值的 TUI 仪表盘，信息一览无余
+- **全方位监控**: 同时展示 CPU、内存、磁盘、网络和进程
+- **主题系统**: 内置多种配色主题，支持自定义
+- **鼠标支持**: 完整的鼠标交互，点击即可操作
+- **GPU 监控**: 支持 NVIDIA 和 AMD 显卡监控
+- **灵活布局**: 可自定义面板布局和显示内容
+
+## 使用示例
+
+```bash
+# 启动 btop
+btop
+
+# 使用指定主题
+btop --theme gruvbox_dark
+
+# 低颜色模式（兼容性更好）
+btop --low-color
+
+# 指定刷新频率（毫秒）
+btop --update 500
+
+# 显示版本信息
+btop --version
+```
+
+### 常用快捷键
+
+```text
+Esc / q     退出
+m           打开菜单
+1-4         切换显示面板
+t           切换进程树视图
+f           进程过滤
+/           进程搜索
+k           发送信号给选中进程
+空格        标记/取消标记进程
+Tab         在面板间切换焦点
++/-         展开/折叠进程树
+```
+
+## 推荐搭配
+
+- **htop** — 更轻量的进程查看器，适合快速检查
+- **procs** — 命令行进程查看工具，适合脚本使用
+- **fastfetch** — 搭配 btop 一起打造美观的终端环境

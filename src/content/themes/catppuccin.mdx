@@ -1,0 +1,103 @@
+---
+title: "Catppuccin"
+description: "社区驱动的柔和配色方案，提供四种风味，覆盖几乎所有终端和开发工具"
+website: "https://catppuccin.com/"
+github: "https://github.com/catppuccin/catppuccin"
+tags: ["配色", "柔和", "跨平台"]
+featured: true
+order: 2
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm"]
+---
+
+## 简介
+
+Catppuccin 是当下最流行的社区驱动配色方案之一。它以柔和、低对比度的色彩为核心设计理念，追求在长时间使用终端和编辑器时减少视觉疲劳。项目提供了四种风味（Flavor），从暖色到冷色依次为：
+
+- **Latte** — 唯一的亮色风味，适合日间使用
+- **Frappé** — 中等深度暖色调
+- **Macchiato** — 较深的暖色调
+- **Mocha** — 最深的暗色风味，最受社区欢迎
+
+Catppuccin 最令人印象深刻的是它的生态覆盖范围——官方和社区维护了超过 200 个移植（port），几乎涵盖你能想到的所有终端模拟器、编辑器、浏览器和应用程序。
+
+## 安装
+
+### iTerm2
+
+```bash
+git clone https://github.com/catppuccin/iterm.git ~/catppuccin-iterm
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+import = ["~/.config/alacritty/themes/catppuccin/catppuccin-mocha.toml"]
+```
+
+### Kitty
+
+```bash
+kitty +kitten themes --reload-in=all Catppuccin-Mocha
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua — WezTerm 内置全部四种风味，无需额外下载
+config.color_scheme = 'Catppuccin Mocha'
+```
+
+## 核心特性
+
+- **四种风味**: Latte / Frappé / Macchiato / Mocha，覆盖从亮色到深色的全部需求
+- **26 种精心调配的颜色**: 每种风味都包含统一且和谐的 26 色调色板
+- **低眼疲劳**: 柔和的色彩过渡和适中的对比度，适合长时间编码
+- **超广泛的生态**: 200+ 官方移植，从终端到编辑器、从浏览器到聊天应用全覆盖
+- **社区活跃**: GitHub 组织下有大量活跃维护者，问题响应迅速
+- **一致的设计语言**: 跨平台、跨应用保持视觉一致性
+
+## 配置推荐
+
+建议将终端、编辑器、工具链统一为同一 Catppuccin 风味，以获得最一致的视觉体验：
+
+```bash
+# bat（终端文件查看器）
+mkdir -p "$(bat --config-dir)/themes"
+git clone https://github.com/catppuccin/bat.git /tmp/catppuccin-bat
+cp /tmp/catppuccin-bat/themes/*.tmTheme "$(bat --config-dir)/themes/"
+bat cache --build
+```
+
+```bash
+# 在 .zshrc 或 .bashrc 中设置
+export BAT_THEME="Catppuccin Mocha"
+
+# fzf 配色
+export FZF_DEFAULT_OPTS=" \
+  --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+  --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+  --color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
+  --color=selected-bg:#45475a"
+```
+
+## 调色板速览（Mocha 风味）
+
+| 角色 | 颜色名 | 用途 |
+|------|--------|------|
+| 背景 | Base | `#1e1e2e` 主背景色 |
+| 文本 | Text | `#cdd6f4` 主前景色 |
+| 红色 | Red | `#f38ba8` 错误、删除 |
+| 绿色 | Green | `#a6e3a1` 成功、新增 |
+| 黄色 | Yellow | `#f9e2af` 警告、修改 |
+| 蓝色 | Blue | `#89b4fa` 信息、链接 |
+| 紫色 | Mauve | `#cba6f7` 关键字、标签 |
+
+## 推荐搭配
+
+- **Powerlevel10k / Starship** — 提示符主题使用 Catppuccin 色调自定义配色
+- **JetBrains Mono / Fira Code** — Nerd Font 变体搭配 Catppuccin 视觉效果极佳
+- **bat + fzf + delta** — 将命令行工具链统一为 Catppuccin 配色
+- **tmux** — Catppuccin 提供官方 tmux 主题插件

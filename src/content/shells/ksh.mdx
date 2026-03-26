@@ -1,0 +1,141 @@
+---
+title: "Ksh"
+description: "Bell Labs 经典 Shell，兼具强大脚本能力和交互特性的企业级 Shell"
+website: "http://www.kornshell.com/"
+github: "https://github.com/ksh93/ksh"
+tags: ["POSIX", "脚本", "经典Unix", "企业级"]
+featured: false
+order: 11
+language: "C"
+posix_compatible: true
+default_on: ["AIX", "Solaris"]
+config_file: ".kshrc"
+---
+
+## 简介
+
+KornShell（ksh）由 AT&T Bell Labs 的 David Korn 于 1983 年开发，是 Unix 历史上最重要的 Shell 之一。Ksh 在 Bourne Shell 的基础上融合了 C Shell 的交互式特性，同时引入了许多开创性的功能——如关联数组、浮点运算、命名管道、协进程等，其中不少特性后来被 Bash 和 Zsh 借鉴采纳。Ksh 是 POSIX Shell 标准的主要参考实现，对整个 Shell 生态的发展产生了深远影响。
+
+Ksh 有多个版本分支：ksh88（1988 年版本，长期作为商业 Unix 标配）、ksh93（1993 年版本，功能最丰富）以及社区维护的 ksh93u+ 和 ksh2020。AT&T 在 2000 年将 ksh93 开源，目前由社区在 GitHub 上积极维护。在企业级 Unix 环境中（如 IBM AIX、Oracle Solaris），Ksh 仍然是默认 Shell 和主要的脚本语言。许多大型金融机构、电信运营商和政府机构的核心系统脚本都使用 Ksh 编写。
+
+对于需要同时兼顾脚本能力和交互体验、且工作在传统 Unix 环境中的用户来说，Ksh 是一个成熟稳定的选择。它的语法比 Bash 更规范一致，内置的数学运算和字符串处理能力也更强。
+
+## 安装
+
+```bash
+# macOS
+brew install ksh93
+
+# Ubuntu/Debian
+sudo apt install ksh
+
+# Fedora
+sudo dnf install ksh
+
+# Arch Linux（AUR）
+yay -S ksh
+
+# openSUSE
+sudo zypper install ksh
+
+# 从源码编译（社区版 ksh93）
+git clone https://github.com/ksh93/ksh.git
+cd ksh
+bin/package make
+
+# 设为默认 Shell
+echo "$(which ksh)" | sudo tee -a /etc/shells
+chsh -s "$(which ksh)"
+```
+
+## 核心特性
+
+- **POSIX 标准参考实现**: Ksh 是 POSIX Shell 标准的主要基础，兼容性最为正统
+- **内置浮点运算**: 支持浮点数学运算（`$(( 3.14 * 2.0 ))`），无需调用 `bc` 或 `awk`
+- **关联数组**: 早在 Bash 4.0 之前就支持关联数组（`typeset -A`），数据处理更方便
+- **命名空间**: `namespace` 关键字（ksh93）可避免变量名冲突，适合大型脚本
+- **复合变量**: 支持类似结构体的复合变量（compound variable），可组织复杂数据
+- **协进程**: `|&` 语法创建协进程，实现与后台进程的双向通信
+- **命令行编辑**: 同时支持 Emacs 和 Vi 编辑模式，内置丰富的快捷键
+- **函数增强**: 支持 `function name { }` 语法定义的函数拥有独立的陷阱（trap）作用域
+- **类型系统**: `typeset` 命令支持整型、浮点、只读、大小写转换等变量属性
+- **内置正则**: 支持扩展模式匹配 `~(E)regex` 语法直接使用正则表达式
+
+## 配置推荐
+
+```ksh
+# ~/.kshrc
+
+# ---------- 环境变量 ----------
+export EDITOR=vim
+export VISUAL=vim
+export PAGER=less
+export PATH="$HOME/.local/bin:$HOME/go/bin:$PATH"
+
+# ---------- 编辑模式 ----------
+set -o vi           # 使用 Vi 编辑模式（或 set -o emacs）
+
+# ---------- 历史记录 ----------
+HISTFILE="$HOME/.ksh_history"
+HISTSIZE=10000
+
+# ---------- 提示符 ----------
+PS1='${USER}@$(hostname -s):${PWD##*/} $ '
+
+# ---------- 实用别名 ----------
+alias ll='ls -lah'
+alias la='ls -A'
+alias gs='git status'
+alias gp='git pull --rebase'
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# ---------- 实用函数 ----------
+# 创建目录并进入
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+# 快速计算器（利用 ksh 内置浮点运算）
+calc() {
+    print "$(( $* ))"
+}
+# 用法: calc 3.14 '*' 2   =>  6.28
+
+# 显示 PATH 中的每个目录
+showpath() {
+    print "${PATH}" | tr ':' '\n' | nl
+}
+
+# ---------- Ksh 特有功能示例 ----------
+# 关联数组
+typeset -A colors
+colors[red]="#FF0000"
+colors[green]="#00FF00"
+colors[blue]="#0000FF"
+
+# 复合变量
+typeset -C server
+server.name="web01"
+server.ip="192.168.1.10"
+server.port=8080
+
+# 命名引用（nameref）
+function greet {
+    nameref person=$1
+    print "Hello, ${person.name} from ${person.city}"
+}
+```
+
+## Ksh 版本对比
+
+| 特性 | ksh88 | ksh93 | mksh |
+|------|-------|-------|------|
+| 关联数组 | 否 | 是 | 部分 |
+| 浮点运算 | 否 | 是 | 否 |
+| 复合变量 | 否 | 是 | 否 |
+| 命名空间 | 否 | 是 | 否 |
+| 开源许可 | 商业 | EPL | BSD |
+| 维护状态 | 停止 | 社区活跃 | 社区活跃 |
+
+Ksh 是"程序员的 Shell"——它在脚本编程方面的能力至今仍优于许多现代 Shell。如果你需要在企业级 Unix 环境中工作，或者希望编写功能强大且高效的脚本，Ksh 是值得深入学习的经典 Shell。

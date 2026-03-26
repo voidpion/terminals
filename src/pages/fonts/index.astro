@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import CardGrid from '../../components/CardGrid.astro';
+import { collectionMeta } from '../../lib/collections';
+
+const entries = (await getCollection('fonts')).sort((a, b) => a.data.order - b.data.order);
+const meta = collectionMeta.fonts;
+---
+
+<PageLayout title={`${meta.label} — Terminal 百科`} description={meta.description}>
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold dark:text-terminal-heading text-light-heading mb-2">{meta.label}</h1>
+    <p class="dark:text-terminal-fg/70 text-light-fg/70">{meta.description}</p>
+  </div>
+  <CardGrid>
+    {entries.map((entry) => (
+      <ToolCard entry={entry} collection="fonts" />
+    ))}
+  </CardGrid>
+</PageLayout>

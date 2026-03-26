@@ -1,0 +1,79 @@
+---
+title: "Bash-it"
+description: "Bash 社区框架，为 Bash 用户提供类似 Oh My Zsh 的丰富插件和主题体验"
+github: "https://github.com/Bash-it/bash-it"
+tags: ["框架", "Bash", "插件", "社区"]
+featured: false
+order: 37
+theme_type: "framework"
+compatible_with: ["Bash"]
+---
+
+## 简介
+
+Bash-it 是 Bash Shell 社区中最全面的框架项目，定位类似于 Zsh 生态中的 Oh My Zsh。它为 Bash 用户提供了一整套开箱即用的配置框架，包括丰富的自动补全脚本、实用的 Shell 别名集合、多样的提示符主题以及功能插件。对于坚持使用 Bash 的用户来说，Bash-it 是提升日常效率的最佳框架。
+
+Bash-it 的一大优势是它的模块化设计。所有的别名、补全和插件都可以单独启用或禁用，用户可以精确控制框架的功能范围。框架内置了针对 Git、Docker、npm、Python 等工具的别名和补全定义，以及数十款精心设计的提示符主题。即使你需要在不支持 Zsh 或 Fish 的服务器环境中工作，Bash-it 也能让你的 Bash 体验大幅提升。
+
+## 安装
+
+```bash
+# 克隆仓库
+git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it
+
+# 运行安装脚本
+~/.bash_it/install.sh
+
+# 可选：保留已有的 .bashrc（追加模式）
+~/.bash_it/install.sh --append-to-config
+
+# 重新加载配置
+source ~/.bashrc
+```
+
+## 核心特性
+
+- **丰富的别名集**: Git、Docker、npm、apt 等工具的快捷别名
+- **自动补全**: 为数十种命令行工具提供 Tab 补全支持
+- **多样主题**: 数十款 Bash 提示符主题，包括 Powerline 风格
+- **模块化管理**: 每个别名集、补全和插件可独立启用/禁用
+- **搜索功能**: 内置搜索命令，快速查找可用的组件
+- **自定义扩展**: 支持在 `~/.bash_it/custom` 目录下添加自定义配置
+
+## 使用方式
+
+```bash
+# 启用/禁用别名集
+bash-it enable alias git
+bash-it enable alias docker
+bash-it disable alias heroku
+
+# 启用/禁用插件
+bash-it enable plugin git
+bash-it enable plugin ssh
+bash-it enable plugin extract
+bash-it enable plugin base
+
+# 启用/禁用补全
+bash-it enable completion git
+bash-it enable completion docker
+bash-it enable completion npm
+bash-it enable completion ssh
+
+# 更换主题
+# 在 ~/.bashrc 中修改
+export BASH_IT_THEME="powerline"
+# 可选主题：bobby, candy, pure, powerline, minimal 等
+
+# 搜索可用组件
+bash-it search git       # 搜索所有包含 git 的组件
+bash-it search --enable  # 列出所有已启用的组件
+
+# 查看帮助
+bash-it help aliases
+bash-it help plugins
+bash-it help completions
+
+# 更新 Bash-it
+bash-it update
+```

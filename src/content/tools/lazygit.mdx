@@ -1,0 +1,52 @@
+---
+title: "lazygit"
+description: "终端中的 Git 图形化界面，让 Git 操作变得简单直观"
+github: "https://github.com/jesseduffield/lazygit"
+tags: ["Git", "TUI", "Go"]
+featured: true
+order: 6
+category: "git"
+replaces: "git CLI"
+install_cmd: "brew install lazygit"
+written_in: "Go"
+---
+
+## 简介
+
+lazygit 是一个简单的终端 UI，用于 Git 命令操作。它提供了直观的界面来管理暂存、提交、分支、冲突解决等操作，大幅降低 Git 的使用门槛。
+
+## 安装
+
+```bash
+# macOS
+brew install lazygit
+
+# Ubuntu/Debian
+sudo add-apt-repository ppa:lazygit-team/release
+sudo apt update && sudo apt install lazygit
+
+# Go
+go install github.com/jesseduffield/lazygit@latest
+```
+
+## 核心功能
+
+- **文件暂存**: 按空格键逐个暂存/取消暂存文件，按 `a` 暂存全部
+- **交互式变基**: 可视化 rebase，支持 squash、fixup、reword
+- **分支管理**: 快速切换、合并、变基分支
+- **冲突解决**: 直观的三方合并界面
+- **Cherry-pick**: 跨分支选择提交
+- **Diff 查看**: 实时查看暂存和未暂存的差异
+- **自定义命令**: 支持绑定自定义 Git 命令
+
+## 快捷键速查
+
+| 按键 | 功能 |
+|------|------|
+| `空格` | 暂存/取消暂存 |
+| `c` | 提交 |
+| `p` | 推送 |
+| `P` | 拉取 |
+| `b` | 切换分支面板 |
+| `s` | Stash |
+| `?` | 帮助 |

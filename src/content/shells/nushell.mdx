@@ -1,0 +1,127 @@
+---
+title: "Nushell"
+description: "用结构化数据思维重新定义 Shell，将一切输出视为表格而非纯文本"
+website: "https://www.nushell.sh/"
+github: "https://github.com/nushell/nushell"
+tags: ["结构化数据", "现代化", "跨平台", "Rust"]
+featured: true
+order: 3
+language: "Rust"
+posix_compatible: false
+default_on: []
+config_file: "config.nu"
+---
+
+## 简介
+
+Nushell（简称 Nu）是一款用 Rust 编写的新一代 Shell，它从根本上重新思考了 Shell 的工作方式。传统 Shell 中一切数据都是纯文本字符串，而 Nushell 将命令的输出视为结构化数据（表格、记录、列表），可以像操作数据库一样进行筛选、排序、分组和转换。这种范式转变让数据处理变得极其直观，不再需要 `awk`、`sed`、`cut` 等文本处理管道。
+
+## 安装
+
+```bash
+# macOS
+brew install nushell
+
+# Windows（通过 winget）
+winget install nushell
+
+# Cargo（跨平台）
+cargo install nu
+
+# Arch Linux
+sudo pacman -S nushell
+
+# Nix
+nix-env -i nushell
+
+# 设为默认 Shell（Linux/macOS）
+echo $(which nu) | sudo tee -a /etc/shells
+chsh -s $(which nu)
+```
+
+## 核心特性
+
+- **结构化数据管道**: 命令输出不是文本而是表格，`ls` 返回包含文件名、大小、修改时间等列的表，可以直接用 `where`、`sort-by`、`select` 等操作
+- **内置数据格式支持**: 原生支持 JSON、YAML、TOML、CSV、SQLite 等格式的读取和转换，无需外部工具
+- **类型系统**: 拥有完整的类型系统（int、string、date、duration、filesize 等），运算更安全，错误提示更友好
+- **友好的错误信息**: 受 Rust 编译器启发，错误信息会精确指出问题位置并给出修改建议
+- **跨平台一致性**: 在 Windows、macOS 和 Linux 上行为一致，不依赖操作系统的原生命令
+- **不可变性与函数式风格**: 变量默认不可变，鼓励使用管道和函数式编程范式
+- **插件系统**: 支持用 Rust、Python 等语言编写插件来扩展功能
+
+## 配置推荐
+
+```nu
+# ~/.config/nushell/config.nu
+
+# ---------- 基本配置 ----------
+$env.config = {
+    show_banner: false              # 关闭启动横幅
+
+    table: {
+        mode: rounded               # 表格边框样式：rounded / compact / none
+        index_mode: auto             # 行号显示
+    }
+
+    completions: {
+        case_sensitive: false        # 补全不区分大小写
+        quick: true                  # 唯一匹配时自动补全
+        algorithm: fuzzy             # 模糊匹配算法
+    }
+
+    history: {
+        max_size: 50000
+        file_format: sqlite          # 使用 SQLite 存储历史（支持更强大的查询）
+    }
+
+    filesize: {
+        metric: false                # 使用 KiB/MiB 而非 KB/MB
+    }
+}
+
+# ---------- 环境变量 ----------
+$env.EDITOR = "nvim"
+$env.PATH = ($env.PATH | prepend [$"($env.HOME)/.local/bin"])
+
+# ---------- 实用别名 ----------
+alias ll = ls -l
+alias la = ls -a
+alias gs = git status
+alias gp = git pull --rebase
+
+# ---------- 自定义命令 ----------
+# 按大小列出当前目录前 10 大文件
+def top10 [] {
+    ls -la | where type == file | sort-by -r size | first 10 | select name size modified
+}
+
+# 快速查看 JSON 文件
+def peek [file: path] {
+    open $file | first 5
+}
+
+# 统计代码行数（按扩展名分组）
+def loc [dir: path = "."] {
+    glob $"($dir)/**/*"
+    | where ($it | path parse | get extension) in ["rs", "ts", "py", "go", "js"]
+    | each { |f| { ext: ($f | path parse | get extension), lines: (open $f | lines | length) } }
+    | group-by ext
+    | transpose ext files
+    | each { |row| { ext: $row.ext, total_lines: ($row.files | each { |f| $f.lines } | math sum) } }
+    | sort-by -r total_lines
+}
+```
+
+## 与其他 Shell 的对比
+
+| 特性 | Nushell | Bash | Zsh | Fish |
+|------|---------|------|-----|------|
+| POSIX 兼容 | 否 | 是 | 是 | 否 |
+| 数据模型 | 结构化表格 | 纯文本 | 纯文本 | 纯文本 |
+| 类型系统 | 完整 | 无 | 无 | 无 |
+| 内置数据格式解析 | JSON/YAML/CSV/TOML/SQLite | 无 | 无 | 无 |
+| 编写语言 | Rust | C | C | C |
+| 跨平台一致性 | 高 | 依赖系统 | 依赖系统 | 依赖系统 |
+| 传统脚本兼容 | 不兼容 | 标准 | 高度兼容 | 不兼容 |
+
+Nushell 的核心价值在于将 Shell 从"文本处理器"进化为"数据处理器"。如果你经常需要处理日志、API 响应、配置文件等结构化数据，Nushell 能大幅提升效率。但如果你需要运行大量现有的 Bash 脚本，则需要考虑兼容性问题。

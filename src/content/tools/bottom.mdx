@@ -1,0 +1,74 @@
+---
+title: "bottom"
+description: "Rust 编写的图形化系统监控工具"
+github: "https://github.com/ClementTsang/bottom"
+tags: ["系统监控", "Rust", "图形化"]
+featured: false
+order: 20
+category: "system"
+replaces: "top"
+install_cmd: "brew install bottom"
+written_in: "Rust"
+---
+
+## 简介
+
+bottom（命令名 `btm`）是一款使用 Rust 编写的跨平台系统资源监控工具，作为传统 `top` 和 `htop` 的现代替代品。它提供了丰富的图形化界面，能够以直观的图表形式展示 CPU、内存、网络和磁盘的使用情况。
+
+与传统监控工具相比，bottom 支持鼠标操作、进程搜索过滤、多种可视化布局模式，并且占用极低的系统资源。它在 Linux、macOS 和 Windows 上均可运行，是跨平台系统管理的得力助手。
+
+## 安装
+
+```bash
+# macOS
+brew install bottom
+
+# Ubuntu/Debian
+sudo apt install bottom
+
+# Cargo
+cargo install bottom --locked
+```
+
+## 核心特性
+
+- **图形化仪表盘**: CPU、内存、网络和磁盘使用率以折线图形式展示
+- **进程管理**: 支持进程搜索、过滤、排序和终止操作
+- **多种布局**: 内置默认、基础、电池等多种布局模式
+- **鼠标支持**: 支持鼠标点击切换面板、滚动列表
+- **跨平台**: 在 Linux、macOS、Windows 上表现一致
+- **低资源占用**: 自身内存和 CPU 消耗极低
+
+## 使用示例
+
+```bash
+# 启动 bottom
+btm
+
+# 使用基础布局模式
+btm --basic
+
+# 指定刷新频率（毫秒）
+btm -r 500
+
+# 启用电池监控模块
+btm --battery
+
+# 按 Celsius 或 Fahrenheit 显示温度
+btm -C
+btm -F
+
+# 使用自定义配置文件
+btm -C ~/.config/bottom/bottom.toml
+```
+
+常用快捷键：
+
+```text
+e/h/j/k     - 面板间切换
+/            - 搜索进程
+dd           - 终止选中进程
+Tab          - 切换进程分组视图
+Esc          - 返回/取消
+q            - 退出
+```

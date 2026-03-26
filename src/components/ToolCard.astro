@@ -1,0 +1,66 @@
+---
+import { getTagColor } from '../lib/tag-colors';
+
+interface Props {
+  entry: {
+    id: string;
+    data: {
+      title: string;
+      description: string;
+      logo?: string;
+      screenshot?: string;
+      tags: string[];
+      website?: string;
+      github?: string;
+    };
+  };
+  collection: string;
+}
+
+const { entry, collection } = Astro.props;
+const href = `/${collection}/${entry.id}`;
+const tags = entry.data.tags.slice(0, 3);
+---
+
+<a href={href} class="group block rounded-xl border transition-all no-underline overflow-hidden
+  dark:bg-terminal-surface/50 dark:border-terminal-border dark:hover:border-terminal-green/40
+  bg-light-surface border-light-border hover:border-terminal-green/40
+  hover:shadow-lg hover:shadow-terminal-green/5 hover:-translate-y-0.5"
+  data-tags={entry.data.tags.join(',')}>
+  {entry.data.screenshot && (
+    <div class="aspect-video overflow-hidden bg-black/20">
+      <img src={entry.data.screenshot} alt={`${entry.data.title} 截图`}
+        class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+    </div>
+  )}
+  <div class="p-5">
+    <div class="flex items-start gap-3">
+      {entry.data.logo && (
+        <img src={entry.data.logo} alt={entry.data.title} class="w-10 h-10 rounded-lg flex-shrink-0" />
+      )}
+      <div class="min-w-0 flex-1">
+        <h3 class="font-semibold text-base dark:text-terminal-heading text-light-heading group-hover:dark:text-terminal-green group-hover:text-terminal-green transition-colors truncate">
+          {entry.data.title}
+        </h3>
+        <p class="text-sm dark:text-terminal-fg/70 text-light-fg/70 mt-1 line-clamp-2">
+          {entry.data.description}
+        </p>
+      </div>
+    </div>
+    {tags.length > 0 && (
+      <div class="flex flex-wrap gap-1.5 mt-3">
+        {tags.map((tag) => {
+          const color = getTagColor(tag);
+          return (
+            <span
+              class="text-xs px-2 py-0.5 rounded-full font-mono"
+              style={`background:${color.bg};color:${color.text}`}
+            >
+              {tag}
+            </span>
+          );
+        })}
+      </div>
+    )}
+  </div>
+</a>

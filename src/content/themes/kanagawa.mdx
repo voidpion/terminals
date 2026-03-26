@@ -1,0 +1,76 @@
+---
+title: "Kanagawa"
+description: "灵感来自葛饰北斋浮世绘《神奈川冲浪里》的深蓝配色方案"
+website: "https://github.com/rebelot/kanagawa.nvim"
+github: "https://github.com/rebelot/kanagawa.nvim"
+tags: ["配色", "暗色", "日式", "浮世绘", "深蓝"]
+featured: false
+order: 12
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal"]
+---
+
+## 简介
+
+Kanagawa 是由开发者 rebelot 创建的 Neovim 配色方案，灵感直接来源于日本浮世绘大师葛饰北斋的传世名作《神奈川冲浪里》（かながわおきなみうら）。这幅画作中汹涌海浪的深邃蓝色、浪花飞溅的纯净白色以及远景富士山的淡雅色调，都被精心转化为编程环境中的色彩元素。Kanagawa 的背景采用了画作中大海般的深蓝色调，前景色则融合了浪花白、天际蓝和晨曦暖色，呈现出一种东方美学与现代编程工具的独特融合。
+
+Kanagawa 提供三种变体：**Wave**（默认暗色，灵感来自画作的海浪）、**Dragon**（更高对比度的暗色变体）和 **Lotus**（亮色变体，灵感来自画作中的远景）。该方案最初为 Neovim 设计，充分利用了 Neovim 的 Tree-sitter 语法解析能力来提供精细的语义高亮。随后社区将其移植到了终端模拟器和其他编辑器中。Kanagawa 在注重美学品味的开发者群体中备受推崇，被认为是将艺术与技术完美结合的典范之作。
+
+## 配色预览
+
+| 角色 | 颜色名 | 色值（Wave） |
+|------|--------|-------------|
+| 背景 | sumiInk3 | `#1f1f28` |
+| 前景 | fujiWhite | `#dcd7ba` |
+| 黑色 | sumiInk0 | `#16161d` |
+| 红色 | autumnRed | `#c34043` |
+| 绿色 | autumnGreen | `#76946a` |
+| 黄色 | boatYellow2 | `#c0a36e` |
+| 蓝色 | crystalBlue | `#7e9cd8` |
+| 紫色 | oniViolet | `#957fb8` |
+| 青色 | waveAqua1 | `#6a9589` |
+| 白色 | oldWhite | `#c8c093` |
+| 亮红 | peachRed | `#ff5d62` |
+| 亮绿 | springGreen | `#98bb6c` |
+| 亮黄 | carpYellow | `#e6c384` |
+| 亮蓝 | springBlue | `#7fb4ca` |
+| 亮紫 | springViolet | `#938aa9` |
+| 亮青 | waveAqua2 | `#7aa89f` |
+| 亮白 | fujiWhite | `#dcd7ba` |
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+# 从社区移植项目获取 Kanagawa iTerm2 配色
+curl -LO https://raw.githubusercontent.com/rebelot/kanagawa.nvim/master/extras/kanagawa.itermcolors
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+# 使用 Kanagawa extras 目录中提供的配置
+import = ["~/.config/alacritty/themes/kanagawa.toml"]
+```
+
+### Kitty
+
+```bash
+# Kanagawa 在 extras 目录中提供了 Kitty 配置文件
+# 将 kanagawa.conf 复制到 ~/.config/kitty/ 并在 kitty.conf 中引入
+include kanagawa.conf
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'Kanagawa (Gogh)'
+```
+
+## 适用场景
+
+Kanagawa 特别适合追求独特美学体验和文化内涵的开发者。如果你希望自己的编程环境不仅仅是功能性的工具，而是一件赏心悦目的艺术品，Kanagawa 将为你的终端注入东方古典美学的韵味。其深蓝色背景和暖色前景的搭配在夜间编码时提供了舒适的视觉体验，不会过度刺激眼睛。Kanagawa 也非常适合 Neovim 用户，因为它针对 Tree-sitter 的语义高亮做了专门优化，能够呈现最丰富的色彩层次。如果你同时欣赏日本传统艺术和现代编程文化，这款配色方案将是你的理想之选。

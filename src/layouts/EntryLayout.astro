@@ -1,0 +1,103 @@
+---
+import PageLayout from './PageLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import TagList from '../components/TagList.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+
+interface Props {
+  entry: {
+    id: string;
+    data: {
+      title: string;
+      description: string;
+      website?: string;
+      github?: string;
+      logo?: string;
+      tags: string[];
+      [key: string]: unknown;
+    };
+  };
+  headings: { depth: number; slug: string; text: string }[];
+  collection: string;
+  collectionLabel: string;
+}
+
+const { entry, headings, collection, collectionLabel } = Astro.props;
+const { data } = entry;
+---
+
+<PageLayout title={`${data.title} — Terminal 百科`} description={data.description}>
+  <Breadcrumb items={[
+    { label: collectionLabel, href: `/${collection}` },
+    { label: data.title },
+  ]} />
+
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-start gap-4">
+      {data.logo && (
+        <img src={data.logo} alt={data.title} class="w-16 h-16 rounded-xl flex-shrink-0" />
+      )}
+      <div>
+        <h1 class="text-3xl md:text-4xl font-bold dark:text-terminal-heading text-light-heading mb-2">
+          {data.title}
+        </h1>
+        <p class="text-lg dark:text-terminal-fg/80 text-light-fg/80">{data.description}</p>
+      </div>
+    </div>
+
+    <!-- Meta -->
+    <div class="flex flex-wrap items-center gap-3 mt-4">
+      {data.website && (
+        <a href={data.website} target="_blank" rel="noopener noreferrer"
+          class="inline-flex items-center gap-1 text-sm px-3 py-1 rounded-full border
+            dark:border-terminal-border dark:text-terminal-fg dark:hover:border-terminal-blue
+            border-light-border text-light-fg hover:border-terminal-blue transition-colors no-underline">
+          🌐 官网
+        </a>
+      )}
+      {data.github && (
+        <a href={data.github} target="_blank" rel="noopener noreferrer"
+          class="inline-flex items-center gap-1 text-sm px-3 py-1 rounded-full border
+            dark:border-terminal-border dark:text-terminal-fg dark:hover:border-terminal-blue
+            border-light-border text-light-fg hover:border-terminal-blue transition-colors no-underline">
+          GitHub
+        </a>
+      )}
+      {data.install_cmd && (
+        <code class="text-sm px-3 py-1 rounded-full"
+          style="background:rgba(158,206,106,0.15);color:#9ece6a">
+          {data.install_cmd}
+        </code>
+      )}
+    </div>
+
+    {data.tags.length > 0 && (
+      <div class="mt-4">
+        <TagList tags={data.tags} />
+      </div>
+    )}
+  </div>
+
+  <!-- Screenshot -->
+  {data.screenshot && (
+    <div class="mb-8 rounded-xl overflow-hidden border dark:border-terminal-border border-light-border">
+      <img src={data.screenshot} alt={`${data.title} 截图`}
+        class="w-full h-auto" loading="lazy" />
+    </div>
+  )}
+
+  <!-- Content -->
+  <div class="flex gap-8">
+    <article class="flex-1 min-w-0 prose dark:prose-invert prose-green max-w-none
+      prose-headings:font-semibold prose-headings:dark:text-terminal-heading
+      prose-a:dark:text-terminal-blue prose-a:no-underline prose-a:hover:underline
+      prose-code:dark:text-terminal-green prose-code:before:content-none prose-code:after:content-none
+      prose-pre:dark:bg-terminal-surface prose-pre:dark:border prose-pre:dark:border-terminal-border">
+      <slot />
+    </article>
+    <aside class="hidden lg:block w-56 flex-shrink-0">
+      <TableOfContents headings={headings} />
+    </aside>
+  </div>
+</PageLayout>

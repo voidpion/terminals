@@ -1,0 +1,66 @@
+---
+title: "Hydro"
+description: "超轻量级 Fish Shell 提示符，以极致性能和简洁设计著称"
+github: "https://github.com/jorgebucaran/hydro"
+tags: ["Fish", "极简", "提示符", "轻量"]
+featured: false
+order: 31
+theme_type: "prompt"
+compatible_with: ["Fish"]
+---
+
+## 简介
+
+Hydro 是一个为 Fish Shell 打造的超轻量级提示符。它的整个实现只有极少量代码，却提供了日常开发所需的核心功能：当前目录显示、Git 分支和状态、命令耗时以及上一条命令的退出状态。Hydro 的作者 Jorge Bucaran 也是 Fish 生态中著名插件管理器 Fisher 的创建者。
+
+Hydro 最突出的特点是它的异步 Git 状态获取机制。即使在拥有数十万次提交的超大型仓库中，Hydro 的提示符也能瞬间响应，Git 状态信息会在后台计算完成后自动更新到提示符上。如果你是 Fish Shell 用户，追求极致的轻量和速度，Hydro 是一个不会令你失望的选择。
+
+## 安装
+
+```bash
+# 使用 Fisher 安装（推荐）
+fisher install jorgebucaran/hydro
+
+# 使用 Oh My Fish 安装
+omf install hydro
+
+# 手动安装
+curl -fsSL https://raw.githubusercontent.com/jorgebucaran/hydro/main/conf.d/hydro.fish \
+  --output ~/.config/fish/conf.d/hydro.fish
+```
+
+## 核心特性
+
+- **异步 Git 信息**: 后台获取 Git 状态，提示符即时响应
+- **超轻量**: 代码极少，加载时间可忽略不计
+- **命令耗时**: 超过阈值的命令自动显示执行时间
+- **退出状态**: 上一条命令失败时以不同颜色提示
+- **零依赖**: 纯 Fish 脚本实现，无外部依赖
+- **多行支持**: 可选单行或双行布局模式
+
+## 配置推荐
+
+```fish
+# 在 Fish Shell 中设置变量
+# 自定义提示符号
+set -g hydro_symbol_prompt "❯"
+set -g hydro_symbol_git_dirty "●"
+set -g hydro_symbol_git_ahead "↑"
+set -g hydro_symbol_git_behind "↓"
+
+# 自定义颜色
+set -g hydro_color_prompt green
+set -g hydro_color_pwd blue
+set -g hydro_color_git magenta
+set -g hydro_color_error red
+set -g hydro_color_duration yellow
+
+# 命令耗时显示阈值（毫秒）
+set -g hydro_cmd_duration_threshold 2000
+
+# 启用多行模式
+set -g hydro_multiline true
+
+# 获取补全功能
+set -g hydro_fetch true
+```

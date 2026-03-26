@@ -1,0 +1,132 @@
+---
+title: "st (suckless terminal)"
+description: "suckless 社区开发的极简终端模拟器，通过修改源代码和补丁进行配置"
+screenshot: "/screenshots/st.png"
+website: "https://st.suckless.org/"
+tags: ["Linux", "极简", "免费", "源码配置"]
+featured: false
+order: 17
+platforms: ["Linux"]
+license: "MIT"
+gpu_accelerated: false
+multiplexer_builtin: false
+pricing: "free"
+---
+
+## 简介
+
+st（simple terminal）是由 suckless.org 社区开发的极简终端模拟器。它秉承 suckless 的核心理念：软件应当简洁、高效、透明——代码量应尽可能少，功能通过补丁（patch）按需添加，配置通过直接编辑源代码中的 `config.h` 头文件完成，然后重新编译安装。
+
+st 的源代码仅有约 4000 行 C 代码，这使得它的启动速度极快、内存占用极低、行为高度可预测。与 Alacritty、Kitty 等功能丰富的现代终端不同，st 的基础版本故意保持极度精简——不内置滚动回查、复制粘贴、甚至不支持配置文件。所有额外功能都需要通过社区维护的补丁来添加。
+
+这种设计看似不便，实则赋予了用户对终端的完全控制权。每位 st 用户的终端都是独一无二的——他们从源码开始，选择需要的补丁，定义自己的配色和快捷键，编译出一个完全符合个人需求的终端。对于追求极致简洁和深度定制的 Linux 用户来说，st 是一种信仰。
+
+## 安装
+
+### 从源码编译（推荐）
+
+```bash
+# 安装编译依赖
+# Ubuntu / Debian
+sudo apt install build-essential libx11-dev libxft-dev libxinerama-dev
+
+# Arch Linux
+sudo pacman -S base-devel libx11 libxft libxinerama
+
+# Fedora
+sudo dnf install gcc make libX11-devel libXft-devel libXinerama-devel
+
+# 克隆源码
+git clone https://git.suckless.org/st
+cd st
+
+# 编辑配置（修改 config.def.h 或创建 config.h）
+cp config.def.h config.h
+# 在 config.h 中修改字体、颜色、快捷键等
+vim config.h
+
+# 编译并安装
+sudo make clean install
+```
+
+### 通过包管理器安装
+
+```bash
+# Arch Linux（AUR，包含常用补丁的版本）
+yay -S st-luke-git
+
+# Void Linux
+sudo xbps-install st
+
+# Gentoo
+sudo emerge x11-terms/st
+```
+
+### 应用补丁
+
+```bash
+# 从 https://st.suckless.org/patches/ 下载补丁
+# 以滚动回查补丁为例
+wget https://st.suckless.org/patches/scrollback/st-scrollback-0.9.2.diff
+
+# 应用补丁
+patch -p1 < st-scrollback-0.9.2.diff
+
+# 重新编译安装
+sudo make clean install
+```
+
+## 核心特性
+
+- **极致精简** - 源代码仅约 4000 行 C 代码，启动速度极快，内存占用极低
+- **源码配置** - 通过编辑 `config.h` 文件配置所有选项，编译即生效，无运行时开销
+- **补丁系统** - 社区维护了数百个补丁，涵盖滚动、透明、连字、图片显示等功能
+- **Xlib 渲染** - 直接使用 Xlib 进行渲染，没有多余的抽象层，性能极高
+- **真彩色支持** - 支持 24-bit 真彩色终端输出
+- **Unicode 支持** - 完整的 Unicode 字符渲染支持
+- **字体回退** - 基于 fontconfig 的字体匹配，支持自动字体回退
+- **选择与复制** - 鼠标选择文本并通过中键粘贴（X11 选择缓冲区）
+- **自定义快捷键** - 在 config.h 中定义任意快捷键映射
+- **安全性** - 代码量少意味着攻击面小，安全审计成本低
+- **可审计性** - 用户可以完全阅读和理解每一行代码的行为
+- **哲学纯粹** - 遵循 Unix 哲学，只做一件事并做好它
+
+### 常用补丁推荐
+
+st 的基础功能非常有限，以下是常用补丁列表：
+
+| 补丁名称 | 功能说明 |
+|---------|---------|
+| scrollback | 添加滚动回查功能（几乎必装） |
+| alpha | 窗口背景透明支持 |
+| anysize | 允许窗口调整为任意大小 |
+| clipboard | 支持系统剪贴板复制粘贴 |
+| font2 | 备用字体支持（用于显示特殊字符） |
+| ligatures | 字体连字渲染支持 |
+| xresources | 从 Xresources 读取配置（无需重新编译即可改主题） |
+
+### config.h 配置示例
+
+```c
+/* 字体设置 */
+static char *font = "JetBrains Mono:pixelsize=16:antialias=true:autohint=true";
+
+/* 颜色方案（Nord 主题） */
+static const char *colorname[] = {
+    "#2e3440", "#bf616a", "#a3be8c", "#ebcb8b",
+    "#81a1c1", "#b48ead", "#88c0d0", "#e5e9f0",
+    "#4c566a", "#bf616a", "#a3be8c", "#ebcb8b",
+    "#81a1c1", "#b48ead", "#8fbcbb", "#eceff4",
+    [255] = 0,
+    "#d8dee9", /* 默认前景色 */
+    "#2e3440", /* 默认背景色 */
+};
+
+/* 终端内边距 */
+static int borderpx = 12;
+
+/* Shell */
+static char *shell = "/bin/zsh";
+```
+
+> **提示**：st 适合那些愿意花时间深度定制终端的用户。建议创建一个 Git 仓库来管理你的 st 源码和补丁，这样可以方便地在多台机器上同步配置，也便于在 st 版本更新时重新应用补丁。搭配 tmux 使用可以弥补 st 不内置标签页和分屏的不足。

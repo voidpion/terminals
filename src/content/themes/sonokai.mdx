@@ -1,0 +1,51 @@
+---
+title: "Sonokai"
+description: "Monokai Pro 的高品质变体，提供 6 种风格选择，色彩鲜明且现代"
+github: "https://github.com/sainnhe/sonokai"
+tags: ["配色", "Monokai", "变体", "鲜明"]
+featured: false
+order: 19
+theme_type: "color_scheme"
+compatible_with: ["iTerm2", "Alacritty", "Kitty", "WezTerm", "Windows Terminal"]
+---
+
+## 简介
+
+Sonokai 是由中国开发者 sainnhe 创建的一款配色方案，灵感来源于经典的 Monokai Pro 主题。与原版 Monokai 相比，Sonokai 在保持其标志性的鲜艳色彩风格的同时，对色调进行了现代化调整——降低了部分颜色的刺眼感，增强了色彩之间的和谐度。项目提供 6 种风格变体：**default**、**atlantis**、**andromeda**、**shusia**、**maia** 和 **espresso**，每种都带有独特的色彩倾向。
+
+Sonokai 的一大亮点是对 Tree-sitter 和 LSP 语义高亮的深度支持，这让它在 Neovim 等现代编辑器中能呈现出极为细腻的代码着色效果。作为一个活跃维护的项目，sainnhe 同时也是 gruvbox-material 和 everforest 等知名配色方案的作者，他在色彩设计方面的经验使 Sonokai 在技术和审美上都达到了很高的水准。项目仓库中提供了到各主流终端的配色导出文件，方便用户统一工作环境。
+
+## 安装与使用
+
+### iTerm2
+
+```bash
+# 从 sonokai 仓库的 extras 目录获取 .itermcolors 文件
+# 打开 iTerm2 → Settings → Profiles → Colors → Color Presets → Import
+```
+
+### Alacritty
+
+```toml
+# ~/.config/alacritty/alacritty.toml
+# 从仓库 extras 目录复制对应变体的 Alacritty 配色
+import = ["~/.config/alacritty/themes/sonokai-default.toml"]
+```
+
+### Kitty
+
+```conf
+# 从 sonokai 仓库获取 kitty 配色文件
+include themes/sonokai.conf
+```
+
+### WezTerm
+
+```lua
+-- ~/.wezterm.lua
+config.color_scheme = 'Sonokai (Gogh)'
+```
+
+## 适用场景
+
+Sonokai 非常适合 Monokai 的长期用户但又想获得更现代、更精致视觉体验的开发者。如果你觉得原版 Monokai 太过经典和大众化，Sonokai 的多种变体能让你在保持熟悉感的同时展现个人风格。它鲜明的色彩表现力特别适合需要快速扫读代码的场景，比如代码审查和调试工作。对于 Neovim 用户而言，Sonokai 对 Tree-sitter 的优秀支持能让你的代码着色达到最佳效果。

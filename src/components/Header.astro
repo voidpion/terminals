@@ -1,0 +1,84 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const navItems = [
+  { label: '终端', href: '/emulators' },
+  { label: 'Shell', href: '/shells' },
+  { label: '配置', href: '/configs' },
+  { label: '主题', href: '/themes' },
+  { label: '工具', href: '/tools' },
+  { label: '字体', href: '/fonts' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 backdrop-blur-md border-b
+  dark:bg-terminal-bg/80 dark:border-terminal-border
+  bg-light-bg/80 border-light-border">
+  <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2 font-mono font-bold text-lg
+      dark:text-terminal-green text-terminal-green no-underline hover:no-underline">
+      <span class="dark:text-terminal-fg text-light-fg">$</span> terminals
+      <span class="animate-pulse">_</span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex items-center gap-1">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'px-3 py-2 rounded-lg text-sm font-medium transition-colors no-underline',
+            currentPath.startsWith(item.href)
+              ? 'dark:bg-terminal-surface dark:text-terminal-green bg-light-border/50 text-terminal-green'
+              : 'dark:text-terminal-fg dark:hover:bg-terminal-surface dark:hover:text-terminal-heading text-light-fg hover:bg-light-border/30',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+      <ThemeToggle />
+    </nav>
+
+    <!-- Mobile Menu Button -->
+    <div class="flex items-center gap-2 md:hidden">
+      <ThemeToggle />
+      <button
+        id="mobile-menu-btn"
+        class="p-2 rounded-lg dark:text-terminal-fg dark:hover:bg-terminal-surface text-light-fg hover:bg-light-border/30 cursor-pointer"
+        aria-label="Toggle menu"
+      >
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Nav -->
+  <nav id="mobile-menu" class="hidden md:hidden border-t dark:border-terminal-border border-light-border">
+    <div class="px-4 py-2 space-y-1">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'block px-3 py-2 rounded-lg text-sm font-medium transition-colors no-underline',
+            currentPath.startsWith(item.href)
+              ? 'dark:bg-terminal-surface dark:text-terminal-green bg-light-border/50 text-terminal-green'
+              : 'dark:text-terminal-fg dark:hover:bg-terminal-surface text-light-fg hover:bg-light-border/30',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+    </div>
+  </nav>
+</header>
+
+<script is:inline>
+  document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+  });
+</script>

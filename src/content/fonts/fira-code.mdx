@@ -1,0 +1,121 @@
+---
+title: "Fira Code"
+description: "基于 Fira Mono 的编程连字字体先驱，拥有最成熟的连字生态和广泛的社区支持"
+website: "https://github.com/tonsky/FiraCode"
+github: "https://github.com/tonsky/FiraCode"
+tags: ["编程字体", "等宽", "连字", "开源"]
+featured: true
+order: 2
+ligatures: true
+nerd_font_variant: true
+styles: ["Regular", "Bold", "Light", "Medium", "SemiBold", "Retina"]
+preview_text: "Terminal > ls -la ~/.config"
+---
+
+## 简介
+
+Fira Code 是由 Nikita Prokopov（tonsky）基于 Mozilla 的 Fira Mono 字体开发的编程专用等宽字体。它是编程连字字体的先驱和标杆——早在 2015 年就率先将连字（ligature）概念引入编程字体领域，深刻影响了后来的 JetBrains Mono、Cascadia Code 等字体的设计。
+
+Fira Code 提供了 125+ 种编程连字，能够将 `!==`、`=>`、`<->`、`www` 等常见代码符号组合渲染为更优雅的连体形式。它的字形风格偏圆润柔和，在代码中呈现出一种独特的"手写感"，深受许多开发者喜爱。
+
+在 GitHub 上拥有超过 75k Star，是最受欢迎的开源编程字体之一。Nerd Font 社区提供了 **FiraCode Nerd Font** 变体，为终端美化提供完整的图标支持。
+
+## 安装
+
+```bash
+# macOS — Homebrew
+brew install --cask font-fira-code
+brew install --cask font-fira-code-nerd-font  # Nerd Font 变体
+
+# Ubuntu/Debian
+sudo apt install fonts-firacode
+
+# Arch Linux
+sudo pacman -S ttf-fira-code
+
+# 手动安装 Nerd Font 变体
+mkdir -p ~/.local/share/fonts && cd ~/.local/share/fonts
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip
+unzip FiraCode.zip -d FiraCode && fc-cache -fv
+
+# Windows — Scoop
+scoop bucket add nerd-fonts
+scoop install nerd-fonts/FiraCode-NF
+```
+
+## 核心特性
+
+- **连字先驱**: 编程连字字体的开创者，125+ 种精心设计的连字，覆盖绝大多数编程语言的运算符
+- **Retina 字重**: 独有的 Retina 字重——介于 Regular 和 Medium 之间，专为高分辨率屏幕优化
+- **圆润字形**: 字形风格偏柔和，笔画末端带有自然弧度，阅读体验温和舒适
+- **字符辨识度**: `0` 带点号、`O` 无修饰，`1` / `l` / `I` 各有明确区分
+- **ASCII 框线字符**: 完整的 Box Drawing 字符集，终端 TUI 应用显示完美
+- **Nerd Font 变体**: FiraCode Nerd Font 包含 Powerline、Devicons、Octicons 等图标集
+- **开源免费**: OFL-1.1 许可证，完全免费使用
+
+## 配置推荐
+
+### 终端模拟器
+
+```toml
+# Alacritty — ~/.config/alacritty/alacritty.toml
+[font]
+size = 14.0
+[font.normal]
+family = "FiraCode Nerd Font"
+style = "Regular"
+[font.bold]
+family = "FiraCode Nerd Font"
+style = "Bold"
+```
+
+```conf
+# Kitty — ~/.config/kitty/kitty.conf
+font_family      FiraCode Nerd Font
+bold_font        auto
+italic_font      auto
+font_size        14.0
+```
+
+```lua
+-- WezTerm — ~/.wezterm.lua
+config.font = wezterm.font('FiraCode Nerd Font')
+config.font_size = 14.0
+config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
+```
+
+### VS Code
+
+```json
+{
+  "editor.fontFamily": "'Fira Code', 'FiraCode Nerd Font', monospace",
+  "editor.fontSize": 14,
+  "editor.fontLigatures": true,
+  "terminal.integrated.fontFamily": "'FiraCode Nerd Font'"
+}
+```
+
+### 连字风格变体
+
+Fira Code 提供了多种连字风格集（stylistic sets），可以通过 OpenType 特性选择：
+
+```json
+// VS Code — 使用备选连字风格
+{ "editor.fontLigatures": "'ss01', 'ss02', 'ss05', 'ss08'" }
+```
+
+| 集合 | 效果 | 说明 |
+|------|------|------|
+| `ss01` | `r` | 带弯曲的 r |
+| `ss02` | `<=` `>=` | 带水平线的比较符 |
+| `ss05` | `@` | 简化的 @ 符号 |
+| `ss08` | `==` `===` | 连续等号风格 |
+| `cv01` | `a` | 单层 a |
+| `cv02` | `g` | 单层 g |
+
+## 推荐搭配
+
+- **Powerlevel10k / Starship** — Nerd Font 变体提供完整的提示符图标支持
+- **Catppuccin / Tokyo Night 配色** — 柔和配色方案与 Fira Code 的圆润字形风格相得益彰
+- **Neovim + Treesitter** — 语法高亮搭配连字，代码阅读体验极佳
+- **tmux** — Nerd Font 变体确保 tmux 状态栏图标正常显示

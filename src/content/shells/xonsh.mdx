@@ -1,0 +1,151 @@
+---
+title: "Xonsh"
+description: "Python 驱动的 Shell，无缝混合 Shell 命令与 Python 代码，数据科学家的利器"
+website: "https://xon.sh/"
+github: "https://github.com/xonsh/xonsh"
+tags: ["Python", "跨平台", "交互式", "数据科学"]
+featured: false
+order: 7
+language: "Python"
+posix_compatible: false
+default_on: []
+config_file: ".xonshrc"
+---
+
+## 简介
+
+Xonsh（发音类似 "conch"）是一款基于 Python 的跨平台 Shell，它最大的特点是可以在同一行中无缝混合 Shell 命令和 Python 表达式。在 Xonsh 中，你既可以像在 Bash 中一样执行 `ls -la | grep foo`，也可以直接写 Python 代码操作变量、调用库函数。这意味着你不再需要在 Shell 脚本和 Python 脚本之间切换——Xonsh 把两者融合在了一起。
+
+对于数据科学家、Python 开发者和 DevOps 工程师来说，Xonsh 提供了独特的价值：你可以直接在 Shell 提示符中导入 `pandas`、`numpy` 等库来处理数据，同时仍然可以用熟悉的 Shell 语法管理文件和进程。Xonsh 还支持丰富的可编程补全、语法高亮、以及通过 xontrib（Xonsh 扩展）生态系统添加功能。它运行在 Python 3.9+ 之上，跨平台支持 Windows、macOS 和 Linux。
+
+## 安装
+
+```bash
+# pip（推荐，跨平台）
+pip install 'xonsh[full]'
+
+# macOS
+brew install xonsh
+
+# conda（适合数据科学环境）
+conda install -c conda-forge xonsh
+
+# Arch Linux
+sudo pacman -S xonsh
+
+# Ubuntu/Debian
+sudo apt install xonsh
+
+# Nix
+nix-env -i xonsh
+
+# 设为默认 Shell
+echo $(which xonsh) | sudo tee -a /etc/shells
+chsh -s $(which xonsh)
+```
+
+## 核心特性
+
+- **Python 与 Shell 混合**: 在同一行或同一脚本中无缝切换 Python 和 Shell 语法，例如 `len($(ls))` 用 Python 获取 ls 输出的长度
+- **Python 超集**: 所有合法的 Python 代码都是合法的 Xonsh 代码，可以直接 `import` 任何 Python 库
+- **智能模式切换**: Xonsh 会自动判断一行代码是 Python 还是 Shell 命令，也可以用 `$()` 和 `@()` 显式切换
+- **环境变量即 Python 变量**: `$HOME` 既是环境变量也可以作为 Python 字符串操作，`$PATH` 是一个可以用 Python 列表方法操作的特殊对象
+- **可编程补全**: 补全系统基于 Python，可以为自定义工具编写任意复杂的补全逻辑
+- **Xontrib 扩展系统**: 通过 `xontrib load` 加载社区扩展，包括 prompt-toolkit 集成、fzf 支持、Docker 补全等
+- **跨平台支持**: 在 Windows（包括 CMD 和 PowerShell 命令）、macOS 和 Linux 上一致运行
+- **正则通配符**: 支持反引号正则通配符，如 `` `\.py$` `` 匹配当前目录所有 Python 文件
+
+## 配置推荐
+
+```python
+# ~/.xonshrc
+
+# ---------- 环境变量 ----------
+$EDITOR = 'nvim'
+$PATH.insert(0, f'{$HOME}/.local/bin')
+$PATH.insert(0, f'{$HOME}/go/bin')
+
+# ---------- Shell 行为配置 ----------
+$XONSH_HISTORY_BACKEND = 'sqlite'          # 使用 SQLite 后端存储历史
+$XONSH_HISTORY_SIZE = (50000, 'commands')   # 历史记录上限
+$AUTO_CD = True                              # 输入目录名自动 cd
+$XONSH_AUTOPAIR = True                      # 括号自动配对
+$COMPLETIONS_CONFIRM = True                  # 补全时需确认
+$XONSH_SHOW_TRACEBACK = True                # 显示完整的 Python 错误追踪
+
+# ---------- 提示符配置 ----------
+$PROMPT = '{env_name}{BOLD_BLUE}{cwd_base}{RESET} {gitstatus} {BOLD_GREEN}>{RESET} '
+$RIGHT_PROMPT = '{localtime}'
+
+# ---------- 实用别名 ----------
+aliases['ll'] = 'ls -lah'
+aliases['gs'] = 'git status'
+aliases['gp'] = 'git pull --rebase'
+aliases['dc'] = 'docker compose'
+
+# ---------- 加载扩展 ----------
+# xontrib load coreutils          # 跨平台核心工具
+# xontrib load fzf-widgets        # fzf 集成
+# xontrib load z                  # 智能目录跳转
+# xontrib load vox                # Python 虚拟环境管理
+
+# ---------- 利用 Python 的强大能力 ----------
+import json
+from pathlib import Path
+
+def _mkcd(args):
+    """创建目录并进入"""
+    d = args[0]
+    mkdir -p @(d)
+    cd @(d)
+
+aliases['mkcd'] = _mkcd
+
+# 快速查看 JSON 文件（Python 函数直接作为命令）
+def _jcat(args):
+    """格式化输出 JSON 文件"""
+    with open(args[0]) as f:
+        data = json.load(f)
+    print(json.dumps(data, indent=2, ensure_ascii=False))
+
+aliases['jcat'] = _jcat
+
+# 使用 Python 处理 Shell 输出
+def _big_files(args):
+    """列出当前目录最大的 N 个文件"""
+    n = int(args[0]) if args else 10
+    files = [(f, f.stat().st_size) for f in Path('.').rglob('*') if f.is_file()]
+    files.sort(key=lambda x: x[1], reverse=True)
+    for f, size in files[:n]:
+        mb = size / (1024 * 1024)
+        print(f'{mb:8.2f} MB  {f}')
+
+aliases['bigfiles'] = _big_files
+```
+
+## 实用技巧
+
+```python
+# 在 Shell 命令中使用 Python 变量
+name = "important_backup"
+mkdir -p /tmp/@(name)
+
+# 在 Python 中捕获命令输出
+output = $(git log --oneline -5)
+lines = output.strip().split('\n')
+
+# 使用 Python 列表推导式处理文件
+py_files = [f for f in g`**/*.py` if 'test' not in str(f)]
+
+# 用 pandas 分析 CSV（如果已安装）
+import pandas as pd
+df = pd.read_csv($(find . -name '*.csv' | head -1).strip())
+print(df.describe())
+
+# 动态构建命令
+flags = ['--verbose', '--recursive']
+target = '/var/log'
+ls @(flags) @(target)
+```
+
+Xonsh 的核心优势在于消除了 Shell 与 Python 之间的鸿沟。对于已经熟悉 Python 的用户，它几乎没有学习成本——你已经会的 Python 知识可以直接用在 Shell 环境中。特别适合需要频繁在数据处理和系统管理之间切换的工作场景。
