@@ -10,6 +10,7 @@ interface Props {
       description: string;
       logo?: string;
       screenshot?: string;
+      recommended?: boolean;
       tags: string[];
       website?: string;
       github?: string;
@@ -23,11 +24,17 @@ const href = url(`/${collection}/${entry.id}`);
 const tags = entry.data.tags.slice(0, 3);
 ---
 
-<a href={href} class="group block rounded-xl border transition-all no-underline overflow-hidden
+<a href={href} class="group block rounded-xl border transition-all no-underline overflow-hidden relative
   dark:bg-terminal-surface/50 dark:border-terminal-border dark:hover:border-terminal-green/40
   bg-light-surface border-light-border hover:border-terminal-green/40
   hover:shadow-lg hover:shadow-terminal-green/5 hover:-translate-y-0.5"
   data-tags={entry.data.tags.join(',')}>
+  {entry.data.recommended && (
+    <span class="absolute top-2 right-2 z-10 text-xs font-bold px-2 py-0.5 rounded-full"
+      style="background:rgba(158,206,106,0.9);color:#1a1b26">
+      推荐
+    </span>
+  )}
   {entry.data.screenshot && (
     <div class="aspect-video overflow-hidden bg-black/20">
       <img src={url(entry.data.screenshot)} alt={`${entry.data.title} 截图`}

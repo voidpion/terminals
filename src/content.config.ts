@@ -11,6 +11,7 @@ const baseFields = {
   screenshot: z.string().optional(),
   tags: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
+  recommended: z.boolean().default(false),
   order: z.number().default(99),
   pubDate: z.coerce.date().optional(),
   updatedDate: z.coerce.date().optional(),
