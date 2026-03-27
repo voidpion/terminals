@@ -29,12 +29,20 @@ sudo apt install ripgrep
 cargo install ripgrep
 ```
 
+## 为什么比 grep 快
+
+- **自动尊重 `.gitignore`**: 在 Git 仓库中搜索时，自动跳过 `node_modules/`、`dist/`、`build/` 等被忽略的目录，避免在海量无关文件中浪费时间。这是 ripgrep 比传统 `grep -r` 快得多的关键原因之一。如需搜索被忽略的文件，可加 `--no-ignore`
+- **智能过滤**: 默认跳过隐藏文件和二进制文件，搜索范围更精准
+- **内存映射 + 并行搜索**: 利用 Rust 的零开销抽象、内存映射 I/O 和多线程并行遍历目录与文件
+- **高效正则引擎**: 使用 Rust 的 `regex` 库，基于有限自动机实现，避免回溯带来的性能退化
+
 ## 核心功能
 
-- **极速搜索**: 利用 Rust 的性能优势和智能并行处理
+- **极速搜索**: 通常比 GNU grep、ack、ag (the_silver_searcher) 快 2-10 倍
 - **默认智能**: 自动忽略 `.gitignore` 中的文件、隐藏文件和二进制文件
 - **Unicode 支持**: 完整的 Unicode 正则表达式支持
 - **压缩文件搜索**: 支持搜索 gzip、bzip2、xz、lzma 等压缩文件
+- **多行搜索**: 通过 `-U` 支持跨行匹配模式
 
 ## 常用命令
 
