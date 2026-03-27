@@ -5,7 +5,7 @@ import ToolCard from '../../components/ToolCard.astro';
 import CardGrid from '../../components/CardGrid.astro';
 import { collectionMeta } from '../../lib/collections';
 
-const entries = (await getCollection('fonts')).sort((a, b) => a.data.order - b.data.order);
+const entries = (await getCollection('fonts')).sort((a, b) => (b.data.recommended ? 1 : 0) - (a.data.recommended ? 1 : 0) || a.data.order - b.data.order);
 const meta = collectionMeta.fonts;
 ---
 

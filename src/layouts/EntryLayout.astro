@@ -40,9 +40,17 @@ const { data } = entry;
         <img src={data.logo} alt={data.title} class="w-16 h-16 rounded-xl flex-shrink-0" />
       )}
       <div>
-        <h1 class="text-3xl md:text-4xl font-bold dark:text-terminal-heading text-light-heading mb-2">
-          {data.title}
-        </h1>
+        <div class="flex items-center gap-3">
+          <h1 class="text-3xl md:text-4xl font-bold dark:text-terminal-heading text-light-heading mb-2">
+            {data.title}
+          </h1>
+          {data.recommended && (
+            <span class="text-sm font-bold px-3 py-1 rounded-full shrink-0 -mt-1"
+              style="background:rgba(158,206,106,0.9);color:#1a1b26">
+              推荐
+            </span>
+          )}
+        </div>
         <p class="text-lg dark:text-terminal-fg/80 text-light-fg/80">{data.description}</p>
       </div>
     </div>

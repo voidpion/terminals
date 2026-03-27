@@ -4,7 +4,7 @@ import PageLayout from '../../layouts/PageLayout.astro';
 import ToolCard from '../../components/ToolCard.astro';
 import CardGrid from '../../components/CardGrid.astro';
 
-const tools = (await getCollection('tools')).sort((a, b) => a.data.order - b.data.order);
+const tools = (await getCollection('tools')).sort((a, b) => (b.data.recommended ? 1 : 0) - (a.data.recommended ? 1 : 0) || a.data.order - b.data.order);
 const allTags = [...new Set(tools.flatMap((t) => t.data.tags))];
 ---
 
