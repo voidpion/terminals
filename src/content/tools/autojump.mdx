@@ -1,0 +1,67 @@
+---
+title: "autojump"
+description: "通过记录访问历史实现目录快速跳转的命令行工具"
+website: "https://github.com/wting/autojump"
+github: "https://github.com/wting/wting/autojump"
+tags: ["导航", "效率工具", "Python"]
+featured: false
+order: 15
+category: "productivity"
+install_cmd: "brew install autojump"
+written_in: "Python"
+---
+
+## 简介
+
+autojump 是一个目录快速跳转工具，通过记录你 `cd` 访问过的目录来维护一个数据库，之后可以用 `j` 命令加部分目录名快速跳转，无需输入完整路径。
+
+## 安装
+
+```bash
+# macOS
+brew install autojump
+
+# Ubuntu/Debian
+sudo apt install autojump
+
+# 手动安装
+git clone https://github.com/wting/autojump.git
+cd autojump && python install.py
+```
+
+安装后需要在 `.bashrc` 或 `.zshrc` 中添加：
+
+```bash
+# Bash
+[[ -s /usr/share/autojump/autojump.sh ]] && source /usr/share/autojump/autojump.sh
+
+# Zsh
+[[ -s /usr/share/autojump/autojump.zsh ]] && source /usr/share/autojump/autojump.zsh
+```
+
+## 核心功能
+
+- **模糊匹配**: 只需输入目录名的部分字符即可跳转
+- **权重优先**: 根据访问频率排序，常用目录优先匹配
+- **多结果选择**: 匹配到多个目录时可交互选择
+
+## 常用命令
+
+```bash
+# 跳转到包含 "pattern" 的目录
+j pattern
+
+# 跳转到子目录
+jc pattern
+
+# 打开目录（而非跳转）
+jo pattern
+
+# 列出数据库中的目录及权重
+j -s
+```
+
+## 注意
+
+- autojump 是经典工具，维护不太活跃
+- 推荐尝试更现代的替代品 **zoxide**（Rust 实现，更快）
