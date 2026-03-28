@@ -6,12 +6,19 @@ import CategorySection from '../components/CategorySection.astro';
 import { url } from '../lib/utils';
 import { getCollection } from 'astro:content';
 
-const emulators = (await getCollection('emulators')).filter(e => e.data.featured).sort((a, b) => a.data.order - b.data.order).slice(0, 6);
-const shells = (await getCollection('shells')).filter(e => e.data.featured).sort((a, b) => a.data.order - b.data.order).slice(0, 6);
-const tools = (await getCollection('tools')).filter(e => e.data.featured).sort((a, b) => a.data.order - b.data.order).slice(0, 6);
-const themes = (await getCollection('themes')).filter(e => e.data.featured).sort((a, b) => a.data.order - b.data.order).slice(0, 6);
-const configs = (await getCollection('configs')).filter(e => e.data.featured).sort((a, b) => a.data.order - b.data.order).slice(0, 6);
-const fonts = (await getCollection('fonts')).filter(e => e.data.featured).sort((a, b) => a.data.order - b.data.order).slice(0, 6);
+const pickTop = (items: any[], n = 6) => {
+  const sorted = items.sort((a, b) => (b.data.recommended ? 1 : 0) - (a.data.recommended ? 1 : 0) || a.data.order - b.data.order);
+  const recommended = sorted.filter(e => e.data.recommended);
+  const featured = sorted.filter(e => !e.data.recommended && e.data.featured);
+  return [...recommended, ...featured].slice(0, n);
+};
+
+const emulators = pickTop(await getCollection('emulators'));
+const shells = pickTop(await getCollection('shells'));
+const tools = pickTop(await getCollection('tools'));
+const themes = pickTop(await getCollection('themes'));
+const configs = pickTop(await getCollection('configs'));
+const fonts = pickTop(await getCollection('fonts'));
 
 const totalEmulators = (await getCollection('emulators')).length;
 const totalShells = (await getCollection('shells')).length;
