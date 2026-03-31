@@ -66,6 +66,69 @@ rg "fn\s+\w+\(" -t rust
 rg "old_name" --replace "new_name"
 ```
 
+## 典型场景
+
+### 场景一：在大型代码库中快速查找函数定义
+
+在 node_modules 满天飞的前端项目里，rg 自动跳过 `.gitignore` 中的目录：
+
+```bash
+# 查找 Python 文件中的函数定义
+rg "^def " -t py -n
+
+# 查找 TypeScript 中的接口定义（含上下文）
+rg "^export interface" -t ts -C 2
+
+# 查找所有 TODO / FIXME
+rg "TODO|FIXME|HACK" --glob "!node_modules"
+```
+
+---
+
+### 场景二：替代 grep 做日志分析
+
+```bash
+# 在压缩日志文件中搜索（无需解压）
+rg "ERROR" logs/*.gz -z
+
+# 搜索 access log 中的特定 IP，显示时间窗口
+rg "192\.168\.1\.100" /var/log/nginx/access.log -C 2
+
+# 统计各级别日志出现次数
+rg "(ERROR|WARN|INFO)" app.log -o | sort | uniq -c | sort -rn
+```
+
+---
+
+### 场景三：配合 fzf 实现交互式代码搜索
+
+```bash
+# 在项目中实时模糊搜索代码内容
+rg_fzf() {
+  rg --color=always --line-number --no-heading "$1" \
+    | fzf --ansi \
+          --delimiter : \
+          --preview 'bat --color=always {1} --highlight-line {2}' \
+          --preview-window '~3:+{2}+3/2'
+}
+
+# 调用：rg_fzf "function name"
+```
+
+---
+
+### 场景四：批量替换（预览模式）
+
+rg 本身不做替换，但可以生成替换命令预览：
+
+```bash
+# 预览所有要替换的位置
+rg "old_api_name" --replace "new_api_name"
+
+# 配合 sd 执行实际替换
+rg -l "old_api_name" | xargs sd "old_api_name" "new_api_name"
+```
+
 ## 推荐搭配
 
 - **fzf** — 与 fzf 集成实现交互式搜索

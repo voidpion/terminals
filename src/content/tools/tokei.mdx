@@ -68,3 +68,56 @@ tokei --files
 # 对比两个项目的代码量
 tokei project-a project-b
 ```
+
+## 典型场景
+
+### 场景一：了解陌生项目的代码构成
+
+接手一个新项目，先用 tokei 摸清家底：
+
+```bash
+# 统计整个项目
+tokei
+
+# 输出示例（按代码量排序）：
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Language        Files    Lines     Code  Comments   Blanks
+# TypeScript         87     6521     5203       821      497
+# JSON               23      891      891         0        0
+# Markdown           12      634      468         0      166
+```
+
+快速判断项目主力语言、测试覆盖占比、文档完善程度。
+
+---
+
+### 场景二：在 README 或 PR 中展示代码规模
+
+```bash
+# 生成 Markdown 表格，直接粘贴到文档
+tokei --output markdown
+
+# 只统计核心源码（排除 vendor 和测试）
+tokei src/ --exclude "**/*.test.*" --exclude "**/__tests__/**"
+
+# 对比两个分支的代码量变化（feature branch 增加了多少行）
+git stash
+tokei --type Rust -o json | jq '.Rust.code' > before.txt
+git stash pop
+tokei --type Rust -o json | jq '.Rust.code' > after.txt
+echo "新增代码行：$(($(cat after.txt) - $(cat before.txt)))"
+```
+
+---
+
+### 场景三：集成到 CI/CD，持续跟踪代码规模
+
+```bash
+# GitHub Actions 中记录每次 merge 后的代码量
+tokei --output json > code-stats.json
+cat code-stats.json | jq '{
+  total_lines: (.Total.lines),
+  code_lines: (.Total.code),
+  comment_ratio: ((.Total.comments / .Total.code * 100) | floor)
+}'
+```

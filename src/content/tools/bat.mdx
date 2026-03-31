@@ -68,6 +68,61 @@ export BAT_THEME="Tokyo Night"
 export BAT_STYLE="numbers,changes,header"
 ```
 
+## 典型场景
+
+### 场景一：替代 cat，随时高亮查看配置文件
+
+调试 nginx、sshd 等配置时，传统 `cat` 输出无高亮、难分辨。换用 bat：
+
+```bash
+bat /etc/nginx/nginx.conf
+bat ~/.ssh/config
+bat /etc/hosts
+```
+
+左侧 Git 状态栏会标出你最近改过哪几行，配合 `-n` 显示行号，报错定位一步到位。
+
+---
+
+### 场景二：作为 fzf 预览后端
+
+将 bat 挂进 fzf 预览窗口，模糊搜索文件的同时实时高亮预览：
+
+```bash
+# 搜索文件并在右侧预览内容
+fzf --preview 'bat --color=always --style=numbers --line-range=:100 {}'
+
+# 也可以写进 .zshrc 让所有 fzf 搜索默认带预览
+export FZF_DEFAULT_OPTS='--preview "bat --color=always {}"'
+```
+
+---
+
+### 场景三：美化 man 手册
+
+让 man 页面也带上语法高亮：
+
+```bash
+# 在 .zshrc 中添加
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANROFFOPT="-c"
+
+# 之后 man 命令自动高亮
+man git-rebase
+```
+
+---
+
+### 场景四：查看 diff 输出
+
+```bash
+# 两个文件对比，结果高亮
+diff old_config.yaml new_config.yaml | bat -l diff
+
+# git diff 结果高亮查看（不依赖 delta）
+git diff HEAD~1 | bat -l diff
+```
+
 ## 推荐搭配
 
 - **fzf** — 作为 fzf 预览窗口的高亮后端

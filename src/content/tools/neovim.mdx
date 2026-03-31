@@ -88,6 +88,62 @@ vim.opt.expandtab = true      -- 用空格代替 Tab
 vim.opt.clipboard = "unnamedplus" -- 系统剪贴板
 ```
 
+## 典型场景
+
+### 场景一：用内置 LSP 获得 IDE 级代码补全
+
+配置 LSP 后，Neovim 提供与 VS Code 同级的智能补全和诊断：
+
+```lua
+-- 安装 nvim-lspconfig 后，在 init.lua 配置语言服务器
+require('lspconfig').pyright.setup{}      -- Python
+require('lspconfig').ts_ls.setup{}        -- TypeScript
+require('lspconfig').rust_analyzer.setup{} -- Rust
+
+-- 常用 LSP 快捷键
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition)     -- 跳转到定义
+vim.keymap.set('n', 'gr', vim.lsp.buf.references)     -- 查找引用
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename) -- 重命名
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action) -- 代码操作
+```
+
+```bash
+# 安装语言服务器（通过 Mason）
+:MasonInstall pyright typescript-language-server rust-analyzer
+```
+
+---
+
+### 场景二：telescope + ripgrep 实现极速文件和代码搜索
+
+```lua
+-- telescope.nvim 配置（依赖 ripgrep 和 fd）
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>ff', builtin.find_files)  -- 模糊搜索文件
+vim.keymap.set('n', '<leader>fg', builtin.live_grep)   -- 全项目 grep
+vim.keymap.set('n', '<leader>fb', builtin.buffers)     -- 搜索打开的 buffer
+vim.keymap.set('n', '<leader>fh', builtin.help_tags)   -- 搜索帮助文档
+```
+
+在几千个文件的项目里，`<leader>ff` 模糊找文件比任何 IDE 都快。
+
+---
+
+### 场景三：内置终端做 REPL 驱动开发
+
+无需离开 Neovim，直接在内置终端里运行代码：
+
+```vim
+" 打开水平分割的终端
+:split | terminal
+
+" 或用快捷键（在 init.vim/init.lua 中定义）
+" Ctrl+\ + Ctrl+n 退出终端模式，回到普通模式
+
+" 实用工作流：左边编辑代码，右边跑 Python REPL
+:vsplit | terminal python3
+```
+
 ## 推荐搭配
 
 - **tmux / zellij** — 终端复用器中运行 Neovim

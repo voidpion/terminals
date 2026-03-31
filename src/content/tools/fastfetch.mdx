@@ -118,6 +118,59 @@ fastfetch --migrate-config neofetch
 fastfetch --gen-config
 ```
 
+## 典型场景
+
+### 场景一：终端启动时展示系统信息
+
+在 `.zshrc` 中加入 fastfetch，每次打开终端都看到当前环境信息：
+
+```bash
+# ~/.zshrc 末尾添加
+fastfetch
+
+# 轻量版（只显示关键模块）
+fastfetch -s os:kernel:shell:terminal:cpu:memory
+```
+
+---
+
+### 场景二：截图炫耀终端配置
+
+自定义 fastfetch 配置，搭配 Nerd Font 和自定义 Logo，打造个性化终端截图：
+
+```jsonc
+// ~/.config/fastfetch/config.jsonc
+{
+  "logo": {
+    "source": "~/.config/fastfetch/logo.png",
+    "type": "kitty",
+    "width": 30,
+    "height": 15
+  },
+  "modules": [
+    "title", "separator",
+    {"type": "os", "format": "{3} {12}"},
+    {"type": "shell", "format": "{3} {4}"},
+    {"type": "terminal", "format": "{3} {5}"},
+    "cpu", "gpu", "memory", "break", "colors"
+  ]
+}
+```
+
+---
+
+### 场景三：CI/CD 中记录构建环境
+
+在 CI 日志中留下构建机器的环境快照，方便追查问题：
+
+```bash
+# 在 GitHub Actions / GitLab CI 的构建脚本开头
+fastfetch --format json > build-env.json
+
+# 或直接打印到日志
+fastfetch -s os:kernel:cpu:memory:disk
+```
+
 ## 推荐搭配
 
 - **Catppuccin / Tokyo Night 配色** — 统一终端配色让 fastfetch 输出更和谐

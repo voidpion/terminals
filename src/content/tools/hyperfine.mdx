@@ -62,3 +62,54 @@ hyperfine 'ripgrep pattern' 'grep -r pattern' --export-markdown results.md
 # 导出为 JSON 用于进一步分析
 hyperfine 'command1' 'command2' --export-json results.json
 ```
+
+## 典型场景
+
+### 场景一：对比新旧实现的性能差异
+
+重构代码后验证是否真的变快了：
+
+```bash
+# 对比 find 和 fd 的搜索速度
+hyperfine --warmup 5 \
+  'find . -name "*.py" -type f' \
+  'fd -e py'
+# 输出类似：
+# fd ran 8.53 ± 0.32 times faster than find
+
+# 对比两个 Python 脚本的执行时间
+hyperfine --warmup 3 \
+  'python old_process.py data.csv' \
+  'python new_process.py data.csv'
+```
+
+---
+
+### 场景二：排查脚本启动慢的原因
+
+Shell 脚本或 CLI 工具启动延迟高，逐步排查：
+
+```bash
+# 测量 zsh 启动时间（检测插件影响）
+hyperfine --warmup 10 'zsh -i -c exit'
+
+# 对比加载不同插件的启动时间
+hyperfine \
+  'zsh --no-rcs -c exit' \
+  'zsh -i -c exit'
+
+# 找到最慢的 zsh 插件：时间差即为插件开销
+```
+
+---
+
+### 场景三：参数扫描——找最优线程数
+
+```bash
+# 找出 make -j N 中最优的并行数
+hyperfine --parameter-scan threads 1 16 \
+  --prepare 'make clean' \
+  'make -j {threads}'
+
+# 输出每个 N 的耗时，直观显示最优点
+```

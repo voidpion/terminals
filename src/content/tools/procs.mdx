@@ -94,6 +94,55 @@ kind = "Command"
 style = "BrightWhite"
 ```
 
+## 典型场景
+
+### 场景一：快速找出占用特定端口的进程
+
+不需要 `netstat -tlnp | grep` 的复杂管道：
+
+```bash
+# 找出占用 8080 端口的进程
+procs --port 8080
+
+# 找出占用多个端口的进程
+procs --port 3000 --port 5432
+```
+
+---
+
+### 场景二：排查高负载进程
+
+应用变慢，快速找出消耗 CPU 或内存最多的进程：
+
+```bash
+# 按 CPU 倒序排列
+procs --sortd cpu
+
+# 按内存倒序排列
+procs --sortd mem
+
+# 搜索特定应用的所有相关进程
+procs python        # 查看所有 Python 进程
+procs --tree node   # 以树形查看 Node.js 进程及其子进程
+```
+
+---
+
+### 场景三：在脚本中处理进程数据
+
+procs 支持 JSON 输出，便于在 Shell 脚本或与 jq 配合使用：
+
+```bash
+# 以 JSON 格式输出并用 jq 处理
+procs --json | jq '.[] | select(.cpu > 10) | {pid, name, cpu}'
+
+# 获取特定进程的 PID（供脚本使用）
+procs nginx --json | jq -r '.[0].pid'
+
+# 实时监控（watch 模式）
+procs --watch 2 python   # 每 2 秒刷新 Python 进程状态
+```
+
 ## 推荐搭配
 
 - **htop / btop** — 交互式进程管理和系统监控

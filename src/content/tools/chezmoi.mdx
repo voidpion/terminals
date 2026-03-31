@@ -1,0 +1,214 @@
+---
+title: "chezmoi"
+description: "跨机器管理 dotfiles 的最佳工具，支持模板、加密和一键环境初始化"
+website: "https://www.chezmoi.io/"
+github: "https://github.com/twpayne/chezmoi"
+tags: ["dotfiles", "配置管理", "Go", "效率工具"]
+featured: true
+recommended: true
+order: 8
+category: "productivity"
+install_cmd: "brew install chezmoi"
+written_in: "Go"
+---
+
+## 简介
+
+chezmoi（发音 /ʃeɪ mwa/，法语"我的家"）是一个专为开发者设计的 dotfiles 管理工具。它把你的 `~/.zshrc`、`~/.gitconfig`、`~/.config/nvim/` 等配置文件统一纳入版本控制，并支持**模板变量**、**加密 secret**、**机器差异化配置**——让你在任何一台新机器上用一条命令还原完整的工作环境。
+
+## 安装
+
+```bash
+# macOS
+brew install chezmoi
+
+# Linux（一键脚本）
+sh -c "$(curl -fsLS get.chezmoi.io)"
+
+# Go
+go install github.com/twpayne/chezmoi@latest
+
+# Arch Linux
+pacman -S chezmoi
+```
+
+## 核心概念
+
+| 概念 | 说明 |
+|------|------|
+| **source directory** | `~/.local/share/chezmoi/`，所有受管文件的"源头" |
+| **target state** | 你希望家目录最终呈现的状态 |
+| `chezmoi add` | 将已有配置文件纳入管理 |
+| `chezmoi apply` | 将 source 的变更同步到实际家目录 |
+| `chezmoi diff` | 预览 apply 前后的差异 |
+| `chezmoi edit` | 直接编辑 source 中的文件 |
+
+## 快速上手
+
+```bash
+# 1. 初始化（会创建 source directory）
+chezmoi init
+
+# 2. 将配置文件加入管理
+chezmoi add ~/.zshrc
+chezmoi add ~/.gitconfig
+chezmoi add ~/.config/nvim
+
+# 3. 查看 source directory 结构
+chezmoi cd   # 进入 ~/.local/share/chezmoi/
+ls           # dot_zshrc  dot_gitconfig  private_dot_config/
+
+# 4. 提交到 Git
+git init && git add -A && git commit -m "init: add dotfiles"
+git remote add origin git@github.com:yourname/dotfiles.git
+git push -u origin main
+
+# 5. 在新机器上一键还原
+chezmoi init --apply git@github.com:yourname/dotfiles.git
+```
+
+## 典型场景
+
+### 场景一：新 Mac 开箱即用
+
+入职新公司或买了新电脑，只需：
+
+```bash
+# 安装 chezmoi 并直接从远程仓库初始化
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply git@github.com:yourname/dotfiles.git
+```
+
+chezmoi 会自动 clone 你的仓库并将所有配置 apply 到家目录，几分钟内恢复熟悉的工作环境。
+
+---
+
+### 场景二：模板——同一套配置适配多台机器
+
+你在公司用 work 邮箱、在家用个人邮箱，但 `~/.gitconfig` 内容几乎一样。用模板解决：
+
+```ini
+# ~/.local/share/chezmoi/dot_gitconfig.tmpl
+[user]
+  name = Your Name
+  {{- if eq .chezmoi.hostname "work-macbook" }}
+  email = you@company.com
+  {{- else }}
+  email = you@gmail.com
+  {{- end }}
+
+[core]
+  editor = nvim
+  autocrlf = input
+```
+
+在 `~/.config/chezmoi/chezmoi.toml` 中声明变量：
+
+```toml
+[data]
+  name = "Your Name"
+```
+
+apply 时 chezmoi 根据当前机器的 `hostname`、`os`、`arch` 等自动渲染正确内容。
+
+---
+
+### 场景三：加密私密配置（age / GPG）
+
+SSH 私钥、API token 等敏感内容不能明文上传到 GitHub。chezmoi 内置 [age](https://age-encryption.org/) 加密支持：
+
+```bash
+# 生成 age 密钥对
+age-keygen -o ~/.config/chezmoi/key.txt
+
+# 在 chezmoi.toml 中启用
+# [age]
+#   identity = "~/.config/chezmoi/key.txt"
+#   recipient = "age1xxxxxxxxxx"
+
+# 以加密方式添加文件（源文件会是 .age 后缀）
+chezmoi add --encrypt ~/.ssh/id_ed25519
+
+# 正常 apply，chezmoi 自动解密写入目标位置
+chezmoi apply
+```
+
+仓库里存的是密文，只有持有密钥的机器才能解密还原。
+
+---
+
+### 场景四：脚本——自动安装依赖
+
+chezmoi 支持在 apply 前后执行脚本，文件名以 `run_` 开头（`run_once_` 表示只跑一次）：
+
+```bash
+# ~/.local/share/chezmoi/run_once_install-packages.sh.tmpl
+#!/bin/bash
+{{- if eq .chezmoi.os "darwin" }}
+brew bundle --file={{ .chezmoi.sourceDir }}/Brewfile
+{{- else if eq .chezmoi.os "linux" }}
+sudo apt install -y zsh git curl ripgrep fzf
+{{- end }}
+```
+
+首次 `chezmoi apply` 时自动安装 Homebrew 包或 apt 包，之后不再重复执行。
+
+---
+
+### 场景五：外部文件引用（1Password / Bitwarden）
+
+chezmoi 与主流密码管理器深度集成，直接在模板中读取 vault：
+
+```ini
+# dot_gitconfig.tmpl
+[user]
+  signingkey = {{ (onepasswordDetailsFields "SSH Key Item").public_key.value }}
+```
+
+```bash
+# Bitwarden
+[data]
+  githubToken = "{{ bitwarden "item" "GitHub Token" | .login.password }}"
+```
+
+apply 时 chezmoi 实时调用密码管理器 CLI 拉取 secret，不需要在仓库里存任何明文。
+
+---
+
+### 场景六：diff 驱动的谨慎更新
+
+不确定 apply 会改什么？先 diff：
+
+```bash
+# 查看 source 和实际文件的差异
+chezmoi diff
+
+# 仅 apply 单个文件
+chezmoi apply ~/.zshrc
+
+# 交互式确认每处变更
+chezmoi apply --interactive
+```
+
+## 常用命令速查
+
+```bash
+chezmoi init                   # 初始化
+chezmoi init --apply <repo>    # 从远程仓库初始化并立即 apply
+chezmoi add <file>             # 将文件纳入管理
+chezmoi re-add                 # 将实际文件的改动同步回 source
+chezmoi edit <file>            # 编辑 source 中对应的文件
+chezmoi diff                   # 预览变更
+chezmoi apply                  # 应用变更到家目录
+chezmoi update                 # git pull + apply（从远程同步最新配置）
+chezmoi cd                     # 进入 source directory
+chezmoi status                 # 查看哪些文件有变动
+chezmoi doctor                 # 诊断环境问题
+chezmoi data                   # 查看当前机器的模板变量
+```
+
+## 推荐搭配
+
+- **age** — 轻量加密工具，配合 chezmoi 加密私密文件
+- **1Password CLI / Bitwarden CLI** — 从密码管理器动态读取 secret
+- **GitHub Actions** — 定期检查 dotfiles 仓库的 CI 健康状态
+- **Homebrew Bundle** — 结合 `run_once_` 脚本一键安装全部软件包

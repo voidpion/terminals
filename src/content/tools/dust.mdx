@@ -76,6 +76,61 @@ dust /home /var /tmp
 dust -b
 ```
 
+## 典型场景
+
+### 场景一：磁盘快满了——快速定位占用大户
+
+服务器 / 存储报警，快速找到罪魁祸首：
+
+```bash
+# 从根目录找最大的目录（限 2 层）
+dust -d 2 /
+
+# 只看 /var 下的情况（日志通常在这里）
+dust -d 3 /var
+
+# 找出超过 1GB 的目录
+dust / | grep -E "^\s+[0-9]+G"
+```
+
+---
+
+### 场景二：清理开发环境的依赖缓存
+
+node_modules、.gradle、pip 缓存往往是磁盘杀手：
+
+```bash
+# 看看家目录各子目录的占用
+dust -d 1 ~
+
+# 找出所有 node_modules 目录的大小
+dust -d 0 $(find ~ -name "node_modules" -maxdepth 5 -type d 2>/dev/null)
+
+# 清理前确认大小
+dust ~/.cache
+dust ~/Library/Caches   # macOS
+```
+
+---
+
+### 场景三：对比清理前后效果
+
+```bash
+# 记录清理前的大小
+dust -d 2 ~ > before.txt
+
+# 执行清理操作...
+# rm -rf node_modules
+# brew cleanup
+# docker system prune
+
+# 清理后对比
+dust -d 2 ~
+diff before.txt <(dust -d 2 ~)
+```
+
+---
+
 ## 推荐搭配
 
 - **eza** — 查看目录内容和大小

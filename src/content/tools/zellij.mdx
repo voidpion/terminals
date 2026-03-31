@@ -93,6 +93,64 @@ Ctrl+o          进入会话模式
   w              会话管理器
 ```
 
+## 典型场景
+
+### 场景一：开箱即用，无需记忆快捷键
+
+相比 tmux 需要背诵大量按键，zellij 底部常驻提示栏：
+
+```bash
+# 直接启动，底部状态栏实时显示可用操作
+zellij
+
+# 新手只需记住：
+# Ctrl+p → 面板操作（分割、切换）
+# Ctrl+t → 标签操作（新建、关闭）
+# Ctrl+o → 会话操作（分离、管理器）
+```
+
+---
+
+### 场景二：用布局文件定义开发环境
+
+将常用工作布局保存为文件，项目专属一键启动：
+
+```yaml
+# ~/.config/zellij/layouts/dev.kdl
+layout {
+    pane split_direction="vertical" {
+        pane size="60%" command="nvim"
+        pane split_direction="horizontal" {
+            pane command="bash" {
+                args "-c" "npm run dev"
+            }
+            pane
+        }
+    }
+    pane size=1 borderless=true {
+        plugin location="zellij:status-bar"
+    }
+}
+```
+
+```bash
+# 用自定义布局启动
+zellij --layout ~/.config/zellij/layouts/dev.kdl
+```
+
+---
+
+### 场景三：浮动面板临时调出工具
+
+不打断当前工作流，临时弹出 lazygit 或监控面板：
+
+```bash
+# 在 zellij 内：
+# Ctrl+p → w → 打开浮动面板
+# 输入 lazygit 或 btop，用完后 Ctrl+p → w → 关闭浮动面板
+# 主工作区完全不受干扰
+```
+
 ## 推荐搭配
 
 - **neovim** — 在 Zellij 面板中运行 Neovim

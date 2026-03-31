@@ -46,6 +46,70 @@ export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 ```
 
+## 典型场景
+
+### 场景一：Ctrl+R 升级版历史搜索
+
+安装并初始化 fzf 后，按 `Ctrl+R` 即可模糊搜索命令历史，支持多关键字：
+
+```bash
+# 搜索所有含 "docker run" 的历史命令
+# 在 fzf 界面中输入：docker run
+# 结果实时过滤，按 Enter 直接执行
+
+# 在 .zshrc 中美化历史搜索
+export FZF_CTRL_R_OPTS="
+  --preview 'echo {}' --preview-window up:3:hidden:wrap
+  --bind 'ctrl-/:toggle-preview'
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+  --color header:italic
+  --header 'Press CTRL-Y to copy command to clipboard'"
+```
+
+---
+
+### 场景二：交互式 kill 进程
+
+不需要先 `ps aux | grep` 再手动复制 PID：
+
+```bash
+# 模糊搜索进程名，选中后直接 kill
+fzf_kill() {
+  local pid
+  pid=$(ps aux | fzf --header='Select process to kill' | awk '{print $2}')
+  [ -n "$pid" ] && kill -9 "$pid"
+}
+
+# 加到 .zshrc 后直接调用
+fzf_kill
+```
+
+---
+
+### 场景三：交互式 git checkout 分支
+
+```bash
+# 模糊搜索并切换分支
+alias gco='git branch | fzf | xargs git checkout'
+
+# 或更完善版本（含远程分支 + 预览最近提交）
+alias gbr='git branch -a | fzf \
+  --preview "git log --oneline --graph --color=always \
+    \$(echo {} | sed s/remotes\\/origin\\/// | tr -d \"* \")" \
+  | sed "s/remotes\/origin\///" | tr -d "* " | xargs git checkout'
+```
+
+---
+
+### 场景四：项目快速跳转（搭配 fd + zoxide）
+
+```bash
+# 在所有 git 仓库中模糊搜索并跳转
+alias proj='cd $(fd -t d -H "^\.git$" ~ --max-depth 5 \
+  | xargs -I{} dirname {} \
+  | fzf --preview "eza --tree --level=1 {}")'
+```
+
 ## 推荐搭配
 
 - **ripgrep** — 配合 fzf 实现代码级搜索

@@ -81,3 +81,49 @@ alias ll="lsd -l"
 alias la="lsd -la"
 alias lt="lsd --tree"
 ```
+
+## 典型场景
+
+### 场景一：一眼看清文件类型分布
+
+进入陌生目录时，Nerd Font 图标帮助快速识别文件类型：
+
+```bash
+# 长格式 + 图标，类型一目了然
+lsd -l
+
+# 只看目录，了解项目结构
+lsd -d */ --icon always
+
+# 按文件大小排序，找大文件
+lsd -lS
+```
+
+---
+
+### 场景二：树形浏览项目目录
+
+```bash
+# 查看项目结构（两层深度）
+lsd --tree --depth 2
+
+# 包含隐藏文件（如 .github、.env）
+lsd --tree --depth 2 -a
+
+# 只展示目录骨架（忽略文件）
+lsd --tree --depth 3 -d
+```
+
+---
+
+### 场景三：作为 ls 的透明替换
+
+lsd 参数与 ls 高度兼容，设置别名后无感迁移：
+
+```bash
+# 与 ls 完全一致的用法
+lsd -la          # 等价于 ls -la，但有图标和颜色
+lsd -lh          # 人类可读大小
+lsd -lt          # 按修改时间排序
+lsd -1           # 每行一个文件（适合管道处理）
+```

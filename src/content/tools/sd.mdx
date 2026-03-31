@@ -66,3 +66,49 @@ sd -p 'error' 'warning' log.txt
 # 多行替换
 echo -e "line1\nline2\nline3" | sd 'line1\nline2' 'replaced'
 ```
+
+## 典型场景
+
+### 场景一：重构代码时批量重命名标识符
+
+将整个项目中的旧 API 名称替换为新名称：
+
+```bash
+# 将所有 Rust 文件中的旧函数名替换为新名称
+sd 'get_user_by_id' 'find_user' src/**/*.rs
+
+# 替换 API 路径（注意：sd 默认使用正则，特殊字符要转义）
+sd '/api/v1/' '/api/v2/' src/**/*.ts
+
+# 纯字符串模式（-F），避免正则干扰
+sd -F 'http://old-domain.com' 'https://new-domain.com' config/*.yaml
+```
+
+---
+
+### 场景二：规范化日期格式
+
+将 `YYYY-MM-DD` 格式转为 `DD/MM/YYYY`：
+
+```bash
+# 利用捕获组重组日期
+echo "Created at 2024-03-15" | sd '(\d{4})-(\d{2})-(\d{2})' '$3/$2/$1'
+# 输出: Created at 15/03/2024
+
+# 批量处理日志文件
+sd '(\d{4})-(\d{2})-(\d{2})' '$3/$2/$1' logs/*.log
+```
+
+---
+
+### 场景三：配合 rg 做精确批量替换
+
+rg 找到目标文件，sd 执行替换：
+
+```bash
+# 只替换含有特定模式的文件
+rg -l "deprecated_func" src/ | xargs sd 'deprecated_func' 'new_func'
+
+# 预览替换结果（-p 预览模式）
+rg -l "old_config" . | head -5 | xargs -I{} sd -p 'old_config' 'new_config' {}
+```

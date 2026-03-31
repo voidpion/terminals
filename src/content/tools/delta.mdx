@@ -72,6 +72,58 @@ git diff --staged | delta
 delta --list-syntax-themes
 ```
 
+## 典型场景
+
+### 场景一：一行配置让所有 git diff 变美观
+
+在 `~/.gitconfig` 中配置后，所有 git 命令自动使用 delta：
+
+```ini
+[core]
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true          # n/N 在文件间跳转
+    side-by-side = true      # 并排对比
+    line-numbers = true
+    syntax-theme = "Tokyo Night"
+
+[merge]
+    conflictstyle = diff3
+```
+
+之后 `git diff`、`git log -p`、`git show` 全部自动高亮。
+
+---
+
+### 场景二：代码审查时使用并排模式
+
+审查 PR 时看并排 diff 比行内 diff 更直观：
+
+```bash
+# 临时切换到并排模式查看某次提交
+git show abc1234 | delta --side-by-side
+
+# 对比两个分支的差异
+git diff main..feature/my-branch | delta --side-by-side
+```
+
+---
+
+### 场景三：在 lazygit 中集成 delta
+
+lazygit 可以使用 delta 渲染内部 diff 视图，在 `~/.config/lazygit/config.yml` 中添加：
+
+```yaml
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
+```
+
 ## 推荐搭配
 
 - **lazygit** — 在 lazygit 中使用 delta 美化 diff 输出

@@ -61,6 +61,51 @@ jo pattern
 j -s
 ```
 
+## 典型场景
+
+### 场景一：免于输入深层路径
+
+积累访问历史后，深层目录只需关键词跳转：
+
+```bash
+# 以前：
+cd ~/Documents/work/projects/backend/src/controllers
+
+# 用 autojump：
+j controllers     # 跳转到匹配的最高权重目录
+j back cont       # 多关键词更精确匹配
+```
+
+---
+
+### 场景二：在相似名称的目录间切换
+
+有多个叫 `src` 的目录，用权重机制选择最常用的：
+
+```bash
+# 查看所有匹配 "api" 的目录及其权重
+j -s | grep api
+
+# 如果跳错了，可以调整权重
+j -i api          # 增加当前目录的权重
+j -d api          # 减少当前目录的权重
+
+# 使用多个关键词精确匹配
+j company api     # 跳转到含 "company" 路径下的 "api" 目录
+```
+
+---
+
+### 场景三：在文件管理器中打开跳转目录
+
+```bash
+# macOS 用 Finder 打开目录
+jo project        # 用默认文件管理器打开匹配目录
+
+# 与其他命令组合
+ls $(j -e echo backend)    # 列出跳转目标目录的内容（不实际跳转）
+```
+
 ## 注意
 
 - autojump 是经典工具，维护不太活跃

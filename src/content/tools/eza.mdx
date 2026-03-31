@@ -56,3 +56,45 @@ alias ll="eza -l --git --icons --time-style=relative"
 alias la="eza -la --git --icons"
 alias lt="eza --tree --level=2 --icons"
 ```
+
+## 典型场景
+
+### 场景一：一眼看清项目结构
+
+进入陌生仓库时，先用树形视图快速了解目录结构：
+
+```bash
+# 展示两层树形结构（含 Git 状态）
+eza --tree --level=2 --icons --git
+
+# 只看源码目录，过滤 node_modules
+eza --tree --level=3 --icons src/
+```
+
+---
+
+### 场景二：按时间排序找最近修改的文件
+
+调试问题时，快速定位最近改动过哪些文件：
+
+```bash
+# 按修改时间逆序，使用相对时间显示
+eza -l --sort=modified --reverse --time-style=relative --icons
+
+# 只看 7 天内修改的文件
+eza -l --sort=modified --reverse --icons | head -20
+```
+
+---
+
+### 场景三：查看文件权限和 Git 状态
+
+代码审查前确认权限设置和改动范围：
+
+```bash
+# 长格式 + Git 状态 + 图标 + 人类可读大小
+eza -lah --git --icons --time-style=long-iso
+
+# 查看哪些文件在暂存区有修改（Git 状态列）
+eza -l --git --git-ignore --icons
+```

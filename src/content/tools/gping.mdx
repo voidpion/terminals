@@ -67,3 +67,44 @@ gping -6 google.com
 # 同时监控内外网延迟
 gping 192.168.1.1 google.com
 ```
+
+## 典型场景
+
+### 场景一：网络抖动可视化诊断
+
+视频会议卡顿、游戏延迟高时，用 gping 实时可视化网络质量：
+
+```bash
+# 同时 ping 网关 + 国内 DNS + 国际节点
+gping 192.168.1.1 114.114.114.114 8.8.8.8
+
+# 对比图表中三条线的走势：
+# - 网关延迟高 → 本地路由器/家庭网络问题
+# - 国内 DNS 高但网关正常 → ISP 问题
+# - 全都高 → 本机网络配置问题
+```
+
+---
+
+### 场景二：监控 API 接口响应时间趋势
+
+不只是 ping，gping 可以测量任意命令的耗时：
+
+```bash
+# 监控某 API 端点的响应时间趋势
+gping --cmd "curl -so /dev/null -w '%{time_total}' https://api.example.com/health"
+
+# 对比两个 CDN 节点的延迟
+gping cdn1.example.com cdn2.example.com
+```
+
+---
+
+### 场景三：运维巡检时的多节点延迟对比
+
+```bash
+# 同时监控多台服务器的可达性
+gping web01.internal web02.internal db01.internal cache01.internal
+
+# 颜色区分不同节点，延迟异常时图形一目了然
+```

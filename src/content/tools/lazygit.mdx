@@ -51,3 +51,41 @@ go install github.com/jesseduffield/lazygit@latest
 | `b` | 切换分支面板 |
 | `s` | Stash |
 | `?` | 帮助 |
+
+## 典型场景
+
+### 场景一：交互式 rebase 整理提交历史
+
+提 PR 前把零碎的 WIP 提交合并成干净的提交记录：
+
+1. 在 lazygit 中切到 commits 面板（按 `4`）
+2. 找到想合并的多个提交，按 `e` 进入交互式 rebase
+3. 对 WIP 提交按 `s`（squash）合并到上一条
+4. 对提交信息按 `r`（reword）改写描述
+5. 确认后 `w` 执行 rebase
+
+全程可视化操作，无需记忆 `git rebase -i HEAD~N` 语法。
+
+---
+
+### 场景二：精细化暂存——只提交部分改动
+
+一个文件里修了两个不相关的 bug，想分两次提交：
+
+1. 在 Files 面板找到该文件，按 `Enter` 展开
+2. 用 `空格` 逐行选择要暂存的 hunk
+3. 按 `c` 提交第一部分
+4. 回到文件继续暂存剩余改动，再次 `c` 提交
+
+等价于 `git add -p`，但完全可视化。
+
+---
+
+### 场景三：解决合并冲突
+
+多人协作时遇到冲突，lazygit 提供三方对比视图：
+
+1. 合并/rebase 后在 Files 面板看到冲突文件（橙色标记）
+2. 按 `Enter` 打开冲突编辑器
+3. 用 `b`（both）、`o`（ours）、`t`（theirs）选择保留哪侧
+4. 冲突解决后 `空格` 暂存，`c` 继续 rebase/merge

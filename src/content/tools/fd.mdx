@@ -74,6 +74,49 @@ fd --type f "pattern"
 fd --exclude node_modules "pattern"
 ```
 
+## 典型场景
+
+### 场景一：批量处理特定类型的文件
+
+```bash
+# 将项目中所有 PNG 转为 JPEG（批量处理）
+fd -e png --exec convert {} {.}.jpg
+
+# 删除所有 .DS_Store 文件（macOS 清理）
+fd -H -I ".DS_Store" --exec rm {}
+
+# 给所有 .sh 文件加执行权限
+fd -e sh --exec chmod +x {}
+```
+
+---
+
+### 场景二：搭配 fzf 做交互式文件选择
+
+```bash
+# 以 fd 作为 fzf 后端，只搜索非隐藏文件
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+# 交互式选择文件并用 nvim 打开
+nvim $(fd -e py | fzf)
+```
+
+---
+
+### 场景三：查找近期修改的文件
+
+```bash
+# 查找 7 天内修改过的配置文件
+fd -e toml -e yaml -e json --changed-within 7d
+
+# 查找大于 100MB 的文件
+fd --size +100m
+
+# 查找空目录（用于清理）
+fd --type d --empty
+```
+
 ## 推荐搭配
 
 - **fzf** — 将 fd 作为 fzf 的默认查找后端

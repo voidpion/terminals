@@ -69,3 +69,52 @@ dog example.com A AAAA MX NS
 # 显示查询耗时
 dog example.com --time
 ```
+
+## 典型场景
+
+### 场景一：调试 DNS 解析问题
+
+网站打不开？先排查 DNS：
+
+```bash
+# 对比系统默认 DNS 和 Google DNS 的解析结果
+dog example.com A
+dog example.com A @8.8.8.8
+
+# 查看完整的 DNS 解析链（MX + A）
+dog example.com A MX NS
+
+# 检查 SPF 记录（邮件发送问题排查）
+dog example.com TXT | grep spf
+```
+
+---
+
+### 场景二：验证 DNS 记录是否生效
+
+域名迁移或新记录添加后，确认是否已在公共 DNS 上生效：
+
+```bash
+# 同时查询多个公共 DNS 服务器
+dog newdomain.com A @8.8.8.8       # Google
+dog newdomain.com A @1.1.1.1       # Cloudflare
+dog newdomain.com A @9.9.9.9       # Quad9
+
+# 若结果一致，说明 DNS 已全球传播
+```
+
+---
+
+### 场景三：使用 DoH 绕过 DNS 污染
+
+在某些网络环境下，普通 DNS 请求可能被污染或劫持：
+
+```bash
+# 通过 HTTPS 查询，加密且防篡改
+dog github.com A --https @https://cloudflare-dns.com/dns-query
+dog github.com A --https @https://dns.google/dns-query
+
+# 结果输出为 JSON，便于脚本处理
+dog github.com A --https @https://1.1.1.1/dns-query --json \
+  | jq '.answers[].data'
+```

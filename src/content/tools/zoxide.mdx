@@ -58,3 +58,66 @@ zoxide query -ls
 ## 推荐搭配
 
 - **fzf** — `zi` 命令使用 fzf 进行交互式选择
+
+## 典型场景
+
+### 场景一：告别输入完整路径
+
+积累一段时间使用记录后，任何深层目录都能用关键词一跳而至：
+
+```bash
+# 以前需要：
+cd ~/Documents/github/mycompany/backend/src/services
+
+# 现在只需要：
+z services
+# 或者更短
+z svc
+```
+
+zoxide 按访问频率和最近访问时间综合排序，最常用的目录永远排最前。
+
+---
+
+### 场景二：zi 交互式跳转（搭配 fzf）
+
+当关键词匹配多个目录时，用 `zi` 打开列表交互选择：
+
+```bash
+# 有多个项目都叫 "api"
+zi api
+# 会弹出 fzf 列表：
+#   /home/user/projects/backend/api
+#   /home/user/projects/mobile/api
+#   /home/user/company/legacy/api
+```
+
+---
+
+### 场景三：在脚本中查询目录路径
+
+zoxide 不只能跳转，也可以当目录解析器用：
+
+```bash
+# 查询匹配路径（不跳转）
+zoxide query myproject
+
+# 配合其他命令使用
+ls $(zoxide query dotfiles)
+code $(zoxide query notes)
+```
+
+---
+
+### 场景四：以 cd 命令名无感替换
+
+不想改变肌肉记忆？让 zoxide 完全接管 cd：
+
+```bash
+# 在 .zshrc 中
+eval "$(zoxide init zsh --cmd cd)"
+
+# 之后 cd 就自动拥有智能跳转能力
+cd proj    # 等价于 z proj
+cd -       # 仍然可以回到上一个目录
+```

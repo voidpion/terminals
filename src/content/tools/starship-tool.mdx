@@ -78,3 +78,61 @@ starship module --list
 # [python]
 # format = "[$symbol$pyenv_prefix($version)]($style) "
 ```
+
+## 典型场景
+
+### 场景一：跨 Shell 统一提示符风格
+
+同时使用 zsh（日常）和 bash（脚本调试）时，starship 让两个 Shell 有完全一致的提示符：
+
+```bash
+# ~/.zshrc
+eval "$(starship init zsh)"
+
+# ~/.bashrc
+eval "$(starship init bash)"
+
+# ~/.config/fish/config.fish
+starship init fish | source
+
+# 现在 zsh、bash、fish 的提示符显示完全一致
+```
+
+---
+
+### 场景二：智能显示项目上下文
+
+进入不同项目目录时，starship 自动显示对应的语言版本和工具信息：
+
+```bash
+~/projects/backend  ❯        # 普通目录
+~/projects/backend  ❯  v20.11.0  # Node.js 项目（有 package.json）
+~/projects/ml-model ❯  3.11.7  # Python 项目（有 requirements.txt）
+~/projects/service  ❯  1.75.0  # Rust 项目（有 Cargo.toml）
+~/projects/app main ❯        # Git 仓库（显示分支名）
+~/projects/app main ❯ +2 !3  # Git 有 2 个暂存、3 个未暂存改动
+```
+
+---
+
+### 场景三：性能调优——关闭不需要的模块
+
+当某些目录检测导致提示符变慢时，针对性关闭模块：
+
+```toml
+# ~/.config/starship.toml
+
+# 关闭不使用的语言检测（加速提示符渲染）
+[ruby]
+disabled = true
+
+[php]
+disabled = true
+
+[java]
+disabled = true
+
+# 查看当前提示符各模块耗时
+# 在终端运行：
+# starship timings
+```

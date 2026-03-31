@@ -74,6 +74,64 @@ jq -s '.[0] * .[1]' base.json override.json
 jq '.version = "2.0"' package.json | sponge package.json
 ```
 
+## 典型场景
+
+### 场景一：处理 API 响应，提取关键字段
+
+调试 REST API 时格式化并提取数据：
+
+```bash
+# 查看 GitHub 仓库信息，只提取关心的字段
+curl -s https://api.github.com/repos/jqlang/jq \
+  | jq '{name, stars: .stargazers_count, language, updated: .updated_at}'
+
+# 遍历 GitHub issues 列表，提取标题和状态
+curl -s "https://api.github.com/repos/owner/repo/issues?state=all" \
+  | jq '.[] | {title, state, number}'
+
+# 从 AWS CLI 输出中提取实例 ID 列表
+aws ec2 describe-instances \
+  | jq -r '.Reservations[].Instances[].InstanceId'
+```
+
+---
+
+### 场景二：日志分析和过滤
+
+处理结构化 JSON 日志：
+
+```bash
+# 过滤 ERROR 级别日志
+cat app.log | jq 'select(.level == "ERROR")'
+
+# 统计各 HTTP 状态码出现次数
+cat access.log | jq -r '.status' | sort | uniq -c | sort -rn
+
+# 提取最近 10 条错误的时间和消息
+cat app.log | jq 'select(.level == "ERROR") | {time: .timestamp, msg: .message}' \
+  | tail -10
+```
+
+---
+
+### 场景三：转换和重组 JSON 结构
+
+处理配置文件或构建数据转换管道：
+
+```bash
+# 将扁平数组转为以 id 为 key 的对象（便于查找）
+jq '[.[] | {(.id): .}] | add' users.json
+
+# 合并两个配置文件（后者覆盖前者）
+jq -s '.[0] * .[1]' defaults.json overrides.json > merged.json
+
+# 将 JSON 转为 CSV（适合导入 Excel）
+jq -r '.[] | [.name, .email, .age] | @csv' users.json > users.csv
+
+# 给数组中每个对象添加字段
+jq '[.[] | . + {processed: true}]' items.json
+```
+
 ## 推荐搭配
 
 - **curl** — 获取 API 响应后用 jq 解析

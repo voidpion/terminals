@@ -79,3 +79,56 @@ r            - 重命名
 z            - 使用 zoxide 跳转
 q            - 退出
 ```
+
+## 典型场景
+
+### 场景一：快速浏览和预览多媒体文件
+
+在 Kitty/iTerm2 等支持图像协议的终端下，yazi 能直接预览图片：
+
+```bash
+# 启动 yazi，浏览图片目录
+yazi ~/Pictures
+
+# 使用 j/k 上下浏览，图片实时在右侧预览
+# 支持 PNG、JPG、GIF 动图、PDF（首页预览）
+# 视频文件显示缩略图帧（需安装 ffmpeg）
+```
+
+---
+
+### 场景二：批量重命名文件
+
+整理照片或下载文件时，需要批量规范文件名：
+
+```bash
+# 在 yazi 中：
+# 1. 按 Space 多选文件
+# 2. 按 r 进入批量重命名模式
+# 3. 会在 $EDITOR 中打开重命名列表
+# 4. 用编辑器的多光标或替换功能改名
+# 5. 保存退出后自动执行重命名
+```
+
+等价于 `vidir` 命令，但集成在文件管理器中，更直观。
+
+---
+
+### 场景三：退出时自动切换到浏览目录
+
+配合 Shell 函数，在 yazi 里浏览到目标目录后退出，Shell 自动跳转过去：
+
+```bash
+# 在 ~/.zshrc 中添加（官方推荐）
+function y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
+}
+
+# 之后用 y 代替 yazi
+y                  # 浏览文件系统，退出后 shell 自动 cd 到你最后所在的目录
+```

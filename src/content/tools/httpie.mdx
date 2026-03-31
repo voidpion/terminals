@@ -74,3 +74,62 @@ http --session=api GET api.example.com/dashboard
 # 输出请求和响应的完整信息
 http --verbose POST api.example.com/data key=value
 ```
+
+## 典型场景
+
+### 场景一：快速测试 REST API
+
+开发后端接口时，不用 Postman 也能方便地测试：
+
+```bash
+# 注册新用户
+http POST api.example.com/auth/register \
+  username=alice \
+  password=secret123 \
+  email=alice@example.com
+
+# 登录获取 token
+TOKEN=$(http POST api.example.com/auth/login \
+  username=alice password=secret123 \
+  | jq -r '.access_token')
+
+# 用 token 调用受保护接口
+http GET api.example.com/profile \
+  "Authorization: Bearer $TOKEN"
+```
+
+---
+
+### 场景二：持久化会话测试（带 Cookie）
+
+测试需要登录状态的接口：
+
+```bash
+# 创建命名会话，自动保存 Cookie
+http --session=myapp POST api.example.com/login user=admin pass=secret
+
+# 后续请求自动携带 Session Cookie
+http --session=myapp GET api.example.com/dashboard
+http --session=myapp POST api.example.com/api/data key=value
+
+# 查看会话文件
+cat ~/.config/httpie/sessions/api.example.com/myapp.json
+```
+
+---
+
+### 场景三：调试 Webhook 和文件上传
+
+```bash
+# 测试文件上传接口
+http -f POST api.example.com/upload \
+  file@./report.pdf \
+  title="Q4 Report" \
+  category=finance
+
+# 发送自定义格式的请求体（调试 Webhook）
+echo '{"event":"push","ref":"refs/heads/main"}' \
+  | http POST localhost:8080/webhook \
+    Content-Type:application/json \
+    X-GitHub-Event:push
+```

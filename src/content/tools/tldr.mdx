@@ -67,6 +67,56 @@ tldr --random
 tldr --search "compress"
 ```
 
+## 典型场景
+
+### 场景一：忘记 tar 解压参数时
+
+`tar` 的参数谁都会忘，tldr 比 man 快 10 倍：
+
+```bash
+tldr tar
+# 立刻看到：
+# - tar -xf archive.tar.gz         # 解压
+# - tar -czf archive.tar.gz dir/   # 打包压缩
+# - tar -tf archive.tar.gz         # 列出内容
+
+# 对比 man tar（几百行，需要自己找）
+man tar | wc -l   # 通常 400+ 行
+```
+
+---
+
+### 场景二：搭配 fzf 交互式查找命令用法
+
+不知道用什么命令解决问题时，用 fzf 浏览 tldr 库：
+
+```bash
+# 交互式搜索所有 tldr 页面，右侧实时预览
+tldr --list | fzf --preview 'tldr {}' --preview-window=right:70%
+
+# 加到 .zshrc 中方便调用
+alias tldrf='tldr --list | fzf --preview "tldr {}" --preview-window=right:70%'
+```
+
+---
+
+### 场景三：新机器上快速学习系统命令
+
+在 Linux 服务器上接触不熟悉的系统命令：
+
+```bash
+# 先更新缓存
+tldr --update
+
+# 查看平台专属命令（如 macOS 的 diskutil）
+tldr --platform osx diskutil
+tldr --platform linux systemctl
+tldr --platform linux journalctl
+
+# 随机浏览，拓宽命令视野
+tldr --random
+```
+
 ## 推荐搭配
 
 - **fzf** — 用 `tldr --list | fzf --preview 'tldr {}'` 交互式查找命令

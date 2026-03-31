@@ -65,3 +65,68 @@ tmux attach -t myproject
 - **TPM** — tmux 插件管理器
 - **tmux-resurrect** — 会话持久化，重启后恢复
 - **tmux-continuum** — 自动保存/恢复会话
+
+## 典型场景
+
+### 场景一：SSH 远程服务器上保持长时间任务
+
+SSH 断开后任务不中断，重连后恢复现场：
+
+```bash
+# 连接服务器后立即创建命名会话
+ssh user@server
+tmux new -s deploy
+
+# 在 tmux 内启动耗时任务
+./deploy.sh production
+
+# 网络断开后重连，任务继续运行
+ssh user@server
+tmux attach -t deploy
+```
+
+---
+
+### 场景二：开发环境一键启动布局
+
+把常用的窗口分割保存为脚本，每次开发一条命令还原工作区：
+
+```bash
+#!/bin/bash
+# ~/scripts/dev-layout.sh
+SESSION="myapp"
+tmux new-session -d -s $SESSION -x 220 -y 50
+
+# 窗口1：编辑器
+tmux rename-window -t $SESSION:1 "editor"
+tmux send-keys -t $SESSION:1 "nvim ." C-m
+
+# 窗口2：上下分割，上面跑服务，下面跑日志
+tmux new-window -t $SESSION:2 -n "server"
+tmux send-keys -t $SESSION:2 "npm run dev" C-m
+tmux split-window -v -t $SESSION:2
+tmux send-keys -t $SESSION:2 "tail -f logs/app.log" C-m
+
+# 窗口3：空终端备用
+tmux new-window -t $SESSION:3 -n "shell"
+
+tmux attach -t $SESSION
+```
+
+---
+
+### 场景三：跨窗格复制粘贴
+
+在不同窗格间共享命令输出：
+
+```bash
+# 进入 copy mode（vi 模式）
+# Ctrl+b [
+# 用 v 开始选择，y 复制
+# Ctrl+b ] 粘贴
+
+# 在 .tmux.conf 中启用 vi 模式
+# setw -g mode-keys vi
+# bind-key -T copy-mode-vi v send-keys -X begin-selection
+# bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
+```
