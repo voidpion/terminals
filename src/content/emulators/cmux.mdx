@@ -1,0 +1,90 @@
+---
+title: "cmux"
+description: "专为 AI 编程智能体设计的原生 macOS 终端，基于 Ghostty 渲染引擎，内置竖向标签页、通知环和可脚本化浏览器"
+website: "https://cmux.com/"
+github: "https://github.com/manaflow-ai/cmux"
+tags: ["macOS", "AI智能体", "GPU加速", "Swift", "开源"]
+featured: false
+order: 19
+platforms: ["macOS"]
+license: "GPL"
+gpu_accelerated: true
+multiplexer_builtin: true
+pricing: "free"
+screenshot: "/screenshots/cmux.jpg"
+---
+
+## 简介
+
+cmux 是一款专为 AI 编程智能体设计的原生 macOS 终端，由 manaflow-ai 团队开发，于 2026 年 2 月发布后迅速在 Hacker News 上获得关注。它基于 Ghostty 的渲染库（libghostty）构建，使用 Swift + AppKit 实现原生 macOS 体验，完全开源（AGPL 协议）。
+
+cmux 并非 tmux 的替代品，而是针对"同时运行多个 AI 智能体"这一现代工作场景专门打造的终端环境。当你需要并行管理多个 Claude Code、Codex、Gemini CLI 等智能体时，cmux 提供的通知系统、侧边栏和内嵌浏览器能让你掌握每个智能体的状态，而无需频繁切换窗口。
+
+## 安装
+
+```bash
+brew install --cask manaflow-ai/cmux/cmux
+```
+
+## 核心特性
+
+- **智能通知环** — 当某个智能体需要关注时，对应面板显示蓝色光环，同时推送 macOS 桌面通知
+- **竖向标签页侧边栏** — 实时显示每个工作区的 Git 分支、PR 状态、工作目录和最新通知
+- **内置可脚本化浏览器** — 内嵌 WebKit 浏览器，可通过 API 操控 DOM、截取无障碍树、填写表单，让智能体直接与本地开发服务器交互
+- **CLI / Socket API** — 完整的编程控制接口，支持创建工作区、发送按键、打开 URL 等操作
+- **原生性能** — Swift + AppKit + GPU 加速渲染，无 Electron 开销
+- **远程 SSH 支持** — `cmux ssh user@remote` 为远程机器创建工作区，localhost 直接可用
+
+## 使用示例
+
+```bash
+# 启动 cmux
+cmux
+
+# SSH 到远程主机并创建工作区
+cmux ssh user@remote
+
+# 通过 CLI 创建新工作区
+cmux workspace create my-project
+
+# 列出所有工作区
+cmux workspace list
+```
+
+## 兼容的 AI 智能体
+
+cmux 作为终端本身，任何可在终端运行的工具均开箱即用：
+
+- Claude Code
+- OpenCode、Codex CLI
+- Gemini CLI、Kiro
+- Aider、Goose、Amp、Cline、Cursor Agent
+
+## 典型场景
+
+### 场景：并行运行多个 Claude Code 实例
+
+同时在多个代码库或分支上运行 AI 智能体，通知环告知哪个实例需要人工决策：
+
+```bash
+# 在 cmux 中打开多个工作区，每个工作区运行一个 Claude Code 实例
+# 当某个实例需要审批或输入时，对应面板的通知环会亮起
+# 侧边栏同时显示各工作区的 Git 分支和 PR 状态，一目了然
+```
+
+---
+
+### 场景：内嵌浏览器验证前端修改
+
+让 Claude Code 直接在终端内访问本地开发服务器，无需在终端和浏览器间切换：
+
+```bash
+# cmux 内嵌 WebKit 浏览器可通过 Socket API 控制
+# 智能体可截取页面无障碍树、点击元素、验证 UI 变更
+# localhost 端口无需额外配置，自动路由到本地开发服务器
+```
+
+## 推荐搭配
+
+- **Claude Code** — cmux 的通知系统专门针对 Claude Code 的工作流优化
+- **lazygit** — 在侧边栏中直接查看 Git 分支状态
