@@ -40,7 +40,7 @@ const allTags = [...new Set(tools.flatMap((t) => t.data.tags))];
 
   <CardGrid>
     {tools.map((entry) => (
-      <ToolCard entry={entry} collection="tools" />
+      <ToolCard entry={entry} collection="tools" showScreenshot={false} />
     ))}
   </CardGrid>
 </PageLayout>

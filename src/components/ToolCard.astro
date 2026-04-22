@@ -17,9 +17,10 @@ interface Props {
     };
   };
   collection: string;
+  showScreenshot?: boolean;
 }
 
-const { entry, collection } = Astro.props;
+const { entry, collection, showScreenshot = true } = Astro.props;
 const href = url(`/${collection}/${entry.id}`);
 const tags = entry.data.tags.slice(0, 3);
 ---
@@ -35,7 +36,7 @@ const tags = entry.data.tags.slice(0, 3);
       推荐
     </span>
   )}
-  {entry.data.screenshot && (
+  {showScreenshot && entry.data.screenshot && (
     <div class="aspect-video overflow-hidden bg-black/20">
       <img src={url(entry.data.screenshot)} alt={`${entry.data.title} 截图`}
         class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" loading="lazy" />
