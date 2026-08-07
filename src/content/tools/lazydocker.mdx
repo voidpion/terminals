@@ -1,0 +1,50 @@
+---
+title: "lazydocker"
+description: "在一个终端界面中管理 Docker 容器、镜像、Compose 服务、日志和资源占用"
+website: "https://github.com/jesseduffield/lazydocker"
+github: "https://github.com/jesseduffield/lazydocker"
+tags: ["Docker", "容器", "TUI", "Go", "开源"]
+featured: true
+order: 13
+pubDate: 2026-08-07
+updatedDate: 2026-08-07
+category: "system"
+replaces: "docker ps / docker logs / docker compose"
+install_cmd: "brew install lazydocker"
+written_in: "Go"
+---
+
+## 简介
+
+lazydocker 是 lazygit 作者推出的 Docker 终端界面，把容器、镜像、卷、Compose 服务、日志和常用操作集中在同一个 TUI 中。它不会隐藏 Docker 本身，而是减少在 `docker ps`、`docker logs`、`docker exec` 和 Compose 命令之间来回切换的成本。
+
+## 安装
+
+```bash
+brew install lazydocker
+
+# 在包含 compose.yaml 的目录中启动
+lazydocker
+```
+
+## 核心特性
+
+- **资源总览** — 快速查看容器状态、CPU、内存和端口信息
+- **实时日志** — 选择服务即可跟踪日志，并支持搜索和滚动
+- **Compose 操作** — 启停、重建或重启单个服务，无需重复输入项目参数
+- **容器 Shell** — 直接进入运行中的容器或执行自定义命令
+- **镜像与卷管理** — 查看、删除和清理未使用资源
+- **自定义命令** — 可以为项目或面板增加常用动作和快捷键
+
+## 典型工作流
+
+```text
+1. 在项目目录运行 lazydocker
+2. 从 Services 面板选择服务
+3. 按 Enter 查看日志或状态
+4. 使用快捷键重启、重建或进入容器
+```
+
+## 选择建议
+
+lazydocker 很适合本地开发和故障排查，尤其是包含多个 Compose 服务的项目。生产环境的批量操作、审计和自动化仍应使用明确的 Docker/Kubernetes 命令或受控平台。

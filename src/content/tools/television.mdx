@@ -1,0 +1,66 @@
+---
+title: "Television"
+description: "面向文件、文本、Git、环境变量和容器等多种数据源的高速可扩展模糊查找器"
+website: "https://alexpasmantier.github.io/television/"
+github: "https://github.com/alexpasmantier/television"
+tags: ["模糊搜索", "TUI", "Shell集成", "Rust", "开源"]
+featured: false
+order: 31
+pubDate: 2026-08-07
+updatedDate: 2026-08-07
+category: "search"
+replaces: "fzf（部分场景）"
+install_cmd: "brew install television"
+written_in: "Rust"
+---
+
+## 简介
+
+Television（命令名 `tv`）是一款高速、可移植、可扩展的终端模糊查找器。它把不同数据源封装为“频道”：文件、文本内容、Git 仓库、环境变量、Docker 容器等都能用统一的搜索与预览界面操作。
+
+它不是简单复刻 fzf。fzf 更像可组合的通用筛选引擎；Television 则提供预制频道、预览器、动作和 Shell 自动补全，更强调开箱即用的完整工作流。
+
+## 安装
+
+```bash
+brew install television
+
+# Zsh：启用 Ctrl-T 与 Ctrl-R 集成
+echo 'eval "$(tv init zsh)"' >> ~/.zshrc
+
+# Bash
+echo 'eval "$(tv init bash)"' >> ~/.bashrc
+```
+
+## 常用频道
+
+```bash
+tv             # 搜索文件（默认频道）
+tv text        # 搜索文件内容
+tv git-repos   # 搜索本机 Git 仓库
+tv env         # 搜索环境变量
+tv --help
+```
+
+## 自定义频道
+
+频道由 TOML 描述，可以组合任意数据源、预览命令和动作：
+
+```toml
+# ~/.config/television/cable/tldr.toml
+[metadata]
+name = "tldr"
+description = "Browse TLDR pages"
+
+[source]
+command = "tldr --list"
+
+[preview]
+command = "tldr '{}'"
+```
+
+## 选择建议
+
+- 已有大量 fzf 脚本：继续使用 fzf，生态和组合自由度更高
+- 想少写 glue code：Television 的频道与预览默认值更省配置
+- 需要集成编辑器：官方生态覆盖 Neovim、Vim、VS Code、Zed 与 JetBrains

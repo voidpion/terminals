@@ -1,0 +1,80 @@
+---
+title: "mise"
+description: "把开发工具版本、项目环境变量和任务统一进 mise.toml 的现代开发环境管理器"
+website: "https://mise.jdx.dev/"
+github: "https://github.com/jdx/mise"
+tags: ["版本管理", "开发环境", "任务运行", "Rust", "开源"]
+featured: true
+recommended: true
+order: 9
+pubDate: 2026-08-07
+updatedDate: 2026-08-07
+category: "productivity"
+replaces: "asdf / nvm / pyenv / direnv"
+install_cmd: "brew install mise"
+written_in: "Rust"
+---
+
+## 简介
+
+mise（mise-en-place）把三类经常分散的配置放进同一个 CLI：语言和工具版本、按目录加载的环境变量、项目任务。一个 `mise.toml` 就能让本地 Shell、不同工作副本和 CI 使用一致的开发环境。
+
+它可以管理 Node.js、Python、Go、Terraform 等大量工具，也能直接安装普通 CLI。与依赖 shim 的传统版本管理器不同，mise 通过 Shell 激活提供快速的目录切换体验。
+
+## 安装与激活
+
+```bash
+brew install mise
+
+# Zsh
+echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
+
+# Bash
+echo 'eval "$(mise activate bash)"' >> ~/.bashrc
+
+# Fish
+echo 'mise activate fish | source' >> ~/.config/fish/config.fish
+```
+
+## 快速上手
+
+```bash
+# 为当前项目固定工具版本
+mise use node@24 python@3.13
+
+# 安装 mise.toml 中声明的全部工具
+mise install
+
+# 临时使用指定版本执行命令
+mise exec node@24 -- node --version
+
+# 查看当前环境
+mise doctor
+```
+
+一个最小项目配置：
+
+```toml
+# mise.toml
+[tools]
+node = "24"
+python = "3.13"
+
+[env]
+NODE_ENV = "development"
+
+[tasks.test]
+run = "npm test"
+```
+
+```bash
+mise run test
+```
+
+## 为什么值得关注
+
+- **统一工具链** — 一个工具覆盖 asdf、nvm、pyenv 和部分 direnv/任务运行器场景
+- **项目可复现** — 工具版本、环境和常用命令可以随代码库提交
+- **广泛注册表** — 除语言运行时外，也能管理 Terraform、kubectl、jq 等 CLI
+- **渐进采用** — 可以先只管理一个语言，再逐步迁移环境变量和任务
+- **CI 友好** — 本地与流水线读取同一份声明，减少版本漂移

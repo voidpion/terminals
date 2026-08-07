@@ -1,6 +1,6 @@
 # Terminal 百科
 
-一站式终端工具导航网站，涵盖终端模拟器、Shell、经典配置、主题美化、CLI 工具和编程字体。
+一站式终端工具导航网站，涵盖终端模拟器、Shell、经典配置、主题美化、CLI 工具和编程字体，共 140 个条目。
 
 **在线访问：** https://voidpion.github.io/terminals/
 
@@ -8,11 +8,11 @@
 
 | 分类 | 数量 | 示例 |
 |------|------|------|
-| 终端模拟器 | 18 | iTerm2, Alacritty, Kitty, WezTerm, Warp, Ghostty |
+| 终端模拟器 | 19 | iTerm2, Alacritty, Kitty, WezTerm, Warp, Ghostty |
 | Shell | 17 | Bash, Zsh, Fish, Nushell, Elvish, PowerShell |
 | 经典配置 | 16 | .zshrc, tmux.conf, init.lua, starship.toml, .vimrc |
 | 主题/框架 | 38 | Tokyo Night, Catppuccin, Dracula, Oh My Zsh, Starship |
-| CLI 工具 | 28 | fzf, ripgrep, bat, fd, jq, yazi, lazygit, zellij |
+| CLI 工具 | 40 | fzf, Atuin, mise, Jujutsu, OpenCode, Gemini CLI |
 | 编程字体 | 10 | JetBrains Mono, Fira Code, Cascadia Code, Iosevka |
 
 ## 技术栈

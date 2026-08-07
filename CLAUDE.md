@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Terminal 百科 — 一站式终端工具导航网站，中文内容为主。涵盖终端模拟器、Shell、配置、主题、CLI 工具、编程字体 6 个分类，共 120+ 条目。
+Terminal 百科 — 一站式终端工具导航网站，中文内容为主。涵盖终端模拟器、Shell、配置、主题、CLI 工具、编程字体 6 个分类，共 140 个条目。
 
 线上地址：https://voidpion.github.io/terminals/
 
@@ -49,4 +49,4 @@ npm run preview   # 预览构建结果
 - `featured: true` 的条目会出现在首页精选区域
 - 截图放在 `public/screenshots/`，建议 JPEG 格式（1200px 宽，quality 80）
 - `order` 数值越小排名越靠前（在同 recommended 级别内）
-- tools 的 `category` 字段必须是枚举值之一：search, file_manager, viewer, multiplexer, git, system, network, productivity, other
+- tools 的 `category` 字段必须是枚举值之一：search, file_manager, viewer, multiplexer, git, system, network, productivity, ai, other

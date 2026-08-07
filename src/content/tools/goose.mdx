@@ -1,0 +1,44 @@
+---
+title: "goose"
+description: "可连接多模型与 MCP 扩展的本地开源通用 AI Agent，提供 CLI、桌面端和 API"
+website: "https://goose-docs.ai/"
+github: "https://github.com/aaif-goose/goose"
+tags: ["AI智能体", "自动化", "MCP", "Rust", "开源"]
+featured: false
+order: 35
+pubDate: 2026-08-07
+updatedDate: 2026-08-07
+category: "ai"
+replaces: "重复的终端与知识工作流"
+install_cmd: "curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | bash"
+written_in: "Rust"
+---
+
+## 简介
+
+goose 是运行在本机的开源通用 AI Agent，不只面向编码，也可用于研究、写作、数据分析和工作流自动化。它提供 CLI、桌面应用与 API，支持多种模型供应商，并通过 Model Context Protocol（MCP）连接外部工具。
+
+项目采用 Apache-2.0 协议，并进入 Linux Foundation 旗下 Agentic AI Foundation。对于希望避免单一模型锁定、同时需要扩展业务工具的用户，goose 是值得关注的通用型选择。
+
+## 安装与启动
+
+```bash
+curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | bash
+goose configure
+goose session
+```
+
+也可以按照官方文档安装桌面应用或使用发布脚本。配置阶段选择模型供应商，并通过环境变量或安全的凭据存储提供密钥。
+
+## 核心特性
+
+- **通用 Agent** — 覆盖代码、研究、内容和自动化，而非只处理源代码
+- **多模型支持** — 可连接主流云模型、聚合服务和 Ollama 等本地方案
+- **MCP 扩展** — 使用开放协议接入开发工具、数据源和企业系统
+- **本地执行** — Agent 在用户机器上运行，工具权限和数据路径更直观
+- **多种界面** — CLI、桌面应用和 API 可共享同一套能力
+- **开放治理** — 开源协议与基金会治理有利于长期生态集成
+
+## 使用边界
+
+goose 的扩展能力意味着它可能接触文件、Shell、浏览器或外部服务。启用 MCP 扩展前应检查来源与权限；涉及删除、发布、财务或生产系统的操作，应保留人工确认和可恢复机制。

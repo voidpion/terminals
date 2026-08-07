@@ -1,0 +1,58 @@
+---
+title: "Jujutsu"
+description: "兼容 Git 仓库、以工作副本自动快照和一等冲突为核心的下一代版本控制系统"
+website: "https://www.jj-vcs.dev/"
+github: "https://github.com/jj-vcs/jj"
+tags: ["版本控制", "Git兼容", "开发效率", "Rust", "开源"]
+featured: true
+order: 12
+pubDate: 2026-08-07
+updatedDate: 2026-08-07
+category: "git"
+replaces: "Git CLI（可渐进共存）"
+install_cmd: "brew install jj"
+written_in: "Rust"
+---
+
+## 简介
+
+Jujutsu（命令名 `jj`）是一个从工作流重新设计的版本控制系统。它可以直接使用 Git 仓库作为后端，与现有远端和托管平台协作，但用自动快照、可修改历史、操作日志和一等冲突替代大量容易出错的暂存区与变基操作。
+
+它最适合希望获得更流畅本地历史编辑体验、又不能离开 Git 生态的开发者。可以在同一个仓库中让 `jj` 与 `git` 共存，逐步尝试而无需迁移远端。
+
+## 安装与初始化
+
+```bash
+brew install jj
+
+# 在已有 Git 仓库中启用共存模式
+cd my-project
+jj git init --colocate
+
+# 设置作者信息
+jj config set --user user.name "Your Name"
+jj config set --user user.email "you@example.com"
+```
+
+## 基本工作流
+
+```bash
+jj status                 # 查看工作副本状态
+jj diff                   # 查看当前变更
+jj describe -m "message" # 描述当前变更
+jj new                    # 开始下一项变更
+jj log                    # 查看提交图
+jj undo                   # 撤销上一次 jj 操作
+```
+
+## 与 Git 思维的主要区别
+
+- **工作副本就是提交** — 文件变化会自动成为当前 change 的快照，无需暂存区
+- **change ID 稳定** — 改写提交后 change ID 不变，更容易追踪逻辑变更
+- **冲突可提交** — 冲突是版本历史中的一等状态，可以稍后或交给他人解决
+- **操作日志** — rebase、squash 等操作也可撤销，降低历史编辑风险
+- **Git 兼容** — 可使用现有 Git 远端、仓库格式和代码托管平台
+
+## 采用建议
+
+建议先从个人仓库或 colocated 工作副本开始，保留 `git` 作为后备。团队无需同时切换，远端仍然看到普通 Git 提交；但提交签名、部分高级 Git 工作流和第三方集成应在正式迁移前验证。

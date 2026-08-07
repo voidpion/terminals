@@ -1,0 +1,57 @@
+---
+title: "Aider"
+description: "围绕 Git、代码库映射和可审阅提交构建的成熟终端 AI 结对编程工具"
+website: "https://aider.chat/"
+github: "https://github.com/Aider-AI/aider"
+tags: ["AI编程", "Git", "多模型", "Python", "开源"]
+featured: false
+order: 34
+pubDate: 2026-08-07
+updatedDate: 2026-08-07
+category: "ai"
+replaces: "手工跨文件修改与重构"
+install_cmd: "python -m pip install aider-install && aider-install"
+written_in: "Python"
+---
+
+## 简介
+
+Aider 是较早成熟起来的终端 AI 结对编程工具。它以 Git 为安全边界，围绕代码库地图、显式加入文件、自动提交、lint 与测试反馈构建工作流，强调变更可以被检查、撤销和继续迭代。
+
+Aider 可以连接多种云端与本地模型，不要求把整个开发体验迁入特定 IDE。
+
+## 安装
+
+```bash
+python -m pip install aider-install
+aider-install
+
+cd my-project
+aider
+```
+
+模型和密钥可以通过命令参数、环境变量或配置文件设置。不要把 API 密钥提交到仓库。
+
+## 核心特性
+
+- **Repository Map** — 提取代码库结构与关键符号，在有限上下文中理解大项目
+- **Git 原生工作流** — 自动生成提交，方便查看 diff、回退和比较方案
+- **多模型支持** — 可连接主流 API、OpenRouter 兼容服务和本地模型
+- **跨文件编辑** — 根据任务协调修改多个相关文件
+- **测试与 lint** — 修改后运行验证，并把错误反馈给模型继续修复
+- **丰富输入** — 可把图片、网页或语音作为任务上下文
+
+## 使用建议
+
+```bash
+# 明确加入需要重点编辑的文件
+/add src/app.ts tests/app.test.ts
+
+# 查看本轮变更
+/diff
+
+# 运行测试并把结果反馈给 Agent
+/test npm test
+```
+
+相比全自动 Agent，Aider 更适合希望持续掌握文件范围和 Git 历史的用户。它仍可能生成错误代码，提交前应运行项目自己的完整验证流程。

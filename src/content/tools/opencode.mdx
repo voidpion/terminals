@@ -1,0 +1,55 @@
+---
+title: "OpenCode"
+description: "提供终端 TUI、桌面端和客户端/服务端模式的开源 AI 编程 Agent，支持多模型供应商"
+website: "https://opencode.ai/"
+github: "https://github.com/anomalyco/opencode"
+tags: ["AI智能体", "编程助手", "多模型", "TUI", "开源"]
+featured: true
+recommended: true
+order: 30
+pubDate: 2026-08-07
+updatedDate: 2026-08-07
+category: "ai"
+replaces: "部分 IDE AI 编程工作流"
+install_cmd: "brew install anomalyco/tap/opencode"
+written_in: "TypeScript"
+---
+
+## 简介
+
+OpenCode 是开源的 AI 编程 Agent，核心体验是面向代码库的终端 TUI，同时提供桌面应用和客户端/服务端架构。它不绑定单一模型供应商，适合希望自由选择云端或本地模型、并把 Agent 保留在终端工作流中的开发者。
+
+## 安装
+
+```bash
+# macOS / Linux
+brew install anomalyco/tap/opencode
+
+# npm 生态
+npm install -g opencode-ai@latest
+
+# 启动
+opencode
+```
+
+## 核心特性
+
+- **多供应商支持** — 可连接不同商业 API、聚合平台或本地模型
+- **终端优先** — TUI 提供会话、文件引用、工具调用和变更审阅
+- **Agent 模式** — 内置可执行修改的 build Agent 与只读分析的 plan Agent
+- **项目感知** — 结合代码搜索、语言服务和项目指令理解仓库
+- **权限控制** — 可针对命令、文件和工具设置询问、允许或拒绝策略
+- **客户端/服务端** — 核心能力可被桌面端或其他客户端复用
+
+## 基本用法
+
+```bash
+cd my-project
+opencode
+```
+
+进入界面后，可以先在 plan 模式中分析问题，再切换到 build 模式实施。对陌生仓库，推荐先要求 Agent 给出影响范围和验证命令，再批准写入操作。
+
+## 适合谁
+
+OpenCode 适合重视开源、多模型选择和终端交互的用户。若团队需要统一账号、集中策略与企业支持，应额外评估模型供应商、密钥管理和审计方案，而不只比较 Agent UI。

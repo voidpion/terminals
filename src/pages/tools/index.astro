@@ -8,10 +8,10 @@ const tools = (await getCollection('tools')).sort((a, b) => (b.data.recommended 
 const allTags = [...new Set(tools.flatMap((t) => t.data.tags))];
 ---
 
-<PageLayout title="CLI 工具 — Terminal 百科" description="精选命令行工具推荐，涵盖搜索、查看、Git、系统管理等分类">
+<PageLayout title="CLI 工具 — Terminal 百科" description="精选现代命令行工具，涵盖搜索、Git、系统管理、开发环境与 AI Agent">
   <div class="mb-8">
     <h1 class="text-3xl font-bold dark:text-terminal-heading text-light-heading mb-2">CLI 工具</h1>
-    <p class="dark:text-terminal-fg/70 text-light-fg/70">精选现代命令行工具，让你的终端体验更上一层楼</p>
+    <p class="dark:text-terminal-fg/70 text-light-fg/70">从高效搜索与开发环境，到新一代终端 AI Agent</p>
   </div>
 
   <!-- Tag Filter -->

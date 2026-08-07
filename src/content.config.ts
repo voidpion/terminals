@@ -65,7 +65,7 @@ const tools = defineCollection({
     ...baseFields,
     category: z.enum([
       'search', 'file_manager', 'viewer', 'multiplexer',
-      'git', 'system', 'network', 'productivity', 'other',
+      'git', 'system', 'network', 'productivity', 'ai', 'other',
     ]).default('other'),
     replaces: z.string().optional(),
     install_cmd: z.string().optional(),

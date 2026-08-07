@@ -1,0 +1,57 @@
+---
+title: "Carapace"
+description: "为 Bash、Zsh、Fish、Nushell、PowerShell 等 Shell 提供统一而丰富的命令参数补全"
+website: "https://carapace-sh.github.io/carapace-bin/"
+github: "https://github.com/carapace-sh/carapace-bin"
+tags: ["自动补全", "Shell", "跨平台", "Go", "开源"]
+featured: false
+order: 32
+pubDate: 2026-08-07
+updatedDate: 2026-08-07
+category: "productivity"
+replaces: "分散的 Shell 补全脚本"
+install_cmd: "brew install carapace"
+written_in: "Go"
+---
+
+## 简介
+
+Carapace 为大量 CLI 提供参数、子命令和动态值补全，并把同一套补全定义输出给多种 Shell。它适合同时使用 Zsh、Fish、Nushell 或 PowerShell，希望补全体验保持一致的用户。
+
+与只补全命令名的轻量方案不同，Carapace 能理解命令结构，并对文件、Git 引用、容器、进程等动态参数提供上下文候选。
+
+## 安装与启用
+
+```bash
+brew install carapace
+
+# Zsh
+echo 'source <(carapace _carapace zsh)' >> ~/.zshrc
+
+# Bash
+echo 'source <(carapace _carapace bash)' >> ~/.bashrc
+
+# Fish
+mkdir -p ~/.config/fish/completions
+carapace _carapace fish > ~/.config/fish/completions/carapace.fish
+```
+
+Nushell 用户可把桥接配置写入 `config.nu`：
+
+```nu
+let carapace_completer = {|spans|
+  carapace $spans.0 nushell ...$spans | from json
+}
+```
+
+## 核心特性
+
+- **跨 Shell 复用** — 一套 completer 可服务 POSIX 与非 POSIX Shell
+- **大量预制补全** — 覆盖常用开发、系统、云和容器命令
+- **动态候选** — 根据当前目录、Git 状态或外部命令生成候选
+- **样式支持** — 可为不同类型的补全项设置颜色和描述
+- **可扩展规格** — 能为内部或小众 CLI 编写自定义补全定义
+
+## 适合谁
+
+经常切换 Shell、使用参数复杂的 CLI，或希望给团队内部工具补齐高质量补全时，Carapace 很有价值。只使用 Fish 且现有原生补全已足够的用户，收益会相对有限。

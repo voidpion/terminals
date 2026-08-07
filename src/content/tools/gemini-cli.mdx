@@ -1,0 +1,60 @@
+---
+title: "Gemini CLI"
+description: "Google 开源的终端 AI Agent，支持代码理解、文件编辑、命令执行、网页检索与 MCP 扩展"
+website: "https://geminicli.com/"
+github: "https://github.com/google-gemini/gemini-cli"
+tags: ["AI智能体", "编程助手", "MCP", "TypeScript", "开源"]
+featured: true
+order: 33
+pubDate: 2026-08-07
+updatedDate: 2026-08-07
+category: "ai"
+replaces: "手工检索与重复编码任务"
+install_cmd: "npm install -g @google/gemini-cli"
+written_in: "TypeScript"
+---
+
+## 简介
+
+Gemini CLI 是 Google 开源的终端 AI Agent。它能够读取和修改代码、运行命令、检索网页，并通过工具调用完成多步骤任务。项目采用 Apache-2.0 协议，既可交互使用，也可在脚本和自动化流程中以非交互模式运行。
+
+## 安装与启动
+
+```bash
+npm install -g @google/gemini-cli
+gemini
+```
+
+也可以直接试用最新版本：
+
+```bash
+npx @google/gemini-cli
+```
+
+首次启动后按引导登录 Google 账号，或使用适合团队与自动化环境的 API/云端认证方式。
+
+## 核心能力
+
+- **代码库理解** — 搜索文件、读取上下文并规划跨文件修改
+- **工具调用** — 编辑文件、执行 Shell、抓取网页和调用搜索能力
+- **MCP 扩展** — 通过 Model Context Protocol 接入数据库、设计工具和内部系统
+- **非交互模式** — 可输出结构化结果，接入脚本、CI 或其他 Agent
+- **项目指令** — 用项目级上下文文件记录规范和长期约束
+- **开源可扩展** — 可审查工具行为，并开发自定义命令和扩展
+
+## 使用示例
+
+```bash
+# 在项目目录启动交互会话
+gemini
+
+# 单次提问
+gemini -p "解释这个仓库的构建流程"
+
+# 让 Agent 先分析再执行时，明确验收条件
+gemini -p "修复失败测试，完成后运行相关测试并总结改动"
+```
+
+## 安全提示
+
+AI Agent 可能执行命令和修改文件。建议在 Git 工作区中使用，提交或暂存重要改动后再开始任务；遇到安装脚本、删除、发布和云资源操作时应仔细检查授权范围。

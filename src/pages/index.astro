@@ -29,7 +29,7 @@ const totalFonts = (await getCollection('fonts')).length;
 const totalEntries = totalEmulators + totalShells + totalConfigs + totalThemes + totalTools + totalFonts;
 ---
 
-<PageLayout title="Terminal 百科 — 终端工具导航" description="一站式终端工具导航百科，涵盖终端模拟器、Shell、配置、主题、CLI 工具和编程字体">
+<PageLayout title="Terminal 百科 — 终端工具导航" description="一站式终端工具导航百科，涵盖终端模拟器、Shell、配置、主题、现代 CLI 与终端 AI Agent">
   <!-- Hero -->
   <section class="text-center py-10 md:py-14">
     <h1 class="text-4xl md:text-6xl font-bold font-mono mb-4">
@@ -38,7 +38,7 @@ const totalEntries = totalEmulators + totalShells + totalConfigs + totalThemes +
       <span class="dark:text-terminal-purple text-terminal-purple"> 百科</span>
     </h1>
     <p class="text-lg md:text-xl max-w-2xl mx-auto dark:text-terminal-fg/80 text-light-fg/80 mb-6">
-      一站式终端工具导航 — 终端模拟器、Shell、经典配置、主题美化、CLI 工具、编程字体
+      一站式终端工具导航 — 终端模拟器、Shell、经典配置、主题美化、现代 CLI、编程字体
     </p>
     <div class="font-mono text-sm dark:text-terminal-fg/50 text-light-fg/50 mb-8">
       <span class="dark:text-terminal-green text-terminal-green">~</span> 探索现代终端的无限可能
@@ -111,7 +111,7 @@ const totalEntries = totalEmulators + totalShells + totalConfigs + totalThemes +
         <span class="text-xs font-mono dark:text-terminal-fg/40 text-light-fg/40">{totalTools}</span>
       </div>
       <h3 class="font-semibold dark:text-terminal-heading text-light-heading text-base">CLI 工具</h3>
-      <p class="text-sm dark:text-terminal-fg/60 text-light-fg/60 mt-1">fzf, ripgrep, bat, fd...</p>
+      <p class="text-sm dark:text-terminal-fg/60 text-light-fg/60 mt-1">fzf, Atuin, mise, OpenCode...</p>
     </a>
     <a href={url('/fonts')} class="group p-6 rounded-xl border transition-all no-underline
       dark:bg-terminal-surface/50 dark:border-terminal-border dark:hover:border-terminal-orange/50
