@@ -1,0 +1,47 @@
+---
+title: "agent-qa"
+description: "具备 memidex 持久记忆与经验证自我改进能力的自然语言应用测试 CLI"
+website: "https://vostride.com"
+github: "https://github.com/vostride/agent-qa"
+tags: ["AI测试", "CLI", "MCP", "Web", "移动端"]
+featured: false
+recommended: false
+order: 99
+pubDate: 2026-10-31
+updatedDate: 2026-10-31
+category: "ai"
+install_cmd: "npm install -D agent-qa"
+written_in: "TypeScript"
+---
+
+## 简介
+
+agent-qa 通过自然语言描述 Web、Android 和 iOS 的用户流程，提供 CLI、仪表板和 MCP 接口。它的 memidex 记忆引擎保存可审查的应用事实与可复用流程，并将经过验证的运行经验用于自我改进。
+
+## 安装与接入
+
+需要 Node.js 24 或更高版本。在待测项目目录中安装并初始化：
+
+```bash
+npm install -D agent-qa
+npx agent-qa init
+```
+
+按[快速开始](https://vostride.com/docs/agent-qa/quickstart)配置模型提供方和测试目标，再编写和运行测试。作为本地 stdio MCP 服务启动时使用：
+
+```bash
+npx agent-qa mcp
+```
+
+MCP 客户端需要以待测项目为工作目录读取配置，并为长时间测试设置至少 100 分钟的调用超时。完整设置见[官方 MCP 文档](https://vostride.com/docs/agent-qa/mcp)。
+
+## 核心特性
+
+- **自然语言测试**：覆盖 Web、Android 和 iOS 的真实用户流程。
+- **memidex 持久记忆**：复用可审查的应用知识与操作流程。
+- **经验证的自我改进**：从运行经验与结果纠正中学习，淘汰失效知识。
+- **运行证据**：通过运行摘要、步骤信息与截图等证据定位失败，支持定向重跑。
+
+## 使用说明
+
+运行时许可证为 FSL-1.1-ALv2。模型和外部服务费用取决于所选配置与用量；实际执行需要可访问的待测应用，以及相应浏览器或设备环境。

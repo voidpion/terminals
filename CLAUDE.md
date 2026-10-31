@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Terminal 百科 — 一站式终端工具导航网站，中文内容为主。涵盖终端模拟器、Shell、配置、主题、CLI 工具、编程字体 6 个分类，共 140 个条目。
+Terminal 百科 — 一站式终端工具导航网站，中文内容为主。涵盖终端模拟器、Shell、配置、主题、CLI 工具、编程字体 6 个分类，共 141 个条目。
 
 线上地址：https://voidpion.github.io/terminals/
 
